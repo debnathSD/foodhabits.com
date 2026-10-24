@@ -1,21 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 import { useColorScheme as useRNColorScheme } from 'react-native';
 
+const noopSubscribe = () => () => {};
+
 /**
- * To support static rendering, this value needs to be re-calculated on the client side for web
+ * To support static rendering, report 'light' on the server and during
+ * hydration, then the real scheme once running in the browser.
  */
 export function useColorScheme() {
-  const [hasHydrated, setHasHydrated] = useState(false);
-
-  useEffect(() => {
-    setHasHydrated(true);
-  }, []);
-
+  const hydrated = useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false,
+  );
   const colorScheme = useRNColorScheme();
-
-  if (hasHydrated) {
-    return colorScheme;
-  }
-
-  return 'light';
+  return hydrated ? colorScheme : 'light';
 }

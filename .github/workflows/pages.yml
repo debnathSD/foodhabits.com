@@ -1,0 +1,68 @@
+# Publishes the marketing website at https://<owner>.github.io/<repository>/
+# and the web app beside it at .../<repository>/app/ on every push to main.
+name: Publish website and web app
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      BASE: /${{ github.event.repository.name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            website/package-lock.json
+
+      - name: Install
+        run: |
+          npm ci
+          npm ci --prefix website
+
+      - name: Build the website
+        run: npm run build --prefix website -- --outDir ../site --emptyOutDir
+        env:
+          SITE_BASE: ${{ env.BASE }}/
+
+      - name: Build the web app
+        run: npm run build:web -- --output-dir site/app
+        env:
+          APP_BASE_URL: ${{ env.BASE }}/app
+
+      # Pages serves 404.html for unknown paths, so app deep links (/app/result/...) still open the app.
+      - name: Finish the site
+        run: |
+          cp site/app/index.html site/404.html
+          touch site/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

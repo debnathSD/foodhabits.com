@@ -1,0 +1,23 @@
+/** Colours shared by the 3D scenes on the website and in the app. */
+export const PALETTE = {
+  ink: '#07120D',
+  emerald: '#1E8A55',
+  glow: '#2BD17E',
+  chartreuse: '#D4F25C',
+  mint: '#57E39A',
+  coral: '#FF6B5B',
+  amber: '#F2C14E',
+  ceramic: '#F4F1EA',
+  tomato: '#E5402E',
+  leaf: '#3E9B4F',
+  leafDark: '#2A6E37',
+  lemon: '#F7D84A',
+  lemonFlesh: '#FBEFA6',
+  berry: '#3A4687',
+  chili: '#D6261C',
+  carrot: '#F07F23',
+  avocadoSkin: '#2F4A1E',
+  avocadoFlesh: '#D7E58A',
+  pit: '#7A4A2A',
+  gut: '#F0A08C',
+} as const;

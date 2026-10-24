@@ -1,0 +1,97 @@
+/// <reference types="node" />
+import assert from 'node:assert/strict';
+import { test } from 'node:test';
+
+import { CATEGORIES, type CategoryId } from '../data/categories';
+import { CATALOG } from '../data/catalog';
+import labels from '../data/food-labels.json';
+import { buildScenes, summaryText, watchText } from '../lib/describe';
+import { analyzeFood, type Food } from '../lib/engine';
+import { foodFromCatalog, foodFromLabel, genericFood } from '../lib/food-index';
+import { DEFAULT_PROFILE, DIETS, GOALS, SENSITIVITIES } from '../lib/profile-options';
+import { capitalize, joinList, TRANSLATED, translate, translateValue } from './index';
+import { en } from './locales/en';
+import { hi } from './locales/hi';
+
+/** Collects every key `t()` is asked for, failing on any that has no English text. */
+function strictT(language: (typeof TRANSLATED)[number] = 'en') {
+  return (key: string, params?: Record<string, string | number>) => {
+    const text = translate(language, key, params);
+    assert.notEqual(text, key, `Missing message: ${key}`);
+    assert.ok(!/\{\w+\}/.test(text), `Unfilled placeholder in ${key}: ${text}`);
+    return text;
+  };
+}
+
+const allFoods: Food[] = [
+  ...labels.map((_, index) => foodFromLabel(index)).filter((food) => food !== null),
+  ...CATALOG.map((item) => foodFromCatalog(item.name)!),
+  ...(Object.keys(CATEGORIES) as CategoryId[]).map(genericFood),
+];
+
+const profiles = [
+  DEFAULT_PROFILE,
+  { diet: 'vegan' as const, sensitivities: SENSITIVITIES.map((s) => s.id), goals: [] },
+  { diet: 'jain' as const, sensitivities: ['lactose' as const], goals: [] },
+  { diet: 'vegetarian' as const, sensitivities: [], goals: [] },
+];
+
+test('every message the engine produces exists, for every food and profile', () => {
+  for (const language of TRANSLATED) {
+    const t = strictT(language);
+    const list = (items: string[]) => joinList(language, items);
+    for (const food of allFoods) {
+      for (const profile of profiles) {
+        for (const hour of [8, 18]) {
+          const analysis = analyzeFood(food, { profile, hour });
+          summaryText(analysis, t, list, capitalize);
+          analysis.watch.forEach((item) => watchText(item, t, list));
+          buildScenes(analysis, food.name, t, list);
+          analysis.gut.forEach((item) => t(`gut.${item.id}.detail`));
+          analysis.body.forEach((item) => t(`body.${item.id}.detail`));
+          analysis.risks.forEach((risk) => t(`risks.${risk}.detail`));
+          analysis.avoid.forEach((item) => {
+            t(`avoid.${item.id}.gut`);
+            t(`avoid.${item.id}.body`);
+            t(`instead.${item.instead}`);
+            t(`timeframe.${item.timeframe}`);
+          });
+          analysis.eat.forEach((id) => t(`eat.${id}.why`));
+        }
+      }
+    }
+  }
+});
+
+test('every category has a name and at least one swap', () => {
+  for (const category of Object.keys(CATEGORIES)) {
+    assert.ok(en.categories[category as keyof typeof en.categories], `No name for ${category}`);
+    const swaps = translateValue<unknown[]>('en', `swaps.${category}`);
+    assert.ok(Array.isArray(swaps) && swaps.length > 0, `No swaps for ${category}`);
+  }
+});
+
+test('every profile option has a label', () => {
+  const t = strictT();
+  DIETS.forEach((option) => t(`profileOptions.diet.${option.id}`));
+  SENSITIVITIES.forEach((option) => t(`profileOptions.sensitivities.${option.id}`));
+  GOALS.forEach((option) => t(`profileOptions.goals.${option.id}`));
+});
+
+test('translations only use keys that exist in English', () => {
+  const walk = (node: unknown, reference: unknown, path: string) => {
+    if (typeof node !== 'object' || node === null || Array.isArray(node)) return;
+    for (const [key, value] of Object.entries(node)) {
+      const next = (reference as Record<string, unknown>)[key];
+      assert.ok(next !== undefined, `Unknown key ${path}${key}`);
+      walk(value, next, `${path}${key}.`);
+    }
+  };
+  walk(hi, en, '');
+});
+
+test('falls back to English and fills placeholders', () => {
+  assert.equal(translate('ta', 'common.continue'), 'Continue');
+  assert.equal(translate('en', 'home.afterMeal', { dish: 'Idli' }), 'After your Idli');
+  assert.equal(joinList('en', ['a', 'b', 'c']), 'a, b and c');
+});

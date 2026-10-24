@@ -1,18 +1,80 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
+import { InstrumentSerif_400Regular } from '@expo-google-fonts/instrument-serif';
+import {
+  InterTight_400Regular,
+  InterTight_500Medium,
+  InterTight_600SemiBold,
+  InterTight_700Bold,
+  useFonts,
+} from '@expo-google-fonts/inter-tight';
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+import { Colors, Type } from '@/constants/theme';
+import { useTranslation } from '@/i18n/use-translation';
+import { loadState, useAppState } from '@/lib/store';
 
 SplashScreen.preventAutoHideAsync();
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+export default function RootLayout() {
+  const scheme = useColorScheme();
+  const colors = Colors[scheme === 'dark' ? 'dark' : 'light'];
+  const ready = useAppState((state) => state.ready);
+  const onboarded = useAppState((state) => state.onboarded && state.language !== null);
+  const { t } = useTranslation();
+  const [fontsLoaded, fontError] = useFonts({
+    InstrumentSerif_400Regular,
+    InterTight_400Regular,
+    InterTight_500Medium,
+    InterTight_600SemiBold,
+    InterTight_700Bold,
+  });
+  // Fall back to system fonts rather than block the app if a font fails to load.
+  const fontsReady = fontsLoaded || Boolean(fontError);
+
+  useEffect(() => {
+    loadState();
+  }, []);
+
+  useEffect(() => {
+    if (ready && fontsReady) SplashScreen.hideAsync();
+  }, [ready, fontsReady]);
+
+  if (!ready || !fontsReady) return null;
+
+  const navigationTheme = scheme === 'dark' ? DarkTheme : DefaultTheme;
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
+    <ThemeProvider
+      value={{
+        ...navigationTheme,
+        colors: { ...navigationTheme.colors, primary: colors.tint, background: colors.background },
+      }}>
+      <Stack
+        screenOptions={{
+          headerShadowVisible: false,
+          headerStyle: { backgroundColor: colors.background },
+          headerTintColor: colors.tint,
+          headerTitleStyle: { color: colors.text, fontFamily: Type.semibold },
+          headerBackButtonDisplayMode: 'minimal',
+          contentStyle: { backgroundColor: colors.background },
+        }}>
+        <Stack.Protected guard={onboarded} redirectTo="/welcome">
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="scan" options={{ headerShown: false, presentation: 'fullScreenModal' }} />
+          <Stack.Screen name="search" options={{ title: t('search.title'), presentation: 'modal' }} />
+          <Stack.Screen
+            name="result/[id]"
+            options={{ title: '', headerTransparent: true, headerTintColor: '#F3F7F2', headerStyle: { backgroundColor: 'transparent' } }}
+          />
+          <Stack.Screen name="explainer/[id]" options={{ headerShown: false, presentation: 'fullScreenModal' }} />
+        </Stack.Protected>
+        <Stack.Protected guard={!onboarded}>
+          <Stack.Screen name="welcome" options={{ headerShown: false }} />
+        </Stack.Protected>
+        <Stack.Screen name="language" options={{ title: t('profile.language'), presentation: 'modal' }} />
+        <Stack.Screen name="privacy" options={{ title: t('privacy.title') }} />
+      </Stack>
     </ThemeProvider>
   );
 }

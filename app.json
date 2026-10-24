@@ -1,26 +1,35 @@
 {
   "expo": {
-    "name": "good-habits",
-    "slug": "good-habits",
+    "name": "foodhabits.com",
+    "slug": "foodhabits",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "goodhabits",
+    "scheme": "foodhabits",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "bundleIdentifier": "com.foodhabits.app",
+      "supportsTablet": false,
+      "icon": "./assets/images/icon.png",
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
+      "package": "com.foodhabits.app",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#07120D",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "output": "server",
+      "output": "single",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
@@ -28,11 +37,31 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#07120D",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "imageWidth": 120
         }
-      ]
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "foodhabits.com uses the camera to recognise the food on your plate. Photos stay on your phone.",
+          "microphonePermission": false,
+          "recordAudioAndroid": false,
+          "barcodeScannerEnabled": false
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "foodhabits.com reads the meal photo you choose to recognise the food. Photos stay on your phone.",
+          "cameraPermission": "foodhabits.com uses the camera to recognise the food on your plate. Photos stay on your phone.",
+          "microphonePermission": false
+        }
+      ],
+      "react-native-fast-tflite",
+      "expo-localization",
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true,
