@@ -32,6 +32,8 @@ In development, "Try now" opens the app's own dev server (`VITE_APP_URL` in
 | Scene slates, chapter CTAs and the timecode readout | `src/sections/Cinema.tsx` |
 | Film-title reveals, preloader, smooth scroll | `src/motion.ts` |
 | Inside-the-dish scene | `src/sections/Inside.tsx`, `src/scene/InsideScene.tsx` |
+| How the 3D canvases render, and when they exist | `src/scene/Frame.tsx`, `src/scene/Effects.tsx` |
+| The lighter phone version | `src/quality.ts` (`LITE`), the `@media (pointer: coarse)` block in `src/styles.css` |
 | Privacy policy page | `privacy.html` (built as a second page, styled by `src/legal.ts`) |
 | Logo, "Try now" key and preloader | `src/sections/Brand.tsx` |
 | Phone screenshots | `public/screens`, refreshed with `npm run capture:screens` from the repo root |
@@ -79,6 +81,25 @@ written here in GSAP and CSS.
 - **Restraint:** only the opening story and the take-apart scene are pinned.
   With reduced motion the grain, sweep and wipes are off and every heading is
   simply there.
+
+## Phones
+
+Phones and tablets get a lighter version of the same site, chosen once when the
+page loads: `LITE` in `src/quality.ts` in code, `@media (pointer: coarse)` in
+CSS. The full version made Android phones crawl.
+
+- **3D:** at most 1.5× pixel density, drawn straight to the screen with the
+  same neutral tone mapping but no post-processing pass (ambient occlusion,
+  bloom, depth of field) and no shadow maps, at 30 frames a second. A canvas
+  exists only while its section is within a few screens, so at most two hold
+  GPU memory. On desktop all five are created with the page.
+- **The page:** no grain or vignette layer over the screen, no blur behind
+  see-through panels (they get a solid tint), no light sweep across the
+  privacy screen, and no blur on the hero's letters.
+
+When adding an effect, animate only `transform` and `opacity`, and keep blend
+modes, `filter` and `backdrop-filter` off large or always-visible elements, or
+off phones altogether. Each of those is redrawn every frame on a phone.
 
 ## Publishing
 

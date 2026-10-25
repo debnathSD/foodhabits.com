@@ -1,34 +1,19 @@
 import { ContactShadows, PresentationControls } from '@react-three/drei';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { GutScene, SaladBowl } from '@three/scenes';
-import { Suspense, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
 import { Backdrop, BACKDROPS } from './Backdrop';
 import { Effects, type Focus } from './Effects';
+import { Frame } from './Frame';
 import { Lighting } from './Lighting';
 import { Phone } from './Phone';
 import { asset } from '../links';
+import { CONTACT_SHADOW_RESOLUTION } from '../quality';
 import { Plinth } from './Plinth';
 import { Scan } from './Scan';
 import type { ScanName } from './scans';
-import { useInView } from './useInView';
-
-function Frame({ className, children, camera }: { className: string; children: React.ReactNode; camera: [number, number, number] }) {
-  const [ref, inView] = useInView<HTMLDivElement>();
-  return (
-    <div ref={ref} className={className} aria-hidden="true">
-      <Canvas
-        frameloop={inView ? 'always' : 'never'}
-        dpr={[1, 2]}
-        camera={{ position: camera, fov: 32 }}
-        gl={{ antialias: false, alpha: true, toneMapping: THREE.NoToneMapping }}
-        shadows>
-        <Suspense fallback={null}>{children}</Suspense>
-      </Canvas>
-    </div>
-  );
-}
 
 /** The gut with its microbes; `health` 0-1 sets the friendly share. */
 export function GutCanvas({ health }: { health: number }) {
@@ -98,7 +83,7 @@ export function PlateCanvas() {
         </group>
         <Lifted />
         <Plinth radius={1.5} height={0.5} color="#221b14" rim="#F2B24C" />
-        <ContactShadows position={[0, 0.01, 0]} opacity={0.6} scale={4} blur={2} far={1.2} color="#000000" />
+        <ContactShadows position={[0, 0.01, 0]} opacity={0.6} scale={4} blur={2} far={1.2} color="#000000" resolution={CONTACT_SHADOW_RESOLUTION} />
       </group>
       <Effects bloom={0} vignette={false} />
     </Frame>
@@ -125,7 +110,7 @@ export function FinaleCanvas() {
         </group>
         <group position={[0, -1.75, 0]}>
           <Plinth radius={1.25} height={0.32} rim="#D4F25C" />
-          <ContactShadows position={[0, -0.33, 0]} opacity={0.55} scale={6} blur={2.6} far={2} color="#010805" />
+          <ContactShadows position={[0, -0.33, 0]} opacity={0.55} scale={6} blur={2.6} far={2} color="#010805" resolution={CONTACT_SHADOW_RESOLUTION} />
         </group>
         <Scan name="food_pomegranate_01" size={0.6} position={[1.4, 0.95, -0.7]} rotation={[0.3, 0.8, 0.1]} />
         <Scan name="food_lime_01" size={0.48} position={[-1.25, -0.85, 0.45]} rotation={[0.5, -0.4, 0.2]} />

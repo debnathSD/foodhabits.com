@@ -3,6 +3,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import Lenis from 'lenis';
 
+import { LITE } from './quality';
+
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
 export const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -82,10 +84,12 @@ export function startSplitReveals() {
     if (element.dataset.split === 'reveal') {
       const split = SplitText.create(element, { type: 'lines,chars', mask: 'lines', linesClass: 'split-line' });
       splits.push(split);
-      gsap.set(split.chars, { yPercent: 70, opacity: 0, filter: 'blur(14px)' });
+      // Phones skip the blur: a filter on every letter is costly while the 3D scene starts up.
+      const blur = (radius: number) => (LITE ? {} : { filter: `blur(${radius}px)` });
+      gsap.set(split.chars, { yPercent: 70, opacity: 0, ...blur(14) });
       hero = gsap
         .timeline({ paused: true })
-        .to(split.chars, { yPercent: 0, opacity: 1, filter: 'blur(0px)', duration: 1.2, ease: 'expo.out', stagger: 0.022 });
+        .to(split.chars, { yPercent: 0, opacity: 1, ...blur(0), duration: 1.2, ease: 'expo.out', stagger: 0.022, clearProps: 'filter' });
       return;
     }
     const split = SplitText.create(element, { type: 'lines', mask: 'lines', linesClass: 'split-line' });
@@ -105,7 +109,8 @@ export function startSplitReveals() {
         .to(wipes[index], { scaleX: 1, duration: 0.45, ease: 'expo.inOut' }, at)
         .set(line, { opacity: 1 }, at + 0.45)
         .set(wipes[index], { transformOrigin: 'right center' }, at + 0.45)
-        .to(wipes[index], { scaleX: 0, duration: 0.55, ease: 'expo.inOut' }, at + 0.45);
+        .to(wipes[index], { scaleX: 0, duration: 0.55, ease: 'expo.inOut' }, at + 0.45)
+        .set(wipes[index], { display: 'none' });
     });
     triggers.push(ScrollTrigger.create({ trigger: element, start: 'top 85%', once: true, onEnter: () => timeline.play() }));
   });

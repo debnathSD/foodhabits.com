@@ -4,6 +4,8 @@ import { type DepthOfFieldEffect, MaskFunction, ToneMappingMode } from 'postproc
 import { useLayoutEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
+import { LITE } from '../quality';
+
 /** A focus pull: the world point to keep sharp, and how strong the blur is (read every frame). */
 export type Focus = { target: THREE.Vector3; blur: { current: number } };
 
@@ -12,8 +14,15 @@ export type Focus = { target: THREE.Vector3; blur: { current: number } };
  * occlusion), bloom on the brightest highlights, optional depth of field,
  * neutral filmic tone mapping (true food colours) and a gentle vignette. Film
  * grain comes from the page itself, so it sits evenly over 3D and type.
+ *
+ * Phones skip the pass: they draw straight to the screen with the same tone
+ * mapping (CANVAS_PROPS), as these passes are what mobile GPUs struggle with.
  */
-export function Effects({
+export function Effects(props: Parameters<typeof PostEffects>[0]) {
+  return LITE ? null : <PostEffects {...props} />;
+}
+
+function PostEffects({
   focus,
   bloom = 0.55,
   occlusion = true,

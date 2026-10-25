@@ -1,16 +1,18 @@
 import { ContactShadows, Html } from '@react-three/drei';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { useFrame } from '@react-three/fiber';
 import { deconstructPhase } from '@lib/deconstruct';
 import { Deconstruct } from '@three/deconstruct';
 import { Suspense, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
+import { CONTACT_SHADOW_RESOLUTION } from '../quality';
 import { PARTS } from '../sections/inside-parts';
 import { Backdrop, BACKDROPS } from './Backdrop';
 import { CholeBhature } from './CholeBhature';
 import { Effects, type Focus } from './Effects';
+import { Frame } from './Frame';
 import { Lighting } from './Lighting';
-import { useInView } from './useInView';
+
 
 /** The front of the deconstruct ring, where the spotlight lands (matches the shared scene). */
 const SPOT = new THREE.Vector3(0, -Math.sin(0.2) * 1.9, Math.cos(0.2) * 1.9);
@@ -58,37 +60,28 @@ function FocusPull({
 
 /** The plate taken apart: scroll progress drives the shared deconstruct scene. */
 export function InsideScene({ progress, compact }: { progress: { current: number }; compact: boolean }) {
-  const [ref, inView] = useInView<HTMLDivElement>();
   const stage = useMemo(
     () => ({ position: new THREE.Vector3(...(compact ? [0, 0.9, 0] : [1.2, 0.05, 0])), scale: compact ? 0.62 : 0.92 }),
     [compact],
   );
   const focus = useMemo<Focus>(() => ({ target: stage.position.clone(), blur: { current: 0 } }), [stage]);
   return (
-    <div ref={ref} className="inside__canvas" aria-hidden="true">
-      <Canvas
-        frameloop={inView ? 'always' : 'never'}
-        // Up to 2× pixel density: full 4K on a 4K display.
-        dpr={[1, 2]}
-        camera={{ position: [0, 1.2, 8], fov: 32 }}
-        gl={{ antialias: false, alpha: true, toneMapping: THREE.NoToneMapping }}
-        shadows>
-        <Backdrop layers={BACKDROPS.inside} />
-        <Suspense fallback={null}>
-          <Lighting dim />
-          <group position={stage.position} scale={stage.scale}>
-            <Deconstruct
-              parts={PARTS}
-              progress={progress}
-              whole={<CholeBhature />}
-              label={compact ? undefined : (index) => <PartTag index={index} progress={progress} />}
-            />
-            <ContactShadows position={[0, -1.4, 0]} opacity={0.5} scale={9} blur={2.6} far={3} color="#000" />
-          </group>
-          <FocusPull progress={progress} focus={focus.target} blurRef={focus.blur} stage={stage} />
-          <Effects focus={compact ? undefined : focus} bloom={0.8} />
-        </Suspense>
-      </Canvas>
-    </div>
+    <Frame className="inside__canvas" camera={[0, 1.2, 8]}>
+      <Backdrop layers={BACKDROPS.inside} />
+      <Suspense fallback={null}>
+        <Lighting dim />
+        <group position={stage.position} scale={stage.scale}>
+          <Deconstruct
+            parts={PARTS}
+            progress={progress}
+            whole={<CholeBhature />}
+            label={compact ? undefined : (index) => <PartTag index={index} progress={progress} />}
+          />
+          <ContactShadows position={[0, -1.4, 0]} opacity={0.5} scale={9} blur={2.6} far={3} color="#000" resolution={CONTACT_SHADOW_RESOLUTION} />
+        </group>
+        <FocusPull progress={progress} focus={focus.target} blurRef={focus.blur} stage={stage} />
+        <Effects focus={compact ? undefined : focus} bloom={0.8} />
+      </Suspense>
+    </Frame>
   );
 }

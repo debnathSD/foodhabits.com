@@ -1,18 +1,20 @@
 import { ContactShadows, Html } from '@react-three/drei';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { useFrame } from '@react-three/fiber';
 import { Suspense, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
 import { asset } from '../links';
+import { CONTACT_SHADOW_RESOLUTION } from '../quality';
 import { sinceReveal } from '../motion';
 import { Backdrop, BACKDROPS } from './Backdrop';
 import { Effects, type Focus } from './Effects';
+import { Frame } from './Frame';
 import { Lighting } from './Lighting';
 import { Phone } from './Phone';
 import { Plinth } from './Plinth';
 import { Scan } from './Scan';
 import type { ScanName } from './scans';
-import { useInView } from './useInView';
+
 
 const SCREENS = ['home', 'camera', 'result', 'next', 'explainer'].map((name) => asset(`screens/${name}.jpg`));
 
@@ -169,7 +171,7 @@ function Choreography({ progress, compact, focus }: { progress: { current: numbe
       </group>
       <group position={[0, PLINTH_TOP, 0]}>
         <Plinth radius={1.25} height={0.32} rim="#D4F25C" />
-        <ContactShadows position={[0, -0.33, 0]} opacity={0.55} scale={6} blur={2.6} far={2} color="#010805" />
+        <ContactShadows position={[0, -0.33, 0]} opacity={0.55} scale={6} blur={2.6} far={2} color="#010805" resolution={CONTACT_SHADOW_RESOLUTION} />
       </group>
       <FloatingFood />
     </group>
@@ -177,23 +179,15 @@ function Choreography({ progress, compact, focus }: { progress: { current: numbe
 }
 
 export function HeroScene({ progress, compact }: { progress: { current: number }; compact: boolean }) {
-  const [ref, inView] = useInView<HTMLDivElement>();
   const focus = useMemo<Focus>(() => ({ target: new THREE.Vector3(1.6, 0.2, 0), blur: { current: compact ? 0 : 1.6 } }), [compact]);
   return (
-    <div ref={ref} className="stage__canvas" aria-hidden="true">
-      <Canvas
-        frameloop={inView ? 'always' : 'never'}
-        dpr={[1, 2]}
-        camera={{ position: [0, 0.25, 8.8], fov: 32 }}
-        gl={{ antialias: false, alpha: true, toneMapping: THREE.NoToneMapping }}
-        shadows>
-        <Backdrop layers={compact ? BACKDROPS.heroCompact : BACKDROPS.hero} />
-        <Suspense fallback={null}>
-          <Lighting />
-          <Choreography progress={progress} compact={compact} focus={focus.target} />
-          <Effects focus={compact ? undefined : focus} bloom={0.7} />
-        </Suspense>
-      </Canvas>
-    </div>
+    <Frame className="stage__canvas" camera={[0, 0.25, 8.8]}>
+      <Backdrop layers={compact ? BACKDROPS.heroCompact : BACKDROPS.hero} />
+      <Suspense fallback={null}>
+        <Lighting />
+        <Choreography progress={progress} compact={compact} focus={focus.target} />
+        <Effects focus={compact ? undefined : focus} bloom={0.7} />
+      </Suspense>
+    </Frame>
   );
 }

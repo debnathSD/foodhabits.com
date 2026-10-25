@@ -64,22 +64,18 @@ export function ChapterHud() {
     );
     sections.forEach((section) => observer.observe(section));
 
-    let frame = 0;
-    let last = -1;
-    const tick = () => {
+    // Updated on scroll only, so a still page does no work.
+    const update = () => {
       const scroll = window.scrollY;
-      if (scroll !== last) {
-        last = scroll;
-        if (clock.current) clock.current.textContent = timecode(scroll);
-        const height = document.documentElement.scrollHeight - window.innerHeight;
-        if (bar.current) bar.current.style.transform = `scaleX(${height > 0 ? scroll / height : 0})`;
-      }
-      frame = requestAnimationFrame(tick);
+      if (clock.current) clock.current.textContent = timecode(scroll);
+      const height = document.documentElement.scrollHeight - window.innerHeight;
+      if (bar.current) bar.current.style.transform = `scaleX(${height > 0 ? scroll / height : 0})`;
     };
-    frame = requestAnimationFrame(tick);
+    update();
+    window.addEventListener('scroll', update, { passive: true });
     return () => {
       observer.disconnect();
-      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', update);
     };
   }, []);
 
