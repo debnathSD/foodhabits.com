@@ -6,6 +6,7 @@ import * as THREE from 'three';
 
 import { ThemedText } from '@/components/themed-text';
 import { Colors, Spacing, Type, verdictColors } from '@/constants/theme';
+import { useTranslation } from '@/i18n/use-translation';
 import type { Verdict } from '@/lib/verdict';
 import { ScoreOrb } from '@/three/scenes';
 import { Backdrop, FOREST } from '@/three/web/backdrop';
@@ -35,6 +36,7 @@ export function ResultHero({
   wide?: boolean;
 }) {
   const onDark = verdictColors(verdict, Colors.dark).color;
+  const { rtl } = useTranslation();
   return (
     <View style={[styles.hero, wide ? styles.wide : styles.narrow]}>
       {photo ? (
@@ -69,7 +71,8 @@ export function ResultHero({
               {verdictLabel}
             </ThemedText>
           </View>
-          <View style={styles.score} accessibilityLabel={`${score}/10`}>
+          {/* "7/10" reads left to right in every language, so undo the right-to-left flip. */}
+          <View style={[styles.score, rtl && styles.scoreRtl]} accessibilityLabel={`${score}/10`}>
             <ThemedText style={[styles.scoreValue, { color: onDark }]}>{score}</ThemedText>
             <ThemedText type="smallBold" style={styles.scoreOutOf}>
               /10
@@ -134,6 +137,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'baseline',
     gap: 2,
+  },
+  scoreRtl: {
+    flexDirection: 'row-reverse',
   },
   scoreValue: {
     fontFamily: Type.serif,

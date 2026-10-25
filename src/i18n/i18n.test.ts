@@ -128,6 +128,9 @@ test('falls back to English and fills placeholders', () => {
   assert.equal(translate('en', 'home.afterMeal', { dish: 'Idli' }), 'After your Idli');
   assert.equal(joinList('en', ['a', 'b', 'c']), 'a, b and c');
   assert.equal(joinList('ur', ['a', 'b', 'c']), 'a، b اور c');
+  assert.equal(joinList('ar', ['أ', 'ب', 'ج']), 'أ، ب وج');
+  assert.equal(joinList('zh', ['甲', '乙', '丙']), '甲、乙和丙');
+  assert.equal(joinList('ja', ['りんご', '梨', '桃']), 'りんご、梨と桃');
 });
 
 test('mid-sentence messages lose their capital, except acronyms and German nouns', () => {

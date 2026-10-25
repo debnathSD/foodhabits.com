@@ -58,9 +58,12 @@ photo ─► centre-crop 192×192 ─► AIY food model (TFLite, on device) ─�
 - **Engine:** `src/lib/engine.ts` is pure TypeScript. It outputs ids, not
   sentences, so saved meals re-render in whatever language the user picks
   later.
-- **Languages:** `src/i18n`. English and Hindi are complete. The app offers 22
-  languages on first launch, and untranslated ones show English text until
-  their file exists.
+- **Languages:** `src/i18n`. All 22 languages offered on first launch are fully
+  translated: English, Hindi, Bengali, Telugu, Marathi, Tamil, Urdu, Gujarati,
+  Kannada, Malayalam, Odia, Punjabi, Assamese, Spanish, French, Portuguese,
+  German, Arabic, Chinese, Japanese, Russian and Indonesian. Urdu and Arabic
+  lay out right to left. `npm test` fails if any language misses a message or
+  changes a `{placeholder}`.
 - **Explainer:** `src/app/explainer/[id].tsx` plays 3D scenes (three.js via
   React Three Fiber) narrated by the device's own text-to-speech
   (`expo-speech`), with captions always on. Its "inside" scene takes the dish

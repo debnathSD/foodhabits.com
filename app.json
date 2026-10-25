@@ -60,7 +60,35 @@
         }
       ],
       "react-native-fast-tflite",
-      "expo-localization",
+      [
+        "expo-localization",
+        {
+          "supportedLocales": [
+            "en",
+            "hi",
+            "bn",
+            "te",
+            "mr",
+            "ta",
+            "ur",
+            "gu",
+            "kn",
+            "ml",
+            "or",
+            "pa",
+            "as",
+            "es",
+            "fr",
+            "pt",
+            "de",
+            "ar",
+            "zh",
+            "ja",
+            "ru",
+            "id"
+          ]
+        }
+      ],
       "expo-asset"
     ],
     "experiments": {

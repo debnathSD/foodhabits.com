@@ -93,7 +93,8 @@ export default function ExplainerVideo({
   });
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%', background: INK, overflow: 'hidden' }}>
+    // The player scales its frame from the left edge, so it stays left to right; the composition sets its own direction.
+    <div dir="ltr" style={{ position: 'relative', width: '100%', height: '100%', background: INK, overflow: 'hidden' }}>
       <Player
         ref={player}
         component={Explainer}

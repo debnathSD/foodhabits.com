@@ -121,6 +121,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'baseline',
     gap: 2,
+    // "7/10" reads left to right in every language.
+    direction: 'ltr',
   },
   scoreValue: {
     fontFamily: Type.serif,
