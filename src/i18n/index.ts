@@ -2,20 +2,25 @@
  * Minimal i18n: nested message objects per language, dotted keys, `{name}`
  * placeholders, and English as the fallback for anything not yet translated.
  */
+import { as } from './locales/as';
 import { bn } from './locales/bn';
 import { en, type Messages } from './locales/en';
 import { gu } from './locales/gu';
 import { hi } from './locales/hi';
 import { kn } from './locales/kn';
+import { ml } from './locales/ml';
 import { mr } from './locales/mr';
+import { or } from './locales/or';
+import { pa } from './locales/pa';
 import { ta } from './locales/ta';
 import { te } from './locales/te';
+import { ur } from './locales/ur';
 import type { LanguageCode } from './languages';
 
 type DeepPartial<T> = { [K in keyof T]?: T[K] extends readonly unknown[] ? T[K] : T[K] extends object ? DeepPartial<T[K]> : T[K] };
 export type Translation = DeepPartial<Messages>;
 
-export const DICTIONARIES: Partial<Record<LanguageCode, Translation>> = { en, bn, gu, hi, kn, mr, ta, te };
+export const DICTIONARIES: Partial<Record<LanguageCode, Translation>> = { en, as, bn, gu, hi, kn, ml, mr, or, pa, ta, te, ur };
 
 /** Languages whose translation is complete enough to offer. */
 export const TRANSLATED: LanguageCode[] = Object.keys(DICTIONARIES) as LanguageCode[];
@@ -46,11 +51,16 @@ export function translateValue<T>(language: LanguageCode, key: string): T | unde
   return (lookup(DICTIONARIES[language], key) ?? lookup(en, key)) as T | undefined;
 }
 
+/** Arabic-script languages use the Arabic comma; Chinese and Japanese use 、 and no spaces. */
+const LIST_COMMA: Partial<Record<LanguageCode, string>> = { ar: '، ', ur: '، ', zh: '、', ja: '、' };
+const UNSPACED: LanguageCode[] = ['zh', 'ja'];
+
 /** "a, b and c" using the language's own word for "and". */
 export function joinList(language: LanguageCode, items: string[]) {
   if (items.length <= 1) return items.join('');
   const and = translate(language, 'common.and');
-  return `${items.slice(0, -1).join(', ')} ${and} ${items[items.length - 1]}`;
+  const space = UNSPACED.includes(language) ? '' : ' ';
+  return `${items.slice(0, -1).join(LIST_COMMA[language] ?? ', ')}${space}${and}${space}${items[items.length - 1]}`;
 }
 
 export function capitalize(text: string) {

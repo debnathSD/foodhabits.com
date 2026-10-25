@@ -126,4 +126,5 @@ test('falls back to English and fills placeholders', () => {
   assert.equal(translate('ta', 'common.appName'), 'foodhabits.com');
   assert.equal(translate('en', 'home.afterMeal', { dish: 'Idli' }), 'After your Idli');
   assert.equal(joinList('en', ['a', 'b', 'c']), 'a, b and c');
+  assert.equal(joinList('ur', ['a', 'b', 'c']), 'a، b اور c');
 });
