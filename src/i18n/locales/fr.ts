@@ -68,6 +68,7 @@ export const fr: Translation = {
     openSettings: 'Ouvrir les Réglages',
     noCamera: 'Appareil photo indisponible ici. Choisissez une photo ou faites une recherche.',
     looking: 'Analyse de votre assiette…',
+    preparing: 'Téléchargement du modèle de reconnaissance (la première fois seulement)… {percent} %',
     pickTitle: 'Lequel est-ce ?',
     pickSubtitle: 'Touchez le plat qui correspond à votre photo.',
     noneOfThese: 'Aucun de ceux-là ? Rechercher',

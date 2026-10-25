@@ -33,6 +33,11 @@ export function warmUpRecognizer() {
 
 export const recognitionAvailable = true;
 
+/** The model ships inside the app, so there is never a download to wait for. */
+export function useModelDownload(): number | null {
+  return null;
+}
+
 export async function recognizeFood(photo: PhotoSource): Promise<Recognition> {
   const [model, thumbnail] = await Promise.all([loadModel(), squareThumbnail(photo, INPUT_SIZE)]);
   const bytes = await new File(thumbnail.uri).bytes();

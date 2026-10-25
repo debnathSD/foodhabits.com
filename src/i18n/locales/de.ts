@@ -72,6 +72,7 @@ export const de: Translation = {
     openSettings: 'Einstellungen öffnen',
     noCamera: 'Hier ist keine Kamera verfügbar. Wähle ein Foto oder suche.',
     looking: 'Dein Teller wird angesehen…',
+    preparing: 'Das Erkennungsmodell wird geladen (nur beim ersten Mal)… {percent} %',
     pickTitle: 'Welches ist es?',
     pickSubtitle: 'Tippe auf das Gericht, das zu deinem Foto passt.',
     noneOfThese: 'Nichts davon? Suchen',

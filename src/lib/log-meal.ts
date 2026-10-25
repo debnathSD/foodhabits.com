@@ -1,4 +1,4 @@
-import type { Food } from './engine';
+import type { Food, FoodRef } from './engine';
 import { savePhoto } from './photo-store';
 import { addScan, createScanId } from './store';
 
@@ -13,7 +13,7 @@ export function logMeal({
   /** URI of the prepared photo, if the meal came from the camera or library. */
   photo?: string | null;
   confidence?: number;
-  alternatives?: number[];
+  alternatives?: FoodRef[];
 }) {
   const id = createScanId();
   addScan({

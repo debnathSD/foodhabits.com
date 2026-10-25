@@ -17,7 +17,7 @@ import { type PhotoSource, preparePhoto } from '@/lib/image';
 import { logMeal } from '@/lib/log-meal';
 import { goBack } from '@/lib/navigation';
 import type { Prediction } from '@/lib/recognition';
-import { recognitionAvailable, recognizeFood, warmUpRecognizer } from '@/lib/recognizer';
+import { recognitionAvailable, recognizeFood, useModelDownload, warmUpRecognizer } from '@/lib/recognizer';
 import { SceneCanvas } from '@/three/canvas';
 import { SaladBowl } from '@/three/scenes';
 import { Studio } from '@/three/studio';
@@ -31,6 +31,7 @@ type Phase =
 export default function ScanScreen() {
   const { t } = useTranslation();
   const [phase, setPhase] = useState<Phase>({ kind: 'camera' });
+  const download = useModelDownload();
   // Web-only demo for marketing screenshots: a 3D bowl stands in for the camera feed.
   const { demo } = useLocalSearchParams<{ demo?: string }>();
 
@@ -68,7 +69,7 @@ export default function ScanScreen() {
       food: chosen.food,
       photo: photo.uri,
       confidence: chosen.confidence,
-      alternatives: others.map((prediction) => prediction.index),
+      alternatives: others.map((prediction) => prediction.food.ref),
     });
     router.replace({ pathname: '/result/[id]', params: { id } });
   }
@@ -97,7 +98,7 @@ export default function ScanScreen() {
         <View style={styles.working}>
           <ActivityIndicator color="#fff" size="large" />
           <ThemedText type="heading" style={styles.onPhoto}>
-            {t('scan.looking')}
+            {download === null ? t('scan.looking') : t('scan.preparing', { percent: Math.round(download * 100) })}
           </ThemedText>
         </View>
       </PhotoBackdrop>

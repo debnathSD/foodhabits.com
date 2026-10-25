@@ -68,6 +68,7 @@ export const es: Translation = {
     openSettings: 'Abrir Ajustes',
     noCamera: 'No hay cámara disponible aquí. Elige una foto o busca.',
     looking: 'Mirando tu plato…',
+    preparing: 'Descargando el modelo de comida (solo la primera vez)… {percent} %',
     pickTitle: '¿Cuál es?',
     pickSubtitle: 'Toca el plato que coincide con tu foto.',
     noneOfThese: '¿Ninguno? Buscar',

@@ -68,6 +68,7 @@ export const zh: Translation = {
     openSettings: '打开设置',
     noCamera: '此处无法使用相机。请选择照片或改用搜索。',
     looking: '正在查看你的餐盘…',
+    preparing: '正在下载食物识别模型（仅首次）… {percent}%',
     pickTitle: '是哪一个？',
     pickSubtitle: '轻点与照片相符的菜品。',
     noneOfThese: '都不是？去搜索',

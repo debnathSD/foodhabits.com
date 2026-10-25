@@ -40,6 +40,7 @@
     "expo-web-browser": "~58.0.6",
     "gsap": "3.15.0",
     "jpeg-js": "^0.4.4",
+    "onnxruntime-web": "1.30.0",
     "postprocessing": "6.39.5",
     "react": "19.3.0",
     "react-dom": "19.3.0",
@@ -57,6 +58,7 @@
     "three": "^0.186.1"
   },
   "devDependencies": {
+    "@huggingface/transformers": "4.3.1",
     "@remotion/cli": "4.0.534",
     "@resvg/resvg-js": "^2.6.2",
     "@types/node": "^26.6.5",
@@ -76,6 +78,7 @@
     "test": "tsx --test \"src/**/*.test.ts\"",
     "typecheck": "tsc --noEmit",
     "build:labels": "node scripts/build-food-labels.mjs",
+    "build:dishes": "tsx scripts/build-dish-embeddings.mts",
     "build:assets": "node scripts/generate-assets.mjs",
     "capture:screens": "node scripts/capture-screens.mjs",
     "build:web": "node scripts/copy-web-runtime.mjs && expo export -p web"

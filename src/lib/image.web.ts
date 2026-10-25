@@ -23,8 +23,12 @@ export async function preparePhoto(source: PhotoSource): Promise<PhotoSource> {
   return { uri: canvas.toDataURL('image/jpeg', 0.78), width, height };
 }
 
-/** Centre-crops to a square, scales to `size` x `size` and returns the RGBA pixels, ready for the food model. */
-export async function squarePixels(source: PhotoSource, size: number) {
+/**
+ * Scales to `size` x `size` and returns the RGBA pixels, ready for a food model:
+ * centre-cropped to a square, or (`crop: false`) the whole photo squashed to
+ * fit, which is how SigLIP was trained.
+ */
+export async function squarePixels(source: PhotoSource, size: number, { crop = true } = {}) {
   const image = await loadImage(source.uri);
   const side = Math.min(image.width, image.height);
   const canvas = document.createElement('canvas');
@@ -32,7 +36,8 @@ export async function squarePixels(source: PhotoSource, size: number) {
   canvas.height = size;
   const context = canvas.getContext('2d', { willReadFrequently: true })!;
   context.imageSmoothingQuality = 'high';
-  context.drawImage(image, (image.width - side) / 2, (image.height - side) / 2, side, side, 0, 0, size, size);
+  if (crop) context.drawImage(image, (image.width - side) / 2, (image.height - side) / 2, side, side, 0, 0, size, size);
+  else context.drawImage(image, 0, 0, size, size);
   image.close();
   return context.getImageData(0, 0, size, size).data;
 }

@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 /**
  * Copies the web app's runtime files into public/ before a web build:
- * - the LiteRT.js WebAssembly runtime (public/litert), so the food model runs
- *   in the browser. Only the single-threaded builds: the threaded one needs
+ * - ONNX Runtime Web (public/ort), which runs the SigLIP 2 food recognizer in
+ *   the browser: the plain-script build and its WebAssembly (the threaded
+ *   build also runs on one thread, which is all GitHub Pages allows).
+ * - the LiteRT.js WebAssembly runtime (public/litert) for the AIY fallback
+ *   model. Only the single-threaded builds: the threaded one needs
  *   cross-origin isolation headers that static hosts such as GitHub Pages
  *   cannot send.
  * - the website's photoscanned food and studio HDRI (public/models, public/hdri)
@@ -21,7 +24,12 @@ mkdirSync(target, { recursive: true });
 for (const name of ['litert_wasm_internal', 'litert_wasm_compat_internal']) {
   for (const extension of ['js', 'wasm']) copyFileSync(join(source, `${name}.${extension}`), join(target, `${name}.${extension}`));
 }
+const ort = join(root, 'node_modules', 'onnxruntime-web', 'dist');
+mkdirSync(join(root, 'public', 'ort'), { recursive: true });
+for (const name of ['ort.wasm.min.js', 'ort-wasm-simd-threaded.mjs', 'ort-wasm-simd-threaded.wasm']) {
+  copyFileSync(join(ort, name), join(root, 'public', 'ort', name));
+}
 for (const folder of ['models', 'hdri']) {
   cpSync(join(root, 'website', 'public', folder), join(root, 'public', folder), { recursive: true });
 }
-console.log('Copied the LiteRT.js runtime, photoscans and HDRI into public/');
+console.log('Copied ONNX Runtime Web, the LiteRT.js runtime, photoscans and HDRI into public/');

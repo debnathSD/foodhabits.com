@@ -24,7 +24,7 @@ account, no subscription and no per-scan cost, and photos never leave the device
 ## How it works
 
 ```
-photo ─► centre-crop 192×192 ─► AIY food model (TFLite, on device) ─► top dishes
+photo ─► on-device model: SigLIP 2 (web) or AIY (phones) ───────────► top dishes
                                                                          │
             typed search (2,100+ foods incl. dosa, roti, chai, cola) ───┤
                                                                          ▼
@@ -37,17 +37,30 @@ photo ─► centre-crop 192×192 ─► AIY food model (TFLite, on device) ─�
      t() ─► the user's language ─► result screen + narrated explainer
 ```
 
-- **Recognition:** [Google AIY Food Classifier V1](https://www.kaggle.com/models/google/aiy/tfLite/vision-classifier-food-v1)
+- **Recognition (web):** Google's [SigLIP 2](https://huggingface.co/google/siglip2-base-patch16-224)
+  (Apache 2.0) compares the photo with a sentence for every dish the app knows,
+  catalog included ("a photo of shorshe ilish, a fish curry."), plus one per
+  English alias, so it recognises Bengali and Indian home food that no
+  classifier was trained on. `scripts/build-dish-embeddings.mts`
+  (`npm run build:dishes`) embeds the sentences once with the text model and
+  gives each dish a prior from its Wikipedia readership, so common dishes beat
+  obscure look-alikes. The browser runs only the 63 MB q4 vision model
+  ([ONNX](https://huggingface.co/onnx-community/siglip2-base-patch16-224-ONNX),
+  pinned to a commit) with [ONNX Runtime Web](https://onnxruntime.ai/docs/tutorials/web/)
+  on WebAssembly in a worker; it downloads once and stays in Cache Storage.
+  `src/lib/dish-recognition.ts` turns similarities into a result. On 170
+  real-world photos (Indian street food and Food-101) it names the dish first
+  125 times and within its top four 148 times; the AIY model below managed 80
+  and 102. If SigLIP 2 can't load, the web falls back to AIY.
+- **Recognition (phones):** [Google AIY Food Classifier V1](https://www.kaggle.com/models/google/aiy/tfLite/vision-classifier-food-v1)
   (MobileNet, 2,023 dishes, Apache 2.0) via
   [`react-native-fast-tflite`](https://github.com/mrousavy/react-native-fast-tflite).
   The TFLite file takes 192×192 RGB bytes and returns quantized
   probabilities (value / 256), not the 224×224 floats its model card
   describes. `src/lib/recognizer.ts` encodes this, and it was verified against
-  the model with LiteRT. On the web, `src/lib/recognizer.web.ts` runs the same
-  file with [LiteRT.js](https://ai.google.dev/edge/litert/web) on WebAssembly
-  (free, offline once cached); `scripts/copy-web-runtime.mjs` serves its
-  runtime from `public/litert`. When the model isn't sure, the user picks from
-  its top guesses or searches.
+  the model with LiteRT. The web fallback runs the same file with
+  [LiteRT.js](https://ai.google.dev/edge/litert/web) from `public/litert`.
+  When the model isn't sure, the user picks from its top guesses or searches.
 - **Knowledge:** every model label is mapped to one of ~80 food categories
   (`src/data/food-labels.json`, built by `scripts/build-food-labels.mjs`).
   Categories carry the nutrition profile (`src/data/categories.ts`), with

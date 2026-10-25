@@ -68,6 +68,7 @@ export const ar: Translation = {
     openSettings: 'فتح الإعدادات',
     noCamera: 'الكاميرا غير متاحة هنا. اختر صورة أو ابحث بدلًا من ذلك.',
     looking: 'نفحص طبقك…',
+    preparing: 'جارٍ تنزيل نموذج التعرّف على الطعام (في المرة الأولى فقط)… {percent}%',
     pickTitle: 'أيّها هو؟',
     pickSubtitle: 'المس الطبق الذي يطابق صورتك.',
     noneOfThese: 'لا شيء منها؟ ابحث',

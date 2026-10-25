@@ -44,5 +44,6 @@ example
 
 # Web-only runtime files, copied in by scripts/copy-web-runtime.mjs
 public/litert/
+public/ort/
 public/models/
 public/hdri/

@@ -19,7 +19,7 @@ import { useTranslation } from '@/i18n/use-translation';
 import { confirmDestructive } from '@/lib/confirm';
 import { summaryText, watchText } from '@/lib/describe';
 import type { Effect } from '@/lib/engine';
-import { foodFromLabel } from '@/lib/food-index';
+import { foodFromLabel, resolveFood } from '@/lib/food-index';
 import { goBack } from '@/lib/navigation';
 import { photoUri } from '@/lib/photo-store';
 import { deleteScan, updateScan, useAppState } from '@/lib/store';
@@ -46,7 +46,9 @@ export default function ResultScreen() {
   const { analysis, name } = result;
   const uri = photoUri(scan.photo);
   const unsure = scan.source === 'photo' && (scan.confidence ?? 1) < 0.6;
-  const alternatives = (scan.alternatives ?? []).map(foodFromLabel).filter((food) => food !== null);
+  const alternatives = (scan.alternatives ?? [])
+    .map((alternative) => (typeof alternative === 'number' ? foodFromLabel(alternative) : resolveFood(alternative)))
+    .filter((food) => food !== null);
   const swaps = tValue<{ swap: string; why: string }[]>(`swaps.${analysis.swaps}`) ?? [];
 
   const hero = (
@@ -92,9 +94,10 @@ export default function ResultScreen() {
                     updateScan(scan.id, {
                       food: food.ref,
                       confidence: undefined,
-                      alternatives: (scan.alternatives ?? [])
-                        .filter((index) => index !== (food.ref.kind === 'label' ? food.ref.index : -1))
-                        .concat(scan.food.kind === 'label' ? [scan.food.index] : []),
+                      alternatives: alternatives
+                        .filter((other) => other.name !== food.name)
+                        .map((other) => other.ref)
+                        .concat(scan.food.kind === 'generic' ? [] : [scan.food]),
                     });
                     setChanging(false);
                   }}

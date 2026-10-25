@@ -21,8 +21,8 @@ export type Scan = {
   source: 'photo' | 'search';
   /** Model confidence for the chosen dish, 0-1, when recognised from a photo. */
   confidence?: number;
-  /** Other dishes the model suggested, so the user can change their mind later. */
-  alternatives?: number[];
+  /** Other dishes the model suggested, so the user can change their mind later. Older scans saved AIY label indices. */
+  alternatives?: (FoodRef | number)[];
 };
 
 type State = {

@@ -71,6 +71,7 @@ export const en = {
     openSettings: 'Open Settings',
     noCamera: 'Camera not available here. Choose a photo or search instead.',
     looking: 'Looking at your plate…',
+    preparing: 'Downloading the food model (first time only)… {percent}%',
     pickTitle: 'Which one is it?',
     pickSubtitle: 'Tap the dish that matches your photo.',
     noneOfThese: 'None of these? Search',

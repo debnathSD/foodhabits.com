@@ -68,6 +68,7 @@ export const id: Translation = {
     openSettings: 'Buka Pengaturan',
     noCamera: 'Kamera tidak tersedia di sini. Pilih foto atau cari saja.',
     looking: 'Sedang melihat piringmu…',
+    preparing: 'Mengunduh model pengenal makanan (hanya pertama kali)… {percent}%',
     pickTitle: 'Yang mana?',
     pickSubtitle: 'Ketuk hidangan yang sesuai dengan fotomu.',
     noneOfThese: 'Tidak ada yang cocok? Cari',

@@ -68,6 +68,7 @@ export const ja: Translation = {
     openSettings: '設定を開く',
     noCamera: 'ここではカメラを使えません。写真を選ぶか検索してください。',
     looking: 'お皿を確認しています…',
+    preparing: '料理認識モデルをダウンロード中（初回のみ）… {percent}%',
     pickTitle: 'どれですか？',
     pickSubtitle: '写真に合う料理をタップしてください。',
     noneOfThese: 'どれでもない？ 検索する',
