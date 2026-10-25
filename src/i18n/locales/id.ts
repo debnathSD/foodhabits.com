@@ -175,11 +175,11 @@ export const id: Translation = {
     body: [
       'foodhabits.com bekerja sepenuhnya di perangkatmu. Pengenalan makanan juga berjalan di perangkat, dan foto, riwayat makanan, serta profilmu hanya disimpan di sana.',
       'Kami tidak mengumpulkan, menjual, atau membagikan data pribadi apa pun. Aplikasi ini tidak punya akun, iklan, analitik, atau pelacakan. Setelah model pengenal makanannya ada di perangkat, tidak perlu internet untuk menganalisis makanan.',
-      'Aplikasi web mengunduh model pengenal makanannya sekali saja dari Hugging Face (huggingface.co) dan menyimpannya di browser-mu. Itu unduhan file biasa: tidak ada foto atau data pribadi yang dikirim.',
+      'Aplikasi mengunduh model pengenal makanannya sekali saja dari Hugging Face (huggingface.co) dan menyimpannya di perangkat Anda. Ini unduhan file biasa: tidak ada foto atau data pribadi yang dikirim.',
       'Kamera hanya dipakai saat kamu memotret makanan. Jika kamu memilih foto dari galeri, hanya foto itu yang dibaca.',
       'Kamu bisa menghapus riwayat makanan kapan saja di Profil. Menghapus aplikasi akan menghapus semua yang disimpannya.',
       'foodhabits.com memberikan informasi gizi umum untuk orang dewasa. Aplikasi ini bukan alat medis dan tidak memberi saran medis, diagnosis, atau pengobatan. Nilai gizi adalah perkiraan untuk porsi umum. Bicarakan dengan dokter atau ahli gizi sebelum mengubah pola makan karena kondisi kesehatan, saat hamil, atau jika kamu punya alergi makanan.',
-      'Pengenalan makanan memakai dua model dari Google, keduanya berlisensi Apache License 2.0: SigLIP 2 di aplikasi web dan AIY Food Classifier di aplikasi ponsel.',
+      'Pengenalan makanan memakai dua model dari Google, keduanya berlisensi Apache License 2.0: SigLIP 2, dan AIY Food Classifier, yang dipakai aplikasi ponsel sampai SigLIP 2 selesai diunduh.',
     ],
     contact: 'Pertanyaan: {email}',
   },

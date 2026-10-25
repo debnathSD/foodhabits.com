@@ -60,6 +60,7 @@
         }
       ],
       "react-native-fast-tflite",
+      "onnxruntime-react-native",
       [
         "expo-localization",
         {

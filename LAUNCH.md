@@ -57,18 +57,22 @@ Check on a real phone before submitting:
       Settings → Accessibility → Spoken Content → Voices.
 - [ ] Airplane mode: scanning and results still work.
 
-This is the first time the native food model (`react-native-fast-tflite`)
-runs. `expo-doctor` flags it as untested on the New Architecture in React
-Native Directory. It is built on Nitro modules, so it should work, but this
-first build is where that gets confirmed.
+This is the first time the native food models run: SigLIP 2 through
+`onnxruntime-react-native`, and the AIY fallback through
+`react-native-fast-tflite`. Both are untested on a real phone so far, and
+`expo-doctor` may flag them in React Native Directory. On the first build,
+check:
 
-**Recognition differs between the web and the phones.** The phone apps still
-run the AIY model: 2,023 dishes, and none of the Bengali home dishes from the
-catalog such as shorshe ilish or aloo posto. The website's "2,250+ dishes,
-Bengali home cooking included" describes the web app, which uses SigLIP 2.
-Before submitting, either bring SigLIP 2 to the phone apps or keep the store
-text and screenshots to what AIY does. The listing below ("2,000+ dishes") is
-true for both.
+- [ ] With the phone online, open the camera once and wait a minute: the
+      63 MB SigLIP 2 model downloads in the background. Then scan shorshe
+      ilish or aloo posto: the answer should be the Bengali dish, which only
+      SigLIP 2 knows (AIY doesn't). If it isn't, look for "SigLIP 2 is
+      unavailable" in the logs: the app fell back to AIY.
+- [ ] Airplane mode after that: scanning still works.
+
+The phone apps then recognise the same 2,250+ dishes as the web app. Before
+the download (or if SigLIP 2 can't load) they fall back to AIY's 2,023, so the
+listing below ("2,000+ dishes") is true either way.
 
 ## 4. Production builds and submission
 

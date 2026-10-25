@@ -52,7 +52,15 @@ photo ─► on-device model: SigLIP 2 (web) or AIY (phones) ──────�
   real-world photos (Indian street food and Food-101) it names the dish first
   125 times and within its top four 148 times; the AIY model below managed 80
   and 102. If SigLIP 2 can't load, the web falls back to AIY.
-- **Recognition (phones):** [Google AIY Food Classifier V1](https://www.kaggle.com/models/google/aiy/tfLite/vision-classifier-food-v1)
+- **Recognition (phones):** the same SigLIP 2 model and dish table, run by
+  [`onnxruntime-react-native`](https://onnxruntime.ai/docs/get-started/with-javascript/react-native.html)
+  on the phone's CPU (`src/lib/recognizer.ts`). The model downloads in the
+  background the first time the camera opens and is kept in the app's
+  documents; until it is there, or if the native runtime can't load, the
+  bundled AIY model below recognises the photo, so nobody waits on a download.
+  (Google's LiteRT build of SigLIP 2 was tried first, but TFLite's default
+  XNNPACK CPU delegate turns its output into NaN.)
+- **Fallback (phones):** [Google AIY Food Classifier V1](https://www.kaggle.com/models/google/aiy/tfLite/vision-classifier-food-v1)
   (MobileNet, 2,023 dishes, Apache 2.0) via
   [`react-native-fast-tflite`](https://github.com/mrousavy/react-native-fast-tflite).
   The TFLite file takes 192×192 RGB bytes and returns quantized

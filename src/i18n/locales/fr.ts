@@ -175,11 +175,11 @@ export const fr: Translation = {
     body: [
       'foodhabits.com fonctionne entièrement sur votre appareil. La reconnaissance des aliments se fait aussi sur l’appareil, et vos photos, votre historique et votre profil sont stockés uniquement sur celui-ci.',
       'Nous ne collectons, ne vendons ni ne partageons aucune donnée personnelle. L’app n’a ni compte, ni publicité, ni statistiques, ni pistage. Une fois son modèle de reconnaissance sur l’appareil, elle n’a pas besoin d’internet pour analyser les aliments.',
-      'L’app web télécharge son modèle de reconnaissance une seule fois depuis Hugging Face (huggingface.co) et le garde dans votre navigateur. C’est un simple téléchargement de fichier : aucune photo ni donnée personnelle n’est envoyée.',
+      'L’app télécharge son modèle de reconnaissance une seule fois depuis Hugging Face (huggingface.co) et le garde sur votre appareil. C’est un simple téléchargement de fichier : aucune photo ni donnée personnelle n’est envoyée.',
       'L’appareil photo n’est utilisé que lorsque vous photographiez un repas. Si vous choisissez une photo dans votre galerie, seule cette photo est lue.',
       'Vous pouvez effacer votre historique à tout moment dans Profil. Désinstaller l’app supprime tout ce qu’elle a enregistré.',
       'foodhabits.com fournit des informations nutritionnelles générales pour les adultes. Ce n’est pas un dispositif médical et il ne donne ni avis médical, ni diagnostic, ni traitement. Les valeurs nutritionnelles sont des estimations pour une portion type. Consultez un médecin ou un diététicien avant de modifier votre alimentation pour un problème de santé, pendant la grossesse ou en cas d’allergie alimentaire.',
-      'La reconnaissance des aliments utilise deux modèles de Google, tous deux sous licence Apache License 2.0 : SigLIP 2 dans l’app web et l’AIY Food Classifier dans les apps mobiles.',
+      'La reconnaissance des aliments utilise deux modèles de Google, tous deux sous licence Apache 2.0 : SigLIP 2, et l’AIY Food Classifier, que les applications mobiles utilisent tant que SigLIP 2 n’est pas téléchargé.',
     ],
     contact: 'Questions : {email}',
   },

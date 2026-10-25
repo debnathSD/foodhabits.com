@@ -179,11 +179,11 @@ export const de: Translation = {
     body: [
       'foodhabits.com läuft vollständig auf deinem Gerät. Auch die Lebensmittelerkennung läuft auf dem Gerät, und deine Fotos, dein Verlauf und dein Profil werden nur dort gespeichert.',
       'Wir erheben, verkaufen oder teilen keine personenbezogenen Daten. Die App hat kein Konto, keine Werbung, keine Analyse und kein Tracking. Sobald ihr Erkennungsmodell auf dem Gerät ist, braucht sie kein Internet, um Essen zu analysieren.',
-      'Die Web-App lädt ihr Erkennungsmodell einmalig von Hugging Face (huggingface.co) herunter und speichert es in deinem Browser. Das ist ein gewöhnlicher Datei-Download: Dabei werden keine Fotos und keine persönlichen Daten gesendet.',
+      'Die App lädt ihr Erkennungsmodell einmalig von Hugging Face (huggingface.co) herunter und speichert es auf deinem Gerät. Das ist ein gewöhnlicher Datei-Download: Dabei werden weder Fotos noch persönliche Daten gesendet.',
       'Die Kamera wird nur genutzt, wenn du eine Mahlzeit fotografierst. Wählst du ein Foto aus deiner Mediathek, wird nur dieses Foto gelesen.',
       'Du kannst deinen Mahlzeitenverlauf jederzeit im Profil löschen. Beim Deinstallieren wird alles entfernt, was die App gespeichert hat.',
       'foodhabits.com bietet allgemeine Ernährungsinformationen für Erwachsene. Es ist kein Medizinprodukt und gibt keinen ärztlichen Rat, keine Diagnose und keine Behandlung. Nährwerte sind Schätzungen für eine übliche Portion. Sprich mit einer Ärztin, einem Arzt oder einer Ernährungsfachkraft, bevor du deine Ernährung wegen einer Erkrankung, in der Schwangerschaft oder bei einer Lebensmittelallergie umstellst.',
-      'Die Lebensmittelerkennung nutzt zwei Modelle von Google, beide lizenziert unter der Apache License 2.0: SigLIP 2 in der Web-App und den AIY Food Classifier in den Handy-Apps.',
+      'Die Lebensmittelerkennung nutzt zwei Modelle von Google, beide lizenziert unter der Apache License 2.0: SigLIP 2 und den AIY Food Classifier, den die Handy-Apps nutzen, bis SigLIP 2 heruntergeladen ist.',
     ],
     contact: 'Fragen: {email}',
   },

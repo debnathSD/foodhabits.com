@@ -175,11 +175,11 @@ export const pt: Translation = {
     body: [
       'O foodhabits.com funciona inteiramente no seu dispositivo. O reconhecimento de alimentos também roda no aparelho, e suas fotos, histórico e perfil ficam guardados só nele.',
       'Não coletamos, vendemos nem compartilhamos dados pessoais. O app não tem conta, anúncios, análises nem rastreamento. Depois que o modelo de reconhecimento está no aparelho, ele não precisa de internet para analisar alimentos.',
-      'O app web baixa o modelo de reconhecimento uma única vez do Hugging Face (huggingface.co) e o guarda no seu navegador. É um download de arquivo comum: nenhuma foto ou dado pessoal é enviado.',
+      'O app baixa o modelo de reconhecimento uma única vez do Hugging Face (huggingface.co) e o guarda no seu dispositivo. É um download comum de arquivo: nenhuma foto ou dado pessoal é enviado.',
       'A câmera só é usada quando você fotografa uma refeição. Se você escolher uma foto da galeria, só essa foto é lida.',
       'Você pode apagar seu histórico de refeições a qualquer momento em Perfil. Desinstalar o app remove tudo o que ele guardou.',
       'O foodhabits.com oferece informações gerais de nutrição para adultos. Não é um dispositivo médico e não dá conselho médico, diagnóstico nem tratamento. Os valores nutricionais são estimativas para uma porção típica. Converse com um médico ou nutricionista antes de mudar sua alimentação por um problema de saúde, na gravidez ou se tiver alergia alimentar.',
-      'O reconhecimento de alimentos usa dois modelos do Google, ambos licenciados sob a Apache License 2.0: o SigLIP 2 no app web e o AIY Food Classifier nos apps de celular.',
+      'O reconhecimento de alimentos usa dois modelos do Google, ambos licenciados sob a Apache License 2.0: o SigLIP 2 e o AIY Food Classifier, que os apps de celular usam até o SigLIP 2 ser baixado.',
     ],
     contact: 'Dúvidas: {email}',
   },

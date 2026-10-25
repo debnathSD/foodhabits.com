@@ -22,19 +22,22 @@ export async function preparePhoto(source: PhotoSource): Promise<PhotoSource> {
 }
 
 /**
- * Centre-crops to a square and scales to `size` x `size`, the input the food
- * model expects. Returns the JPEG's file URI and, on request, its base64.
+ * Scales to `size` x `size`, the input a food model expects: centre-cropped to
+ * a square, or (`crop: false`) the whole photo squashed to fit, which is how
+ * SigLIP was trained. Returns the JPEG's file URI and, on request, its base64.
  */
-export async function squareThumbnail(source: PhotoSource, size: number, base64 = false) {
+export async function squareThumbnail(source: PhotoSource, size: number, base64 = false, { crop = true } = {}) {
   const side = Math.min(source.width, source.height);
-  const context = ImageManipulator.manipulate(source.uri)
-    .crop({
+  const context = ImageManipulator.manipulate(source.uri);
+  if (crop) {
+    context.crop({
       originX: Math.floor((source.width - side) / 2),
       originY: Math.floor((source.height - side) / 2),
       width: side,
       height: side,
-    })
-    .resize({ width: size, height: size });
+    });
+  }
+  context.resize({ width: size, height: size });
   const image = await context.renderAsync();
   try {
     return await image.saveAsync({ format: SaveFormat.JPEG, compress: 0.95, base64 });
