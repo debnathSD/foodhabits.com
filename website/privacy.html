@@ -25,14 +25,20 @@
       <p class="legal__eyebrow">Last updated 25 October 2026</p>
       <h1 class="display">Privacy, <em>simply</em>.</h1>
       <p class="lede">
-        foodhabits.com works entirely on your phone. Food recognition runs on the device with a built-in model, and your
-        photos, meal history and profile are stored only on that phone.
+        foodhabits.com works entirely on your device. Food recognition runs on the device, and your photos, meal history
+        and profile are stored only on it.
       </p>
 
       <h2 class="h3">What we collect</h2>
       <p>
         Nothing. We do not collect, sell or share any personal data. The app has no account, no ads, no analytics and no
-        tracking. It does not need an internet connection to analyse food.
+        tracking. Once its food model is on the device, it does not need an internet connection to analyse food.
+      </p>
+
+      <h2 class="h3">The web app's food model</h2>
+      <p>
+        The web app downloads its food model once from Hugging Face (huggingface.co) and keeps it in your browser. That is
+        an ordinary file download: no photo or personal data is sent with it.
       </p>
 
       <h2 class="h3">Camera and photos</h2>
@@ -58,7 +64,10 @@
       </p>
 
       <h2 class="h3">Credits</h2>
-      <p>Food recognition uses the AIY Food Classifier by Google, licensed under the Apache License 2.0.</p>
+      <p>
+        Food recognition uses two models by Google, both licensed under the Apache License 2.0: SigLIP 2 in the web app
+        and the AIY Food Classifier in the phone apps.
+      </p>
 
       <h2 class="h3">Contact</h2>
       <p>Questions: <a href="mailto:hello@example.com">hello@example.com</a></p>

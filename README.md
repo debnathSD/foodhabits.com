@@ -26,7 +26,7 @@ account, no subscription and no per-scan cost, and photos never leave the device
 ```
 photo ─► on-device model: SigLIP 2 (web) or AIY (phones) ───────────► top dishes
                                                                          │
-            typed search (2,100+ foods incl. dosa, roti, chai, cola) ───┤
+            typed search (2,250+ foods incl. dosa, roti, chai, cola) ───┤
                                                                          ▼
      category profile (fibre, sugar, salt, fats, protein, fermented, fried…)
      + per-dish tweaks + the user's diet and sensitivities
@@ -64,8 +64,10 @@ photo ─► on-device model: SigLIP 2 (web) or AIY (phones) ──────�
 - **Knowledge:** every model label is mapped to one of ~80 food categories
   (`src/data/food-labels.json`, built by `scripts/build-food-labels.mjs`).
   Categories carry the nutrition profile (`src/data/categories.ts`), with
-  per-dish corrections in `src/data/food-tweaks.ts` and extra foods for search
-  in `src/data/catalog.ts`. Bengali food has its own list
+  per-dish corrections in `src/data/food-tweaks.ts`. `src/data/catalog.ts`
+  adds foods the AIY labels lack, from dosa and chai to plain pizza and steak;
+  they are searchable and the web recognizer knows them too, so search and
+  photos cover the same 2,254 dishes. Bengali food has its own list
   (`src/data/catalog-bengali.ts`): everyday fish, dal, shaak and posto, Kolkata
   street food, chutneys and sweets, searchable in Bengali script too.
 - **Engine:** `src/lib/engine.ts` is pure TypeScript. It outputs ids, not
@@ -99,7 +101,8 @@ npx expo start
 
 Install the build on your phone from the link EAS prints, then open the
 project from the dev client. The web version (`npm run web`) runs everything,
-photo recognition included.
+photo recognition included. Its first scan downloads the 63 MB SigLIP 2 model
+once from Hugging Face; after that it loads from the browser's cache.
 
 ```bash
 npm test            # engine, recognition, search and translation coverage
@@ -129,7 +132,14 @@ website and the web app and publishes both to GitHub Pages: the site at
 - Fix how a dish is classified: edit `OVERRIDES` in
   `scripts/build-food-labels.mjs`, then run `npm run build:labels`.
 - Adjust one dish's nutrition: `src/data/food-tweaks.ts`.
-- Add a searchable food: `src/data/catalog.ts`.
+- Add a food, or an alias for one: `src/data/catalog.ts` (or
+  `catalog-bengali.ts`). English aliases double as extra descriptions for the
+  web recognizer, so a plain description ("fermented rice") helps it.
+- After changing the catalog, its aliases or the labels, run
+  `npm run build:dishes`. It embeds the new dish sentences (a few minutes on a
+  laptop) and looks up Wikipedia readership only for dishes it hasn't seen,
+  caching it in `scripts/data/dish-popularity.json`. `npm test` fails until the
+  embeddings match the dish list.
 - Change advice text: `src/i18n/locales/en.ts`, then the same key in each
   translation. `npm test` fails if any food produces a missing message.
 - Regenerate the icon and splash after editing the mark:
@@ -137,7 +147,10 @@ website and the web app and publishes both to GitHub Pages: the site at
 
 ## Licences
 
-The food model is © Google, used under the Apache License 2.0 (attribution in
-the in-app privacy page). The website's food photoscans and studio HDRI are
-from [Poly Haven](https://polyhaven.com) (CC0). App code was started from
-`create-expo-app` (MIT).
+Both food models are © Google and used under the Apache License 2.0: SigLIP 2
+in the web app and the AIY Food Classifier in the phone apps (attribution in
+the in-app privacy page and on the website's privacy page). The web app runs
+SigLIP 2 with [ONNX Runtime Web](https://github.com/microsoft/onnxruntime)
+(MIT) and the AIY fallback with LiteRT.js (Apache 2.0). The website's food
+photoscans and studio HDRI are from [Poly Haven](https://polyhaven.com) (CC0).
+App code was started from `create-expo-app` (MIT).

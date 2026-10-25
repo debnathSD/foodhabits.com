@@ -1,73 +1,57 @@
-# React + TypeScript + Vite
+# foodhabits.com website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The marketing site for foodhabits.com, published at
+https://debnathsd.github.io/foodhabits.com/. Its "Try now" button opens the web
+app, which is published next to it at `/foodhabits.com/app/`.
 
-Currently, two official plugins are available:
+Built with Vite, React, React Three Fiber (three.js), GSAP and Lenis. The 3D
+food uses photoscans from [Poly Haven](https://polyhaven.com) (CC0), and the
+"inside the dish" scene shares its parts and timing with the app
+(`../src/three`, `../src/lib`, aliased as `@three` and `@lib` in
+`vite.config.ts`).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Run it
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install --prefix website
+npm run dev --prefix website        # http://localhost:5173
+npm run build --prefix website      # type-checks, then builds into website/dist
+npm run lint --prefix website
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+In development, "Try now" opens the app's own dev server (`VITE_APP_URL` in
+`.env.development`); start it from the repo root with
+`npm run web -- --port 8086`. In a build, it opens `<base>/app/`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Where things live
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+| What | File |
+|---|---|
+| Hero, the four steps and the phone story | `src/sections/Stage.tsx`, `src/scene/HeroScene.tsx` (glass callouts) |
+| Figures (dishes, foods), languages, privacy, comparison table, footer | `src/sections/Sections.tsx` |
+| Inside-the-dish scene | `src/sections/Inside.tsx`, `src/scene/InsideScene.tsx` |
+| Privacy policy page | `privacy.html` (built as a second page, styled by `src/legal.ts`) |
+| Logo, "Try now" key and preloader | `src/sections/Brand.tsx` |
+| Phone screenshots | `public/screens`, refreshed with `npm run capture:screens` from the repo root |
+
+## Keep the claims true
+
+The figures and privacy copy describe what the app really does, so update them
+with the app:
+
+- **Dishes recognised from a photo:** the web app recognises every dish in
+  `dishLabels()` (`../src/lib/dish-labels.ts`), 2,254 today, with SigLIP 2.
+  The phone apps, not released yet, use the AIY model (2,023 dishes).
+- **Foods you can search:** the catalog plus the AIY labels, also 2,254.
+- **Privacy:** photos never leave the device. The web app downloads its food
+  model once from Hugging Face, which the privacy page discloses. The site
+  itself loads no cookies, analytics or third-party scripts.
+
+The same privacy text is in the app (`privacy.body` in
+`../src/i18n/locales/*.ts`), in all 22 languages; change both together.
+
+## Publishing
+
+Every push to `main` runs `../.github/workflows/pages.yml`. It builds this site
+with `SITE_BASE=/foodhabits.com/` and the web app into `app/`, and publishes
+both to GitHub Pages.

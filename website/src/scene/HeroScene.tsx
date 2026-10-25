@@ -23,7 +23,7 @@ const SCREENS = ['home', 'camera', 'result', 'next', 'explainer'].map((name) => 
 const CALLOUTS: [string, string][][] = [
   [],
   [
-    ['Dishes it knows', '2,023'],
+    ['Dishes it knows', '2,250+'],
     ['Works', 'Offline'],
   ],
   [

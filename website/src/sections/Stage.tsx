@@ -7,7 +7,7 @@ import { TryNow } from './Brand';
 const STEPS = [
   {
     title: 'Snap.',
-    text: 'Point your camera at any plate. A model on your phone recognises over 2,000 dishes, with no upload and no wait.',
+    text: 'Point your camera at any plate. A model on your device recognises over 2,250 dishes, Bengali home cooking included, and nothing is uploaded.',
   },
   {
     title: 'Understand.',

@@ -31,7 +31,10 @@ Android Studio. Steps marked **(you)** need your accounts or decisions.
    npx eas-cli@latest deploy --prod
    ```
 
-   Your policy is then at `https://<your-subdomain>.expo.app/privacy`.
+   Your policy is then at `https://<your-subdomain>.expo.app/privacy`. It is
+   also already live on GitHub Pages, at
+   https://debnathsd.github.io/foodhabits.com/privacy.html (website) and
+   https://debnathsd.github.io/foodhabits.com/app/privacy (web app).
 
 ## 3. Try it on your phone
 
@@ -58,6 +61,14 @@ This is the first time the native food model (`react-native-fast-tflite`)
 runs. `expo-doctor` flags it as untested on the New Architecture in React
 Native Directory. It is built on Nitro modules, so it should work, but this
 first build is where that gets confirmed.
+
+**Recognition differs between the web and the phones.** The phone apps still
+run the AIY model: 2,023 dishes, and none of the Bengali home dishes from the
+catalog such as shorshe ilish or aloo posto. The website's "2,250+ dishes,
+Bengali home cooking included" describes the web app, which uses SigLIP 2.
+Before submitting, either bring SigLIP 2 to the phone apps or keep the store
+text and screenshots to what AIY does. The listing below ("2,000+ dishes") is
+true for both.
 
 ## 4. Production builds and submission
 

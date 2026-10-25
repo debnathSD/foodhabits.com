@@ -75,14 +75,14 @@ export function Editorial() {
       <div className="wrap">
         <div className="figures">
           <div className="figure" data-reveal>
-            <span className="figure__value" data-count="2023">
-              2,023
+            <span className="figure__value" data-count="2250" data-suffix="+">
+              2,250+
             </span>
-            <span>dishes recognised from a photo, on your phone</span>
+            <span>dishes recognised from a photo, Bengali home cooking included</span>
           </div>
           <div className="figure" data-reveal>
-            <span className="figure__value" data-count="2100" data-suffix="+">
-              2,100+
+            <span className="figure__value" data-count="2250" data-suffix="+">
+              2,250+
             </span>
             <span>foods you can search, from masala dosa to kombucha</span>
           </div>
@@ -163,10 +163,10 @@ export function Privacy() {
     <section className="section privacy-section" id="privacy" aria-labelledby="privacy-title">
       <div className="wrap privacy">
         <h2 className="display" id="privacy-title" data-split>
-          Your photos never leave your phone.
+          Your photos never leave your device.
         </h2>
         <p className="lede" data-reveal>
-          The AI runs on your device, even in airplane mode. Nothing is uploaded, stored or sold.
+          The AI runs on your device. Nothing is uploaded, stored or sold.
         </p>
         <div className="chips" data-reveal>
           <span>No account</span>
@@ -181,7 +181,7 @@ export function Privacy() {
 }
 
 const ROWS: [string, string, string][] = [
-  ['Photo food recognition', 'Free, on your phone', 'Usually a paid tier'],
+  ['Photo food recognition', 'Free, on your device', 'Usually a paid tier'],
   ['Gut and body explanations', 'Free', 'Rarely included'],
   ['Disease risks, with context', 'Free', 'Rarely included'],
   ['Narrated 3D explainers', 'Free', 'Not offered'],
@@ -198,7 +198,7 @@ export function Compare() {
             Everything. Free.
           </h2>
           <p className="lede" style={{ marginTop: 28 }} data-reveal>
-            Diet apps charge a subscription for this. foodhabits.com runs on your phone, so it costs nothing to run, and nothing
+            Diet apps charge a subscription for this. foodhabits.com runs on your device, so it costs nothing to run, and nothing
             to use.
           </p>
         </div>
