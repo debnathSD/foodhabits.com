@@ -58,6 +58,7 @@ export const as: Translation = {
   scan: {
     frameHint: 'আপোনাৰ কাঁহীখন ফ্ৰেমৰ ভিতৰত ৰাখক',
     library: 'ফটো',
+    upload: 'ফটো আপলোড কৰক',
     search: 'বিচাৰক',
     torchOn: 'টৰ্চ জ্বলাওক',
     torchOff: 'টৰ্চ নুমাওক',

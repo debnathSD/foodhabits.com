@@ -58,6 +58,7 @@ export const id: Translation = {
   scan: {
     frameHint: 'Masukkan piringmu ke dalam bingkai',
     library: 'Foto',
+    upload: 'Unggah foto',
     search: 'Cari',
     torchOn: 'Nyalakan lampu',
     torchOff: 'Matikan lampu',

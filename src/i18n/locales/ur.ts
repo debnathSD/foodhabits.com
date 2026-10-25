@@ -58,6 +58,7 @@ export const ur: Translation = {
   scan: {
     frameHint: 'اپنی پلیٹ فریم کے اندر رکھیں',
     library: 'تصاویر',
+    upload: 'تصویر اپ لوڈ کریں',
     search: 'تلاش کریں',
     torchOn: 'ٹارچ آن کریں',
     torchOff: 'ٹارچ بند کریں',

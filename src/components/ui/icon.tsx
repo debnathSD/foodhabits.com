@@ -4,6 +4,7 @@ import { SymbolView, type SymbolViewProps } from 'expo-symbols';
 const ICONS = {
   camera: { ios: 'camera.fill', android: 'photo_camera', web: 'photo_camera' },
   photos: { ios: 'photo.on.rectangle', android: 'photo_library', web: 'photo_library' },
+  upload: { ios: 'square.and.arrow.up', android: 'upload', web: 'upload' },
   search: { ios: 'magnifyingglass', android: 'search', web: 'search' },
   close: { ios: 'xmark', android: 'close', web: 'close' },
   torchOn: { ios: 'flashlight.on.fill', android: 'flashlight_on', web: 'flashlight_on' },

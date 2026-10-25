@@ -58,6 +58,7 @@ export const te: Translation = {
   scan: {
     frameHint: 'మీ ప్లేట్‌ను ఫ్రేమ్ లోపల ఉంచండి',
     library: 'ఫోటోలు',
+    upload: 'ఫోటో అప్‌లోడ్ చేయండి',
     search: 'వెతకండి',
     torchOn: 'లైట్ ఆన్ చేయండి',
     torchOff: 'లైట్ ఆఫ్ చేయండి',

@@ -58,6 +58,7 @@ export const or: Translation = {
   scan: {
     frameHint: 'ଆପଣଙ୍କ ଥାଳିକୁ ଫ୍ରେମ୍ ଭିତରେ ରଖନ୍ତୁ',
     library: 'ଫଟୋ',
+    upload: 'ଫଟୋ ଅପଲୋଡ କରନ୍ତୁ',
     search: 'ଖୋଜନ୍ତୁ',
     torchOn: 'ଟର୍ଚ୍ଚ ଜାଳନ୍ତୁ',
     torchOff: 'ଟର୍ଚ୍ଚ ବନ୍ଦ କରନ୍ତୁ',

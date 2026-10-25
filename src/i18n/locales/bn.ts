@@ -58,6 +58,7 @@ export const bn: Translation = {
   scan: {
     frameHint: 'থালাটা ফ্রেমের ভেতরে রাখুন',
     library: 'ছবি',
+    upload: 'ছবি আপলোড করুন',
     search: 'খুঁজুন',
     torchOn: 'আলো জ্বালান',
     torchOff: 'আলো নেভান',

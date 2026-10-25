@@ -58,6 +58,7 @@ export const ar: Translation = {
   scan: {
     frameHint: 'ضع طبقك داخل الإطار',
     library: 'الصور',
+    upload: 'رفع صورة',
     search: 'بحث',
     torchOn: 'تشغيل الضوء',
     torchOff: 'إطفاء الضوء',

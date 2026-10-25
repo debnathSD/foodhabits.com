@@ -58,6 +58,7 @@ export const ja: Translation = {
   scan: {
     frameHint: 'お皿を枠の中に収めてください',
     library: '写真',
+    upload: '写真をアップロード',
     search: '検索',
     torchOn: 'ライトをつける',
     torchOff: 'ライトを消す',

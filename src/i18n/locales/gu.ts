@@ -58,6 +58,7 @@ export const gu: Translation = {
   scan: {
     frameHint: 'તમારી થાળી ફ્રેમની અંદર રાખો',
     library: 'ફોટા',
+    upload: 'ફોટો અપલોડ કરો',
     search: 'શોધો',
     torchOn: 'ટૉર્ચ ચાલુ કરો',
     torchOff: 'ટૉર્ચ બંધ કરો',

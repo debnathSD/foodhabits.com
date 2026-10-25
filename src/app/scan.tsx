@@ -172,18 +172,24 @@ function Camera({ onPhoto, onSearch, demo }: { onPhoto: (photo: PhotoSource) => 
 
   if (!demo && !permission) return <View style={styles.camera} />;
 
+  const upload = { title: Platform.OS === 'web' ? t('scan.upload') : t('scan.library'), onPress: pickFromLibrary };
+
   if (!demo && !permission?.granted) {
+    // A browser can't open its own camera settings, so a blocked camera leaves uploading as the way in.
+    const blocked = !permission?.canAskAgain;
     return (
       <Message
         icon="camera"
         title={t('scan.cameraTitle')}
         text={t('scan.cameraText')}
         primary={
-          permission?.canAskAgain
+          !blocked
             ? { title: t('scan.allowCamera'), onPress: requestPermission }
-            : { title: t('scan.openSettings'), onPress: () => Linking.openSettings() }
+            : Platform.OS === 'web'
+              ? upload
+              : { title: t('scan.openSettings'), onPress: () => Linking.openSettings() }
         }
-        secondary={{ title: t('scan.library'), onPress: pickFromLibrary }}
+        secondary={blocked && Platform.OS === 'web' ? undefined : upload}
         tertiary={{ title: t('scan.search'), onPress: onSearch }}
       />
     );
@@ -202,6 +208,7 @@ function Camera({ onPhoto, onSearch, demo }: { onPhoto: (photo: PhotoSource) => 
       ) : unavailable ? (
         <View style={styles.unavailable}>
           <ThemedText style={styles.onPhoto}>{t('scan.noCamera')}</ThemedText>
+          <Button title={t('scan.upload')} icon="upload" onPress={pickFromLibrary} />
         </View>
       ) : (
         <FoodCamera
@@ -231,7 +238,11 @@ function Camera({ onPhoto, onSearch, demo }: { onPhoto: (photo: PhotoSource) => 
             </ThemedText>
           </View>
         )}
-        {controls}
+        <View style={styles.bottom} pointerEvents="box-none">
+          {/* Browsers on laptops and phones get a labelled way to upload a photo; the round icon alone isn't read as one. */}
+          {Platform.OS === 'web' && !demo && !unavailable && <UploadButton label={t('scan.upload')} onPress={pickFromLibrary} />}
+          {controls}
+        </View>
       </SafeAreaView>
     </View>
   );
@@ -329,6 +340,20 @@ function Message({
   );
 }
 
+function UploadButton({ label, onPress }: { label: string; onPress: () => void }) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      onPress={onPress}
+      style={({ pressed }) => [styles.upload, { opacity: pressed ? 0.75 : 1 }]}>
+      <Icon name="upload" size={20} color="#fff" />
+      <ThemedText type="smallBold" style={styles.uploadLabel}>
+        {label}
+      </ThemedText>
+    </Pressable>
+  );
+}
+
 function RoundButton({ icon, label, onPress }: { icon: IconName; label: string; onPress: () => void }) {
   return (
     <Pressable
@@ -369,6 +394,9 @@ const styles = StyleSheet.create({
     borderRadius: Radius.large,
     borderWidth: 3,
     borderColor: 'rgba(255,255,255,0.85)',
+  },
+  bottom: {
+    gap: Spacing.two,
   },
   controls: {
     flexDirection: 'row',
@@ -411,8 +439,25 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     left: 0,
+    alignItems: 'center',
     justifyContent: 'center',
+    gap: Spacing.four,
     padding: Spacing.five,
+  },
+  upload: {
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
+    minHeight: 48,
+    paddingHorizontal: Spacing.four,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.4)',
+    backgroundColor: 'rgba(0,0,0,0.55)',
+  },
+  uploadLabel: {
+    color: '#fff',
   },
   working: {
     flex: 1,

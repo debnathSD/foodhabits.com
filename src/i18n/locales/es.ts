@@ -58,6 +58,7 @@ export const es: Translation = {
   scan: {
     frameHint: 'Encaja tu plato dentro del marco',
     library: 'Fotos',
+    upload: 'Subir una foto',
     search: 'Buscar',
     torchOn: 'Encender luz',
     torchOff: 'Apagar luz',

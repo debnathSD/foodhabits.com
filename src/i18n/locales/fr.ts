@@ -58,6 +58,7 @@ export const fr: Translation = {
   scan: {
     frameHint: 'Placez votre assiette dans le cadre',
     library: 'Photos',
+    upload: 'Importer une photo',
     search: 'Rechercher',
     torchOn: 'Allumer la lampe',
     torchOff: 'Éteindre la lampe',

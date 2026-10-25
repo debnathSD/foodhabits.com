@@ -62,6 +62,7 @@ export const de: Translation = {
   scan: {
     frameHint: 'Bring deinen Teller in den Rahmen',
     library: 'Fotos',
+    upload: 'Foto hochladen',
     search: 'Suchen',
     torchOn: 'Licht an',
     torchOff: 'Licht aus',

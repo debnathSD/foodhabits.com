@@ -58,6 +58,7 @@ export const ru: Translation = {
   scan: {
     frameHint: 'Поместите тарелку в рамку',
     library: 'Фото',
+    upload: 'Загрузить фото',
     search: 'Поиск',
     torchOn: 'Включить свет',
     torchOff: 'Выключить свет',

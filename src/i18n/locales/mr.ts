@@ -58,6 +58,7 @@ export const mr: Translation = {
   scan: {
     frameHint: 'तुमचे ताट चौकटीत ठेवा',
     library: 'फोटो',
+    upload: 'फोटो अपलोड करा',
     search: 'शोधा',
     torchOn: 'टॉर्च चालू करा',
     torchOff: 'टॉर्च बंद करा',

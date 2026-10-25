@@ -58,6 +58,7 @@ export const ml: Translation = {
   scan: {
     frameHint: 'നിങ്ങളുടെ പ്ലേറ്റ് ഫ്രെയിമിനുള്ളിൽ വയ്ക്കുക',
     library: 'ഫോട്ടോകൾ',
+    upload: 'ഫോട്ടോ അപ്‌ലോഡ് ചെയ്യുക',
     search: 'തിരയുക',
     torchOn: 'ടോർച്ച് ഓൺ ചെയ്യുക',
     torchOff: 'ടോർച്ച് ഓഫ് ചെയ്യുക',

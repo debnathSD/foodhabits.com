@@ -61,6 +61,7 @@ export const en = {
   scan: {
     frameHint: 'Fit your plate inside the frame',
     library: 'Photos',
+    upload: 'Upload a photo',
     search: 'Search',
     torchOn: 'Turn on light',
     torchOff: 'Turn off light',

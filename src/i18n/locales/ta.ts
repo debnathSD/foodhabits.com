@@ -58,6 +58,7 @@ export const ta: Translation = {
   scan: {
     frameHint: 'உங்கள் தட்டைச் சட்டத்துக்குள் வையுங்கள்',
     library: 'படங்கள்',
+    upload: 'புகைப்படத்தைப் பதிவேற்றவும்',
     search: 'தேடு',
     torchOn: 'டார்ச்சை இயக்கு',
     torchOff: 'டார்ச்சை அணை',

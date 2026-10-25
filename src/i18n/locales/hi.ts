@@ -58,6 +58,7 @@ export const hi: Translation = {
   scan: {
     frameHint: 'अपनी थाली को फ़्रेम के अंदर रखें',
     library: 'फ़ोटो',
+    upload: 'फ़ोटो अपलोड करें',
     search: 'खोजें',
     torchOn: 'लाइट चालू करें',
     torchOff: 'लाइट बंद करें',

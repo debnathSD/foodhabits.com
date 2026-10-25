@@ -58,6 +58,7 @@ export const zh: Translation = {
   scan: {
     frameHint: '把餐盘放进框内',
     library: '相册',
+    upload: '上传照片',
     search: '搜索',
     torchOn: '打开补光',
     torchOff: '关闭补光',

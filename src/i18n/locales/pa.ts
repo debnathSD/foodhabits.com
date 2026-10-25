@@ -58,6 +58,7 @@ export const pa: Translation = {
   scan: {
     frameHint: 'ਆਪਣੀ ਥਾਲੀ ਫ਼ਰੇਮ ਦੇ ਅੰਦਰ ਰੱਖੋ',
     library: 'ਫ਼ੋਟੋਆਂ',
+    upload: 'ਫ਼ੋਟੋ ਅੱਪਲੋਡ ਕਰੋ',
     search: 'ਖੋਜੋ',
     torchOn: 'ਟਾਰਚ ਚਾਲੂ ਕਰੋ',
     torchOff: 'ਟਾਰਚ ਬੰਦ ਕਰੋ',

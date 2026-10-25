@@ -58,6 +58,7 @@ export const pt: Translation = {
   scan: {
     frameHint: 'Enquadre seu prato dentro da moldura',
     library: 'Fotos',
+    upload: 'Enviar uma foto',
     search: 'Buscar',
     torchOn: 'Ligar luz',
     torchOff: 'Desligar luz',

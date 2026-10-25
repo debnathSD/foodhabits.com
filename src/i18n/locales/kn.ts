@@ -58,6 +58,7 @@ export const kn: Translation = {
   scan: {
     frameHint: 'ನಿಮ್ಮ ತಟ್ಟೆಯನ್ನು ಚೌಕಟ್ಟಿನೊಳಗೆ ಇಡಿ',
     library: 'ಫೋಟೋಗಳು',
+    upload: 'ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
     search: 'ಹುಡುಕಿ',
     torchOn: 'ಟಾರ್ಚ್ ಆನ್ ಮಾಡಿ',
     torchOff: 'ಟಾರ್ಚ್ ಆಫ್ ಮಾಡಿ',
