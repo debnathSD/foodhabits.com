@@ -2,6 +2,7 @@
  * Minimal i18n: nested message objects per language, dotted keys, `{name}`
  * placeholders, and English as the fallback for anything not yet translated.
  */
+import { bn } from './locales/bn';
 import { en, type Messages } from './locales/en';
 import { hi } from './locales/hi';
 import type { LanguageCode } from './languages';
@@ -9,7 +10,7 @@ import type { LanguageCode } from './languages';
 type DeepPartial<T> = { [K in keyof T]?: T[K] extends readonly unknown[] ? T[K] : T[K] extends object ? DeepPartial<T[K]> : T[K] };
 export type Translation = DeepPartial<Messages>;
 
-const DICTIONARIES: Partial<Record<LanguageCode, Translation>> = { en, hi };
+export const DICTIONARIES: Partial<Record<LanguageCode, Translation>> = { en, hi, bn };
 
 /** Languages whose translation is complete enough to offer. */
 export const TRANSLATED: LanguageCode[] = Object.keys(DICTIONARIES) as LanguageCode[];

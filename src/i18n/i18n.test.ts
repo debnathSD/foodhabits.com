@@ -9,9 +9,8 @@ import { buildScenes, summaryText, watchText } from '../lib/describe';
 import { analyzeFood, type Food } from '../lib/engine';
 import { foodFromCatalog, foodFromLabel, genericFood } from '../lib/food-index';
 import { DEFAULT_PROFILE, DIETS, GOALS, SENSITIVITIES } from '../lib/profile-options';
-import { capitalize, joinList, TRANSLATED, translate, translateValue } from './index';
+import { capitalize, DICTIONARIES, joinList, TRANSLATED, translate, translateValue } from './index';
 import { en } from './locales/en';
-import { hi } from './locales/hi';
 
 /** Collects every key `t()` is asked for, failing on any that has no English text. */
 function strictT(language: (typeof TRANSLATED)[number] = 'en') {
@@ -78,6 +77,8 @@ test('every profile option has a label', () => {
   GOALS.forEach((option) => t(`profileOptions.goals.${option.id}`));
 });
 
+const placeholders = (text: string) => (text.match(/\{\w+\}/g) ?? []).sort().join(',');
+
 test('translations only use keys that exist in English', () => {
   const walk = (node: unknown, reference: unknown, path: string) => {
     if (typeof node !== 'object' || node === null || Array.isArray(node)) return;
@@ -87,7 +88,36 @@ test('translations only use keys that exist in English', () => {
       walk(value, next, `${path}${key}.`);
     }
   };
-  walk(hi, en, '');
+  for (const [language, dictionary] of Object.entries(DICTIONARIES)) {
+    if (language !== 'en') walk(dictionary, en, `${language}: `);
+  }
+});
+
+test('every translation covers every English message, with the same placeholders', () => {
+  for (const [language, dictionary] of Object.entries(DICTIONARIES)) {
+    if (language === 'en') continue;
+    const walk = (reference: unknown, node: unknown, path: string) => {
+      if (typeof reference === 'string') {
+        assert.equal(typeof node, 'string', `${language}: missing ${path}`);
+        assert.equal(placeholders(node as string), placeholders(reference), `${language}: placeholders differ in ${path}`);
+        return;
+      }
+      if (Array.isArray(reference)) {
+        assert.ok(Array.isArray(node) && node.length > 0, `${language}: missing ${path}`);
+        return;
+      }
+      for (const [key, value] of Object.entries(reference as Record<string, unknown>)) {
+        // The app name is the brand and stays as it is.
+        if (path === '' && key === 'common') {
+          const { appName: _brand, ...rest } = value as Record<string, unknown>;
+          walk(rest, (node as Record<string, unknown>)?.common, 'common.');
+          continue;
+        }
+        walk(value, (node as Record<string, unknown> | undefined)?.[key], `${path}${key}.`);
+      }
+    };
+    walk(en, dictionary, '');
+  }
 });
 
 test('falls back to English and fills placeholders', () => {
