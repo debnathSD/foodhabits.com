@@ -58,16 +58,6 @@ function ground(target: CANNON.World, y = 0) {
   target.addBody(body);
 }
 
-/** The whole dish dropping onto its pedestal (top at y = 0) with a small tumble and a bounce. */
-export function bakeDrop(frames: number, fps: number): Baked {
-  const target = world();
-  ground(target);
-  const dish = new CANNON.Body({ mass: 1, shape: new CANNON.Sphere(0.8), position: new CANNON.Vec3(0, 4.2, 0), angularDamping: 0.6 });
-  dish.angularVelocity.set(0.6, 0.3, -0.4);
-  target.addBody(dish);
-  return record(target, [dish], frames, fps);
-}
-
 /**
  * Microbes pouring into a glass capsule (radius 1, floor at y = -1.2): `good`
  * friendly ones and `bad` troublemakers, mixed in a seeded order. Returns the

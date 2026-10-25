@@ -84,7 +84,13 @@ photo ─► on-device model: SigLIP 2 (web) or AIY (phones) ──────�
   (`expo-speech`), with captions always on. A meal scanned from a photo stars
   as itself: the photo, on a plate (`src/three/photo-dish.tsx`), drops onto the
   pedestal and is what the "inside" scene burns away into its parts and puts
-  back together. Its "inside" scene takes the dish
+  back together. A meal added by search shows a 3D model of the dish instead
+  (`src/three/dish-models.tsx`), built offline from simple shapes: curries in a
+  bowl with their fish, mutton or paneer, biryani on a plate, a dosa with sambar
+  and coconut chutney, bhetki paturi in banana leaf, jhalmuri in a paper cone,
+  chai in a kulhad. The food type picks the model and the dish's name its
+  colours and toppings (`src/lib/dish-look.ts`); Bengali and Indian dishes are
+  set one by one in `src/data/dish-looks.ts`. Its "inside" scene takes the dish
   apart (`src/three/deconstruct.tsx`, timing in `src/lib/deconstruct.ts`): the
   parts it is made of come out at micro scale (fibre strands, protein coils,
   starch, oil, sugar, salt, microbes) and each passes under a spotlight, mint
@@ -143,6 +149,8 @@ website and the web app and publishes both to GitHub Pages: the site at
   laptop) and looks up Wikipedia readership only for dishes it hasn't seen,
   caching it in `scripts/data/dish-popularity.json`. `npm test` fails until the
   embeddings match the dish list.
+- Change how a dish looks in its explainer when there is no photo: its entry in
+  `src/data/dish-looks.ts` (model, colours, toppings, side bowls).
 - Change advice text: `src/i18n/locales/en.ts`, then the same key in each
   translation. `npm test` fails if any food produces a missing message.
 - Regenerate the icon and splash after editing the mark:

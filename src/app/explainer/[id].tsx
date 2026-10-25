@@ -18,6 +18,7 @@ import { Icon } from '@/components/ui/icon';
 import { Colors, Spacing, verdictColors } from '@/constants/theme';
 import { useAnalysis } from '@/hooks/use-analysis';
 import { useTranslation } from '@/i18n/use-translation';
+import { dishLook } from '@/lib/dish-look';
 import { goBack } from '@/lib/navigation';
 import { photoDataUri } from '@/lib/photo-store';
 import { useAppState } from '@/lib/store';
@@ -66,6 +67,7 @@ export default function ExplainerScreen() {
     analysis: result.analysis,
     dish: result.name,
     photo,
+    look: dishLook(result.food.category, result.food.name),
     t,
     list,
     lower: inSentence,

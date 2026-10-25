@@ -8,10 +8,11 @@ import * as THREE from 'three';
 
 import type { SceneKind } from '../lib/describe';
 import { Bite, Deconstruct } from '../three/deconstruct';
+import { DishModel, dishTilt } from '../three/dish-models';
 import { Avocado, Broccoli, Tomato } from '../three/food';
 import { PhotoDish } from '../three/photo-dish';
 import { GutScene, HeartScene, ScoreOrb } from '../three/scenes';
-import { bakeDrop, bakeMicrobes, bakePlate, poseAt } from './physics';
+import { bakeMicrobes, bakePlate, poseAt } from './physics';
 import type { ExplainerVideoProps } from './props';
 
 const MINT = '#57E39A';
@@ -38,37 +39,28 @@ function Pedestal({ radius = 1.3 }: { radius?: number }) {
 const PHOTO_TILT = 1.2;
 
 /**
- * Intro: the dish drops onto the pedestal. A meal from a photo is that photo
- * on a plate, swinging up to face the viewer; otherwise a stand-in bite
- * tumbles and settles.
+ * Intro: the dish drops onto the pedestal and leans back to face the viewer:
+ * the meal's own photo on a plate, or a 3D model of the dish when there is no
+ * photo.
  */
-function IntroStage({ props, local, frames }: { props: ExplainerVideoProps; local: number; frames: number }) {
+function IntroStage({ props, local }: { props: ExplainerVideoProps; local: number }) {
   const { fps } = useVideoConfig();
-  const baked = useMemo(() => bakeDrop(frames, fps), [frames, fps]);
-  const pose = poseAt(baked, 0, local);
-  if (props.photo) {
-    const drop = spring({ frame: local, fps, config: { damping: 13, mass: 0.9 } });
-    const sway = Math.sin((local / fps) * 0.8) * 0.12;
-    return (
-      <group position={[0, -0.75, 0]} scale={0.62}>
-        <Pedestal />
-        <group position={[0, 1 + (1 - drop) * 3.6, 0]} rotation={[PHOTO_TILT * drop, sway, 0]}>
-          <PhotoDish uri={props.photo} />
-        </group>
-      </group>
-    );
-  }
+  const drop = spring({ frame: local, fps, config: { damping: 13, mass: 0.9 } });
+  const sway = Math.sin((local / fps) * 0.8) * 0.12;
+  const tilt = props.photo ? PHOTO_TILT : dishTilt(props.look);
+  // Tilting about its base sinks the front edge; lift it back onto the pedestal.
+  const lift = Math.sin(tilt) * 1.05 + 0.02;
   return (
     <group position={[0, -0.75, 0]} scale={0.62}>
       <Pedestal />
-      <group position={pose.position} quaternion={pose.quaternion} scale={0.85}>
-        <Bite color={props.dishColor} />
+      <group position={[0, lift + (1 - drop) * 3.6, 0]} rotation={[tilt * drop, sway, 0]}>
+        {props.photo ? <PhotoDish uri={props.photo} /> : <DishModel look={props.look} />}
       </group>
     </group>
   );
 }
 
-/** Inside: the shared take-apart scene on the video's clock. The meal's photo burns away into its parts. */
+/** Inside: the shared take-apart scene on the video's clock. The meal's photo, or its 3D model, burns away into its parts. */
 function InsideStage({ props, progress }: { props: ExplainerVideoProps; progress: number }) {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -85,8 +77,14 @@ function InsideStage({ props, progress }: { props: ExplainerVideoProps; progress
         progress={progressRef}
         time={timeRef}
         color={props.dishColor}
-        whole={props.photo ? <PhotoDish uri={props.photo} radius={1.1} rotation={[PHOTO_TILT, 0, 0]} /> : undefined}
-        facing={Boolean(props.photo)}
+        whole={
+          props.photo ? (
+            <PhotoDish uri={props.photo} radius={1.1} rotation={[PHOTO_TILT, 0, 0]} />
+          ) : (
+            <DishModel look={props.look} rotation={[dishTilt(props.look), 0, 0]} />
+          )
+        }
+        facing
       />
     </group>
   );
@@ -177,7 +175,7 @@ export function Stage({ kind, props, local, frames }: { kind: SceneKind; props: 
   let content: React.ReactNode = null;
   switch (kind) {
     case 'intro':
-      content = <IntroStage props={props} local={local} frames={frames} />;
+      content = <IntroStage props={props} local={local} />;
       break;
     case 'inside':
       content = <InsideStage props={props} progress={progress} />;

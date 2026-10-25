@@ -3,6 +3,7 @@
  * language. Serializable, so it can cross into the video's web view.
  */
 import type { Part } from '../lib/deconstruct';
+import type { DishLook } from '../lib/dish-look';
 import { buildScenes, sceneDuration, type SceneKind } from '../lib/describe';
 import type { Analysis } from '../lib/engine';
 import { foodParts, partsColor } from '../lib/parts';
@@ -29,6 +30,8 @@ export type ExplainerVideoProps = {
   dishColor: string;
   /** The meal's own photo as a data URI, shown as the dish; null for meals added by search. */
   photo: string | null;
+  /** The 3D dish shown when there is no photo. */
+  look: DishLook;
   parts: Part[];
   partNames: string[];
   partTags: { good: string; bad: string };
@@ -55,6 +58,7 @@ export function buildExplainerProps({
   analysis,
   dish,
   photo,
+  look,
   t,
   list,
   lower,
@@ -65,6 +69,7 @@ export function buildExplainerProps({
   analysis: Analysis;
   dish: string;
   photo: string | null;
+  look: DishLook;
   t: T;
   list: (items: string[]) => string;
   /** `inSentence` from i18n. */
@@ -91,6 +96,7 @@ export function buildExplainerProps({
     color,
     dishColor: partsColor(parts),
     photo,
+    look,
     parts,
     partNames: parts.map((part) => t(`parts.${part.kind}.name`)),
     partTags: { good: t('parts.good'), bad: t('parts.bad') },
