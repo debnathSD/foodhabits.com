@@ -1,4 +1,4 @@
-import { CameraView, useCameraPermissions } from 'expo-camera';
+import { useCameraPermissions } from 'expo-camera';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Linking, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { FoodCamera, type FoodCameraHandle } from '@/components/food-camera';
 import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
 import { Icon, type IconName } from '@/components/ui/icon';
@@ -130,7 +131,7 @@ export default function ScanScreen() {
 function Camera({ onPhoto, onSearch, demo }: { onPhoto: (photo: PhotoSource) => void; onSearch: () => void; demo?: boolean }) {
   const { t } = useTranslation();
   const [permission, requestPermission] = useCameraPermissions();
-  const camera = useRef<CameraView>(null);
+  const camera = useRef<FoodCameraHandle>(null);
   const [ready, setReady] = useState(false);
   const [torch, setTorch] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
@@ -147,8 +148,7 @@ function Camera({ onPhoto, onSearch, demo }: { onPhoto: (photo: PhotoSource) => 
     setBusy(true);
     haptics.tap();
     try {
-      const picture = await camera.current.takePictureAsync({ quality: 0.9 });
-      onPhoto({ uri: picture.uri, width: picture.width, height: picture.height });
+      onPhoto(await camera.current.takePicture());
     } catch (error) {
       console.warn('Could not take a picture', error);
       setBusy(false);
@@ -156,7 +156,7 @@ function Camera({ onPhoto, onSearch, demo }: { onPhoto: (photo: PhotoSource) => 
   }
 
   const controls = (
-    <View style={styles.controls}>
+    <View style={styles.controls} pointerEvents="box-none">
       <RoundButton icon="photos" label={t('scan.library')} onPress={pickFromLibrary} />
       <Pressable
         accessibilityRole="button"
@@ -204,17 +204,16 @@ function Camera({ onPhoto, onSearch, demo }: { onPhoto: (photo: PhotoSource) => 
           <ThemedText style={styles.onPhoto}>{t('scan.noCamera')}</ThemedText>
         </View>
       ) : (
-        <CameraView
+        <FoodCamera
           ref={camera}
           style={StyleSheet.absoluteFill}
-          facing="back"
-          enableTorch={torch}
-          onCameraReady={() => setReady(true)}
-          onMountError={() => setUnavailable(true)}
+          torch={torch}
+          onReady={() => setReady(true)}
+          onUnavailable={() => setUnavailable(true)}
         />
       )}
-      <SafeAreaView style={styles.overlay} edges={['top', 'bottom']}>
-        <View style={styles.topBar}>
+      <SafeAreaView style={styles.overlay} edges={['top', 'bottom']} pointerEvents="box-none">
+        <View style={styles.topBar} pointerEvents="box-none">
           <RoundButton icon="close" label={t('common.close')} onPress={() => goBack()} />
           {!unavailable && (
             <RoundButton
@@ -363,8 +362,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: Spacing.three,
   },
+  // Smaller than the screen so people hold the phone far enough away for it to focus.
   frame: {
-    width: '78%',
+    width: '66%',
     aspectRatio: 1,
     borderRadius: Radius.large,
     borderWidth: 3,
