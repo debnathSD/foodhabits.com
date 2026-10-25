@@ -30,8 +30,13 @@ declare global {
 }
 
 const BASE = process.env.EXPO_BASE_URL ?? '';
-/** ONNX Runtime Web, copied into public/ort by scripts/copy-web-runtime.mjs and loaded as a plain script. */
+/**
+ * ONNX Runtime Web, copied into public/ort by scripts/copy-web-runtime.mjs and
+ * loaded as a plain script: the WebGPU build where the browser has a GPU to
+ * offer (it can also fall back to the CPU), otherwise the smaller CPU-only one.
+ */
 const ORT_SCRIPT = `${BASE}/ort/ort.wasm.min.js`;
+const ORT_WEBGPU_SCRIPT = `${BASE}/ort/ort.webgpu.min.js`;
 const MODEL_URL = `https://huggingface.co/${DISH_MODEL.repo}/resolve/${DISH_MODEL.revision}/${DISH_MODEL.vision}`;
 const MODEL_CACHE = 'foodhabits-models';
 
@@ -109,19 +114,41 @@ async function dishTable(): Promise<DishTable> {
 
 type Siglip = { ort: Ort; session: InferenceSession; table: DishTable };
 
+/** Whether the browser can give us a GPU through WebGPU (Chrome, Edge, recent Safari). */
+async function hasWebGpu() {
+  const gpu = (navigator as Navigator & { gpu?: { requestAdapter: () => Promise<unknown> } }).gpu;
+  try {
+    return Boolean(gpu && (await gpu.requestAdapter()));
+  } catch {
+    return false;
+  }
+}
+
 let siglipPromise: Promise<Siglip> | undefined;
 
 function loadSiglip() {
   siglipPromise ??= (async () => {
-    if (!window.ort) await loadScript(ORT_SCRIPT);
+    const gpu = await hasWebGpu();
+    if (!window.ort) await loadScript(gpu ? ORT_WEBGPU_SCRIPT : ORT_SCRIPT);
     const ort = window.ort!;
     ort.env.wasm.wasmPaths = `${BASE}/ort/`;
     // Threads need cross-origin isolation, which static hosts such as GitHub Pages can't turn on.
     ort.env.wasm.numThreads = self.crossOriginIsolated ? Math.min(4, navigator.hardwareConcurrency || 1) : 1;
-    // Run the model in a worker so the page keeps animating while it thinks.
-    ort.env.wasm.proxy = true;
+    // On the CPU, run the model in a worker so the page keeps animating while it thinks. (The GPU doesn't block the page.)
+    ort.env.wasm.proxy = !gpu;
     const [bytes, table] = await Promise.all([modelBytes(), dishTable()]);
-    const session = await ort.InferenceSession.create(bytes, { executionProviders: ['wasm'], graphOptimizationLevel: 'all' });
+    const options = { graphOptimizationLevel: 'all' } as const;
+    let session: InferenceSession;
+    try {
+      session = await ort.InferenceSession.create(bytes, { ...options, executionProviders: gpu ? ['webgpu', 'wasm'] : ['wasm'] });
+    } catch (error) {
+      if (!gpu) throw error;
+      console.warn('WebGPU is unavailable for the food model, using the CPU', error);
+      session = await ort.InferenceSession.create(bytes, { ...options, executionProviders: ['wasm'] });
+    }
+    // One blank run now compiles the GPU shaders (or warms the CPU kernels) while the camera is still open.
+    const size = DISH_MODEL.inputSize;
+    await session.run({ [session.inputNames[0]]: new ort.Tensor('float32', new Float32Array(3 * size * size), [1, 3, size, size]) });
     return { ort, session, table };
   })().catch((error) => {
     siglipPromise = undefined;

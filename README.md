@@ -46,8 +46,10 @@ photo ─► on-device model: SigLIP 2 (web) or AIY (phones) ──────�
   gives each dish a prior from its Wikipedia readership, so common dishes beat
   obscure look-alikes. The browser runs only the 63 MB q4 vision model
   ([ONNX](https://huggingface.co/onnx-community/siglip2-base-patch16-224-ONNX),
-  pinned to a commit) with [ONNX Runtime Web](https://onnxruntime.ai/docs/tutorials/web/)
-  on WebAssembly in a worker; it downloads once and stays in Cache Storage.
+  pinned to a commit) with [ONNX Runtime Web](https://onnxruntime.ai/docs/tutorials/web/):
+  on the GPU through WebGPU where the browser offers it (about 0.1 s a photo on
+  a MacBook), otherwise on WebAssembly in a worker (about 3 s). It downloads
+  once and stays in Cache Storage.
   `src/lib/dish-recognition.ts` turns similarities into a result. On 170
   real-world photos (Indian street food and Food-101) it names the dish first
   125 times and within its top four 148 times; the AIY model below managed 80

@@ -2,8 +2,9 @@
 /**
  * Copies the web app's runtime files into public/ before a web build:
  * - ONNX Runtime Web (public/ort), which runs the SigLIP 2 food recognizer in
- *   the browser: the plain-script build and its WebAssembly (the threaded
- *   build also runs on one thread, which is all GitHub Pages allows).
+ *   the browser: the plain-script CPU and WebGPU builds and their WebAssembly
+ *   (the threaded builds also run on one thread, which is all GitHub Pages
+ *   allows).
  * - the LiteRT.js WebAssembly runtime (public/litert) for the AIY fallback
  *   model. Only the single-threaded builds: the threaded one needs
  *   cross-origin isolation headers that static hosts such as GitHub Pages
@@ -26,7 +27,8 @@ for (const name of ['litert_wasm_internal', 'litert_wasm_compat_internal']) {
 }
 const ort = join(root, 'node_modules', 'onnxruntime-web', 'dist');
 mkdirSync(join(root, 'public', 'ort'), { recursive: true });
-for (const name of ['ort.wasm.min.js', 'ort-wasm-simd-threaded.mjs', 'ort-wasm-simd-threaded.wasm']) {
+// The CPU build, and the WebGPU build with its WebAssembly (loaded only where the browser has WebGPU).
+for (const name of ['ort.wasm.min.js', 'ort-wasm-simd-threaded.mjs', 'ort-wasm-simd-threaded.wasm', 'ort.webgpu.min.js', 'ort-wasm-simd-threaded.asyncify.mjs', 'ort-wasm-simd-threaded.asyncify.wasm']) {
   copyFileSync(join(ort, name), join(root, 'public', 'ort', name));
 }
 for (const folder of ['models', 'hdri']) {
