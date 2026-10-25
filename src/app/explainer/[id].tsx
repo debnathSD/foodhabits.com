@@ -4,10 +4,11 @@
  * in the user's language. The device's own text-to-speech narrates each scene
  * in that language, so it works offline, for every food, at no cost. Captions
  * are always in the video; without a voice for the language it plays silently.
+ * The video waits at the end of a scene until its narration has finished.
  */
 import * as Speech from 'expo-speech';
 import { useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -19,6 +20,7 @@ import { useAnalysis } from '@/hooks/use-analysis';
 import { useTranslation } from '@/i18n/use-translation';
 import { goBack } from '@/lib/navigation';
 import { useAppState } from '@/lib/store';
+import { pickVoice } from '@/lib/voice';
 import { buildExplainerProps } from '@/video/props';
 
 export default function ExplainerScreen() {
@@ -27,18 +29,23 @@ export default function ExplainerScreen() {
   const voiceSetting = useAppState((state) => state.voice);
   const result = useAnalysis(scan);
   const { t, list, inSentence, speechLanguage, rtl } = useTranslation();
-  const [voiceAvailable, setVoiceAvailable] = useState<boolean | null>(null);
+  // The voice to narrate in: undefined while looking, null when there is none for this language.
+  const [voice, setVoice] = useState<string | null | undefined>(undefined);
+  // The scene whose narration is still being spoken (-1: none). Each narration
+  // gets a token, so the callback of one that was cut short can't clear a newer one.
+  const [narrating, setNarrating] = useState({ token: 0, scene: -1 });
+  const tokens = useRef(0);
 
   useEffect(() => {
-    const prefix = speechLanguage.split('-')[0];
     Speech.getAvailableVoicesAsync()
-      .then((voices) => setVoiceAvailable(voices.some((voice) => voice.language.toLowerCase().startsWith(prefix))))
-      .catch(() => setVoiceAvailable(false));
+      .then((voices) => setVoice(pickVoice(voices, speechLanguage)))
+      .catch(() => setVoice(null));
     return () => {
       Speech.stop();
     };
   }, [speechLanguage]);
 
+  const voiceAvailable = voice === undefined ? null : voice !== null;
   const speak = voiceSetting && voiceAvailable === true;
 
   if (!result || voiceAvailable === null) {
@@ -61,17 +68,31 @@ export default function ExplainerScreen() {
       <ExplainerVideo
         video={video}
         labels={{ play: t('explainer.play'), pause: t('explainer.pause'), replay: t('explainer.replay') }}
+        narratingScene={narrating.scene}
         onScene={async (index) => {
           Speech.stop();
           const narration = video.scenes[index]?.narration;
-          if (speak && narration) Speech.speak(narration, { language: speechLanguage, rate: 0.95 });
+          const token = ++tokens.current;
+          if (!speak || !narration) {
+            setNarrating({ token, scene: -1 });
+            return;
+          }
+          const finished = () => setNarrating((current) => (current.token === token ? { token, scene: -1 } : current));
+          setNarrating({ token, scene: index });
+          Speech.speak(narration, {
+            language: speechLanguage,
+            voice: voice ?? undefined,
+            rate: 0.95,
+            onDone: finished,
+            onStopped: finished,
+            onError: finished,
+          });
         }}
         onPause={async () => {
           Speech.stop();
         }}
-        onEnded={async () => {
-          Speech.stop();
-        }}
+        // The closing line finishes over the last frame rather than being cut off.
+        onEnded={async () => {}}
         dom={{ style: { flex: 1 }, scrollEnabled: false }}
       />
       <SafeAreaView style={styles.overlay} edges={['top']} pointerEvents="box-none">

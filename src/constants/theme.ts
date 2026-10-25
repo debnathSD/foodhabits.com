@@ -105,5 +105,6 @@ export const Elevation = Platform.select({
   },
 });
 
-export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
+/** Room tab screens leave for the tab bar; on narrow web it's the floating dock (68px from the bottom). */
+export const BottomTabInset = Platform.select({ ios: 50, android: 80, web: 72 }) ?? 0;
 export const MaxContentWidth = 720;

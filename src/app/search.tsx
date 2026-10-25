@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { useDeferredValue, useState } from 'react';
 import { FlatList, Platform, Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
@@ -27,8 +27,10 @@ export default function SearchScreen() {
    */
   const { photo, replace } = useLocalSearchParams<{ photo?: string; replace?: string }>();
   const [query, setQuery] = useState('');
-  const results = searchFoods(query);
-  const showGeneric = query.trim().length > 1 && results.length === 0;
+  // Typing comes first: on a slow phone the search catches up a moment later.
+  const search = useDeferredValue(query);
+  const results = searchFoods(search);
+  const showGeneric = search.trim().length > 1 && results.length === 0;
 
   function choose(food: Food) {
     haptics.success();
@@ -46,22 +48,25 @@ export default function SearchScreen() {
       <View style={styles.inner}>
         <View style={[styles.searchBox, { backgroundColor: theme.backgroundElement }]}>
           <Icon name="search" size={18} color={theme.textSecondary} />
+          {/* Left uncontrolled: writing the text back while the keyboard is still composing
+              a word (or switching language) resets the keyboard. */}
           <TextInput
             autoFocus
-            value={query}
             onChangeText={setQuery}
             placeholder={t('search.placeholder')}
             placeholderTextColor={theme.textSecondary}
             style={[styles.input, { color: theme.text }]}
             returnKeyType="search"
-            autoCorrect={false}
+            // On Android "no autocorrect" also turns off the keyboard's suggestions, which
+            // Bengali and other transliterating keyboards need to type at all.
+            autoCorrect={Platform.OS === 'android' ? undefined : false}
             accessibilityLabel={t('search.title')}
           />
         </View>
 
         {showGeneric ? (
           <View style={styles.generic}>
-            <ThemedText themeColor="textSecondary">{t('search.noResults', { query: query.trim() })}</ThemedText>
+            <ThemedText themeColor="textSecondary">{t('search.noResults', { query: search.trim() })}</ThemedText>
             <ChipGroup>
               {GENERIC_CHOICES.map((category) => (
                 <Chip

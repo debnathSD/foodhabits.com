@@ -63,10 +63,9 @@ function TabButton({ children, icon, isFocused, onPress, href, ref: _ref }: TabT
       href={typeof href === 'string' ? href : undefined}
       className={`fh-nav__tab${isFocused ? ' is-active' : ''}`}
       aria-current={isFocused ? 'page' : undefined}
-      onClick={(event) => {
-        event.preventDefault();
-        onPress?.(event as never);
-      }}>
+      // The trigger switches tabs and cancels the browser's navigation for a plain
+      // click itself; cancelling it here first made it ignore the press.
+      onClick={(event) => onPress?.(event as never)}>
       <Icon name={icon} size={18} color={isFocused ? '#07120D' : 'rgba(234,242,236,0.62)'} />
       <span>{children}</span>
     </a>
@@ -81,7 +80,16 @@ function Navigation({ children, style: _style, ...props }: TabListProps) {
     <View {...props} style={[styles.container, wide ? styles.top : styles.bottom]} pointerEvents="box-none">
       <nav className="fh-nav" style={{ width: '100%', maxWidth: wide ? 1180 : 520 }}>
         {wide && (
-          <a className="fh-wordmark" href="/" aria-label={t('common.appName')}>
+          <a
+            className="fh-wordmark"
+            // The app may live under a base path (GitHub Pages serves it at /foodhabits.com/app/).
+            href={`${process.env.EXPO_BASE_URL ?? ''}/`}
+            aria-label={t('common.appName')}
+            onClick={(event) => {
+              if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+              event.preventDefault();
+              router.navigate('/');
+            }}>
             <Mark />
             <span aria-hidden="true">
               foodhabits<span className="fh-wordmark__dot">.</span>
