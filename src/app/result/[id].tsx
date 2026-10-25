@@ -26,7 +26,7 @@ import { deleteScan, updateScan, useAppState } from '@/lib/store';
 
 export default function ResultScreen() {
   const theme = useTheme();
-  const { t, tValue, list, capitalize } = useTranslation();
+  const { t, tValue, list, inSentence, capitalize } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const scan = useAppState((state) => state.scans.find((candidate) => candidate.id === id));
   const result = useAnalysis(scan);
@@ -214,7 +214,7 @@ export default function ResultScreen() {
                 <View key={index} style={styles.row}>
                   <Icon name="warning" size={16} color={theme.warn} />
                   <ThemedText type="small" style={styles.flex}>
-                    {watchText(item, t, list)}
+                    {watchText(item, t, list, inSentence)}
                   </ThemedText>
                 </View>
               ))}

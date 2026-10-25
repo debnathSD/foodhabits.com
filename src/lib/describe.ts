@@ -5,6 +5,8 @@ import { foodParts } from './parts';
 
 type T = (key: string, params?: Record<string, string | number>) => string;
 type List = (items: string[]) => string;
+/** Prepares a message for use mid-sentence (`inSentence` from i18n). */
+type Lower = (text: string) => string;
 
 export function summaryText(analysis: Analysis, t: T, list: List, capitalize: (text: string) => string) {
   const good = list(analysis.summary.good.map((id) => t(`factors.${id}`)));
@@ -12,14 +14,14 @@ export function summaryText(analysis: Analysis, t: T, list: List, capitalize: (t
   return capitalize(t(`summary.${analysis.summary.kind}`, { good, bad }));
 }
 
-export function watchText(item: WatchOut, t: T, list: List) {
+export function watchText(item: WatchOut, t: T, list: List, lower: Lower) {
   if (item.kind === 'allergens') {
     return t('watch.contains', { list: list(item.allergens.map((allergen) => t(`watch.allergen.${allergen}`))) });
   }
   if (item.kind === 'dietConflict') {
     return t('watch.dietConflict', {
       what: t(`watch.what.${item.what}`),
-      diet: t(`profileOptions.diet.${item.diet}`).toLocaleLowerCase(),
+      diet: lower(t(`profileOptions.diet.${item.diet}`)),
     });
   }
   return t(`watch.${item.key}`);
@@ -46,7 +48,7 @@ export function insideLine(lines: string[], t: number) {
 }
 
 /** The explainer's script: one narrated scene per part of the analysis. */
-export function buildScenes(analysis: Analysis, dish: string, t: T, list: List): Scene[] {
+export function buildScenes(analysis: Analysis, dish: string, t: T, list: List, lower: Lower): Scene[] {
   const scenes: Scene[] = [{ kind: 'intro', narration: t('explainer.intro', { dish }) }];
 
   // Take the dish apart, part by part, then put it back together.
@@ -68,19 +70,19 @@ export function buildScenes(analysis: Analysis, dish: string, t: T, list: List):
     scenes.push({ kind: 'body', narration: [t('explainer.body'), ...body].join(' ') });
   }
 
-  const risks = analysis.risks.map((risk) => t(`risks.${risk}.name`).toLocaleLowerCase());
+  const risks = analysis.risks.map((risk) => lower(t(`risks.${risk}.name`)));
   scenes.push({
     kind: 'risks',
     narration: risks.length ? t('explainer.risks', { list: list(risks) }) : t('explainer.noRisks'),
   });
 
-  const avoid = analysis.avoid.slice(0, 2).map((item) => t(`avoid.${item.id}.food`).toLocaleLowerCase());
+  const avoid = analysis.avoid.slice(0, 2).map((item) => lower(t(`avoid.${item.id}.food`)));
   const eat = analysis.eat
     .filter((id) => id !== 'more_of_this')
     .slice(0, 2)
-    .map((id) => t(`eat.${id}.food`).toLocaleLowerCase());
+    .map((id) => lower(t(`eat.${id}.food`)));
   scenes.push({ kind: 'next', narration: t('explainer.next', { avoid: list(avoid), eat: list(eat) }) });
 
-  scenes.push({ kind: 'outro', narration: t('explainer.outro', { verdict: t(`verdict.${analysis.verdict}`).toLocaleLowerCase() }) });
+  scenes.push({ kind: 'outro', narration: t('explainer.outro', { verdict: lower(t(`verdict.${analysis.verdict}`)) }) });
   return scenes;
 }

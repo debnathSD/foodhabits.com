@@ -9,7 +9,7 @@ import { buildScenes, summaryText, watchText } from '../lib/describe';
 import { analyzeFood, type Food } from '../lib/engine';
 import { foodFromCatalog, foodFromLabel, genericFood } from '../lib/food-index';
 import { DEFAULT_PROFILE, DIETS, GOALS, SENSITIVITIES } from '../lib/profile-options';
-import { capitalize, DICTIONARIES, joinList, TRANSLATED, translate, translateValue } from './index';
+import { capitalize, DICTIONARIES, inSentence, joinList, TRANSLATED, translate, translateValue } from './index';
 import { en } from './locales/en';
 
 /** Collects every key `t()` is asked for, failing on any that has no English text. */
@@ -39,13 +39,14 @@ test('every message the engine produces exists, for every food and profile', () 
   for (const language of TRANSLATED) {
     const t = strictT(language);
     const list = (items: string[]) => joinList(language, items);
+    const lower = (text: string) => inSentence(language, text);
     for (const food of allFoods) {
       for (const profile of profiles) {
         for (const hour of [8, 18]) {
           const analysis = analyzeFood(food, { profile, hour });
           summaryText(analysis, t, list, capitalize);
-          analysis.watch.forEach((item) => watchText(item, t, list));
-          buildScenes(analysis, food.name, t, list);
+          analysis.watch.forEach((item) => watchText(item, t, list, lower));
+          buildScenes(analysis, food.name, t, list, lower);
           analysis.gut.forEach((item) => t(`gut.${item.id}.detail`));
           analysis.body.forEach((item) => t(`body.${item.id}.detail`));
           analysis.risks.forEach((risk) => t(`risks.${risk}.detail`));
@@ -127,4 +128,10 @@ test('falls back to English and fills placeholders', () => {
   assert.equal(translate('en', 'home.afterMeal', { dish: 'Idli' }), 'After your Idli');
   assert.equal(joinList('en', ['a', 'b', 'c']), 'a, b and c');
   assert.equal(joinList('ur', ['a', 'b', 'c']), 'a، b اور c');
+});
+
+test('mid-sentence messages lose their capital, except acronyms and German nouns', () => {
+  assert.equal(inSentence('en', 'Bowel cancer'), 'bowel cancer');
+  assert.equal(inSentence('fr', 'AVC'), 'AVC');
+  assert.equal(inSentence('de', 'Darmkrebs'), 'Darmkrebs');
 });

@@ -26,7 +26,7 @@ export default function ExplainerScreen() {
   const scan = useAppState((state) => state.scans.find((candidate) => candidate.id === id));
   const voiceSetting = useAppState((state) => state.voice);
   const result = useAnalysis(scan);
-  const { t, list, speechLanguage, rtl } = useTranslation();
+  const { t, list, inSentence, speechLanguage, rtl } = useTranslation();
   const [voiceAvailable, setVoiceAvailable] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -50,6 +50,7 @@ export default function ExplainerScreen() {
     dish: result.name,
     t,
     list,
+    lower: inSentence,
     color: verdictColors(result.analysis.verdict, Colors.dark).color,
     speaking: speak,
     rtl,

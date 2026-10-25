@@ -54,6 +54,7 @@ export function buildExplainerProps({
   dish,
   t,
   list,
+  lower,
   color,
   speaking,
   rtl,
@@ -62,13 +63,15 @@ export function buildExplainerProps({
   dish: string;
   t: T;
   list: (items: string[]) => string;
+  /** `inSentence` from i18n. */
+  lower: (text: string) => string;
   color: string;
   /** Scenes last as long as the voice takes when narrated, reading speed otherwise. */
   speaking: boolean;
   rtl: boolean;
 }): ExplainerVideoProps {
   const parts = foodParts(analysis);
-  const scenes = buildScenes(analysis, dish, t, list).map((scene) => ({
+  const scenes = buildScenes(analysis, dish, t, list, lower).map((scene) => ({
     kind: scene.kind,
     narration: scene.narration,
     lines: scene.lines ?? [scene.narration],
