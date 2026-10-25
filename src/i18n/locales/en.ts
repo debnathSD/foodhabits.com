@@ -51,6 +51,7 @@ export const en = {
     avoid: 'Avoid',
     eat: 'Eat',
     todayMeals: "Today's meals",
+    dayAverage: "Today's gut score",
     dayScore: 'Average gut score {score}/10',
     howItWorks: 'How it works',
     step1: 'Snap your meal or search for it.',
@@ -148,6 +149,9 @@ export const en = {
     noVoice: 'No voice for this language on your phone. Showing captions.',
     inside: "Now let's take {dish} apart, down to what it is made of.",
     together: 'Put back together, that is your {dish}.',
+    friendly: 'Friendly microbes',
+    troublemakers: 'Troublemakers',
+    brand: 'foodhabits.com explains',
   },
   parts: {
     good: 'Good',

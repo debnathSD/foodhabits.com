@@ -37,5 +37,9 @@
   "include": [
     "src",
     "../src/three"
+  ],
+  // The app's web-only 3D (process.env, its own drei) isn't part of the site.
+  "exclude": [
+    "../src/three/web"
   ]
 }

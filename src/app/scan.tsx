@@ -35,8 +35,9 @@ export default function ScanScreen() {
   const { demo } = useLocalSearchParams<{ demo?: string }>();
 
   useEffect(() => {
-    warmUpRecognizer();
-  }, []);
+    // The screenshot demo has no camera feed, so it doesn't need the model.
+    if (!demo) warmUpRecognizer();
+  }, [demo]);
 
   async function handlePhoto(source: PhotoSource) {
     setPhase({ kind: 'working', photo: null });

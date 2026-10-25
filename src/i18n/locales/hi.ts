@@ -48,6 +48,7 @@ export const hi: Translation = {
     avoid: 'बचें',
     eat: 'खाएँ',
     todayMeals: 'आज का खाना',
+    dayAverage: 'आज का औसत स्कोर',
     dayScore: 'औसत गट स्कोर {score}/10',
     howItWorks: 'यह कैसे काम करता है',
     step1: 'अपने खाने की फ़ोटो लें या उसे खोजें।',
@@ -145,6 +146,9 @@ export const hi: Translation = {
     noVoice: 'आपके फ़ोन पर इस भाषा की आवाज़ नहीं है। कैप्शन दिखा रहे हैं।',
     inside: 'अब {dish} को खोलकर देखते हैं, उन चीज़ों तक जिनसे यह बना है।',
     together: 'सब वापस जोड़ें, तो यही है आपका {dish}।',
+    friendly: 'अच्छे बैक्टीरिया',
+    troublemakers: 'नुकसान वाले बैक्टीरिया',
+    brand: 'foodhabits.com बताता है',
   },
   parts: {
     good: 'अच्छा',

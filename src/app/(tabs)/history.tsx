@@ -7,11 +7,13 @@ import { ThemedView } from '@/components/themed-view';
 import { Icon } from '@/components/ui/icon';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
+import { useWebLayout } from '@/hooks/use-web-layout';
 import { useTranslation } from '@/i18n/use-translation';
 import { dayLabel, startOfDay } from '@/lib/format';
 import { type Scan, useAppState } from '@/lib/store';
 
 export default function HistoryScreen() {
+  const layout = useWebLayout();
   const theme = useTheme();
   const { t, language } = useTranslation();
   const scans = useAppState((state) => state.scans);
@@ -25,12 +27,12 @@ export default function HistoryScreen() {
   }
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView style={[styles.container, layout.screen]}>
       <SafeAreaView style={styles.safe} edges={['top']}>
         <SectionList
           sections={sections}
           keyExtractor={(scan) => scan.id}
-          contentContainerStyle={styles.content}
+          contentContainerStyle={[styles.content, { paddingTop: layout.topInset || undefined }]}
           contentInsetAdjustmentBehavior="automatic"
           stickySectionHeadersEnabled={false}
           ListHeaderComponent={<ThemedText type="largeTitle">{t('history.title')}</ThemedText>}

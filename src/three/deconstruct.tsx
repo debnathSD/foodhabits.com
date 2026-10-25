@@ -434,12 +434,18 @@ export function Deconstruct({
   color = '#C9A46A',
   label,
   whole: custom,
+  time,
 }: {
   parts: Part[];
   progress: { current: number };
   color?: string;
   label?: (index: number) => ReactNode;
   whole?: ReactNode;
+  /**
+   * Seconds to animate by, instead of the render clock. With it every frame is
+   * a pure function of `progress` and `time`, so video renders repeat exactly.
+   */
+  time?: { current: number };
 }) {
   const root = useRef<THREE.Group>(null);
   const whole = useRef<THREE.Group>(null);
@@ -623,14 +629,21 @@ export function Deconstruct({
     mesh.instanceMatrix.needsUpdate = true;
   }
 
-  useFrame(({ clock }, delta) => {
-    const time = clock.getElapsedTime();
+  useFrame(({ clock }, frameDelta) => {
+    const fixed = time !== undefined;
+    const now = fixed ? time.current : clock.getElapsedTime();
+    const delta = fixed ? 1 : frameDelta;
+    // Live, values ease towards their targets; on a fixed clock they land exactly.
+    const settle = (current: number, target: number, lambda: number) => (fixed ? target : THREE.MathUtils.damp(current, target, lambda, delta));
     const phase = deconstructPhase(progress.current, count);
 
     if (whole.current) {
       // Turn slowly while whole; square up to the viewer to open.
       const rotation = whole.current.rotation;
-      if (phase.split > 0.02) rotation.y = THREE.MathUtils.damp(rotation.y, Math.round(rotation.y / (Math.PI * 2)) * Math.PI * 2, 4, delta);
+      if (fixed) {
+        const spin = now * 0.35;
+        rotation.y = THREE.MathUtils.lerp(spin, Math.round(spin / (Math.PI * 2)) * Math.PI * 2, phase.split);
+      } else if (phase.split > 0.02) rotation.y = settle(rotation.y, Math.round(rotation.y / (Math.PI * 2)) * Math.PI * 2, 4);
       else rotation.y += delta * 0.35;
     }
     // The halves part, then shrink away entirely while the parts are out.
@@ -648,7 +661,7 @@ export function Deconstruct({
       half.scale.setScalar(shrink);
     });
 
-    if (ring.current) ring.current.rotation.y = THREE.MathUtils.damp(ring.current.rotation.y, -phase.turn * step, 6, delta);
+    if (ring.current) ring.current.rotation.y = settle(ring.current.rotation.y, -phase.turn * step, 6);
     clusters.current.forEach((node, index) => {
       if (!node) return;
       const angle = index * step;
@@ -658,8 +671,8 @@ export function Deconstruct({
       // With dust, each part takes shape as its specks arrive.
       const grown = custom ? THREE.MathUtils.smoothstep(phase.spread, 0.55, 1) : phase.spread;
       const size = grown * (focused ? 1 + 0.65 * phase.light : phase.focus >= 0 ? 0.72 : 1);
-      node.scale.setScalar(THREE.MathUtils.damp(node.scale.x, Math.max(0.001, size), 6, delta));
-      node.rotation.y = time * 0.35 + index;
+      node.scale.setScalar(settle(node.scale.x, Math.max(0.001, size), 6));
+      node.rotation.y = now * 0.35 + index;
       const material = live.current.materials[index];
       if (material) material.emissiveIntensity = focused ? 0.28 * phase.light : 0;
     });
@@ -667,7 +680,8 @@ export function Deconstruct({
     const part = parts[phase.focus];
     const { light, wanted } = live.current;
     wanted.set(part ? (part.good ? MINT : CORAL) : MINT);
-    light.lerp(wanted, 1 - Math.exp(-8 * delta));
+    if (fixed) light.copy(wanted);
+    else light.lerp(wanted, 1 - Math.exp(-8 * delta));
     if (spot.current) {
       spot.current.color.copy(light);
       spot.current.intensity = 70 * phase.light;

@@ -28,6 +28,8 @@ export function ResultHero({
   verdict: Verdict;
   score: number;
   photo: string | null;
+  /** Used by the web layout only. */
+  wide?: boolean;
 }) {
   const theme = useTheme();
   // The hero is always dark, so it uses the dark theme's verdict colours.

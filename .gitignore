@@ -42,5 +42,7 @@ example
 /ios
 /android
 
-# LiteRT.js runtime, copied from node_modules at build time
+# Web-only runtime files, copied in by scripts/copy-web-runtime.mjs
 public/litert/
+public/models/
+public/hdri/

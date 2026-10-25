@@ -42,8 +42,8 @@ const SHOTS = [
   { name: 'camera', path: '/scan?demo=1' },
   { name: 'result', path: '/result/lunch' },
   { name: 'next', path: '/result/lunch', scrollTo: 'Avoid next' },
-  // The take-apart scene (the explainer's second), with the spotlight on the frying oil.
-  { name: 'explainer', path: '/explainer/lunch', sceneReached: 2, after: 14000 },
+  // The explainer video's take-apart scene, with a part under the spotlight.
+  { name: 'explainer', path: '/explainer/lunch', wait: 17000 },
 ];
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -161,6 +161,7 @@ async function main() {
         );
         await sleep(800);
       }
+      if (shot.wait) await sleep(shot.wait);
       if (shot.sceneReached) {
         // Explainer progress segments light up as scenes play.
         await waitFor(

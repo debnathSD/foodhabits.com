@@ -11,6 +11,7 @@ import { Icon, type IconName } from '@/components/ui/icon';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { findLanguage } from '@/i18n/languages';
+import { useWebLayout } from '@/hooks/use-web-layout';
 import { useTranslation } from '@/i18n/use-translation';
 import { confirmDestructive } from '@/lib/confirm';
 import { DIETS, GOALS, SENSITIVITIES } from '@/lib/profile-options';
@@ -21,15 +22,16 @@ function toggle<T>(list: T[], item: T) {
 }
 
 export default function ProfileScreen() {
+  const layout = useWebLayout();
   const { t, language } = useTranslation();
   const profile = useAppState((state) => state.profile);
   const voice = useAppState((state) => state.voice);
   const theme = useTheme();
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView style={[styles.container, layout.screen]}>
       <SafeAreaView style={styles.safe} edges={['top']}>
-        <ScrollView contentContainerStyle={styles.content} contentInsetAdjustmentBehavior="automatic">
+        <ScrollView contentContainerStyle={[styles.content, { paddingTop: layout.topInset || undefined }]} contentInsetAdjustmentBehavior="automatic">
           <View style={styles.header}>
             <ThemedText type="largeTitle">{t('profile.title')}</ThemedText>
             <ThemedText type="small" themeColor="textSecondary">

@@ -9,8 +9,9 @@ import {
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
-import { useColorScheme } from 'react-native';
+import { Platform, useColorScheme } from 'react-native';
 
+import { WebBackdrop } from '@/components/web-backdrop';
 import { Colors, Type } from '@/constants/theme';
 import { useTranslation } from '@/i18n/use-translation';
 import { loadState, useAppState } from '@/lib/store';
@@ -48,8 +49,10 @@ export default function RootLayout() {
     <ThemeProvider
       value={{
         ...navigationTheme,
-        colors: { ...navigationTheme.colors, primary: colors.tint, background: colors.background },
+        // On the web, screens sit on the page's cinematic backdrop.
+        colors: { ...navigationTheme.colors, primary: colors.tint, background: Platform.OS === 'web' ? 'transparent' : colors.background },
       }}>
+      <WebBackdrop />
       <Stack
         screenOptions={{
           headerShadowVisible: false,

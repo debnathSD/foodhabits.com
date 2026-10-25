@@ -9,7 +9,7 @@ import { FoodOrbit, SaladBowl } from '@/three/scenes';
 import { Studio } from '@/three/studio';
 
 /** The home screen's opening: a live 3D bowl on a deep emerald glow, with the day's greeting. */
-export function HomeHero({ greeting, title }: { greeting: string; title: string }) {
+export function HomeHero({ greeting, title }: { greeting: string; title: string; wide?: boolean }) {
   const theme = useTheme();
   return (
     <View style={styles.hero}>

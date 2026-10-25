@@ -1,7 +1,8 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Linking, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Linking, Platform, ScrollView, StyleSheet, useWindowDimensions, View, type ViewStyle } from 'react-native';
 
+import { ExplainerButton } from '@/components/explainer-button';
 import { ResultHero } from '@/components/result-hero';
 import { ScoreMeter } from '@/components/score-badge';
 import { ThemedText } from '@/components/themed-text';
@@ -30,6 +31,8 @@ export default function ResultScreen() {
   const scan = useAppState((state) => state.scans.find((candidate) => candidate.id === id));
   const result = useAnalysis(scan);
   const [changing, setChanging] = useState(false);
+  const { width, height } = useWindowDimensions();
+  const wide = Platform.OS === 'web' && width >= 900;
 
   if (!scan || !result) {
     return (
@@ -46,17 +49,20 @@ export default function ResultScreen() {
   const alternatives = (scan.alternatives ?? []).map(foodFromLabel).filter((food) => food !== null);
   const swaps = tValue<{ swap: string; why: string }[]>(`swaps.${analysis.swaps}`) ?? [];
 
-  return (
-    <ThemedView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <ResultHero
-          name={name}
-          caption={scan.source === 'photo' ? t('result.sourceModel') : t('result.sourceSearch')}
-          verdictLabel={t(`verdict.${analysis.verdict}`)}
-          verdict={analysis.verdict}
-          score={analysis.score}
-          photo={uri}
-        />
+  const hero = (
+    <ResultHero
+      name={name}
+      caption={scan.source === 'photo' ? t('result.sourceModel') : t('result.sourceSearch')}
+      verdictLabel={t(`verdict.${analysis.verdict}`)}
+      verdict={analysis.verdict}
+      score={analysis.score}
+      photo={uri}
+      wide={wide}
+    />
+  );
+
+  const details = (
+    <>
 
         <Card>
           <ScoreMeter score={analysis.score} verdict={analysis.verdict} />
@@ -107,22 +113,11 @@ export default function ResultScreen() {
           <Button title={t('result.fixIt')} icon="edit" variant="ghost" onPress={() => setChanging(true)} />
         )}
 
-        <Pressable
-          accessibilityRole="button"
+        <ExplainerButton
+          title={t('result.explain')}
+          hint={t('result.explainHint')}
           onPress={() => router.push({ pathname: '/explainer/[id]', params: { id: scan.id } })}
-          style={({ pressed }) => [styles.explainer, { backgroundColor: theme.accent, transform: [{ scale: pressed ? 0.98 : 1 }] }]}>
-          <View style={styles.playCircle}>
-            <Icon name="play" size={22} color={theme.onAccent} />
-          </View>
-          <View style={styles.flex}>
-            <ThemedText type="heading" style={{ color: theme.onAccent }}>
-              {t('result.explain')}
-            </ThemedText>
-            <ThemedText type="small" style={{ color: theme.onAccent, opacity: 0.75 }}>
-              {t('result.explainHint')}
-            </ThemedText>
-          </View>
-        </Pressable>
+        />
 
         <Section title={t('result.gutTitle')} icon="leaf">
           <Card>
@@ -280,6 +275,23 @@ export default function ResultScreen() {
             }
           />
         </View>
+    </>
+  );
+
+  return (
+    <ThemedView style={[styles.container, Platform.OS === 'web' && styles.clear]}>
+      <ScrollView contentContainerStyle={[styles.content, wide && styles.contentWide]}>
+        {wide ? (
+          <View style={styles.columns}>
+            <View style={[styles.heroColumn, { height: Math.max(560, height - 64) }]}>{hero}</View>
+            <View style={styles.sideColumn}>{details}</View>
+          </View>
+        ) : (
+          <>
+            {hero}
+            {details}
+          </>
+        )}
       </ScrollView>
     </ThemedView>
   );
@@ -330,6 +342,28 @@ const styles = StyleSheet.create({
     paddingBottom: Spacing.six,
     gap: Spacing.four,
   },
+  clear: {
+    backgroundColor: 'transparent',
+  },
+  contentWide: {
+    maxWidth: 1212,
+    paddingTop: Spacing.five,
+  },
+  columns: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: Spacing.five,
+  },
+  // On the web the hero card stays in view while the details scroll past.
+  heroColumn: {
+    flex: 1,
+    position: 'sticky',
+    top: Spacing.five,
+  } as unknown as ViewStyle,
+  sideColumn: {
+    flex: 1.1,
+    gap: Spacing.four,
+  },
   scoreRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -343,21 +377,6 @@ const styles = StyleSheet.create({
   },
   flex: {
     flex: 1,
-  },
-  explainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.three,
-    borderRadius: Radius.large,
-    padding: Spacing.three,
-  },
-  playCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: 'rgba(7,18,13,0.12)',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   effect: {
     flexDirection: 'row',

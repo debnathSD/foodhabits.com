@@ -27,6 +27,7 @@ const ICONS = {
   trash: { ios: 'trash', android: 'delete', web: 'delete' },
   flag: { ios: 'flag', android: 'flag', web: 'flag' },
   globe: { ios: 'globe', android: 'language', web: 'language' },
+  home: { ios: 'house.fill', android: 'home', web: 'home' },
   history: { ios: 'clock.arrow.circlepath', android: 'history', web: 'history' },
   person: { ios: 'person.crop.circle', android: 'account_circle', web: 'account_circle' },
   lock: { ios: 'lock.fill', android: 'lock', web: 'lock' },
