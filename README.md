@@ -81,7 +81,10 @@ photo ─► on-device model: SigLIP 2 (web) or AIY (phones) ──────�
   changes a `{placeholder}`.
 - **Explainer:** `src/app/explainer/[id].tsx` plays 3D scenes (three.js via
   React Three Fiber) narrated by the device's own text-to-speech
-  (`expo-speech`), with captions always on. Its "inside" scene takes the dish
+  (`expo-speech`), with captions always on. A meal scanned from a photo stars
+  as itself: the photo, on a plate (`src/three/photo-dish.tsx`), drops onto the
+  pedestal and is what the "inside" scene burns away into its parts and puts
+  back together. Its "inside" scene takes the dish
   apart (`src/three/deconstruct.tsx`, timing in `src/lib/deconstruct.ts`): the
   parts it is made of come out at micro scale (fibre strands, protein coils,
   starch, oil, sugar, salt, microbes) and each passes under a spotlight, mint

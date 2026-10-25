@@ -7,12 +7,13 @@
  */
 import { ThreeCanvas } from '@remotion/three';
 import { gsap } from 'gsap';
-import { type ReactNode, useLayoutEffect, useRef } from 'react';
-import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig } from 'remotion';
+import { type ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { AbsoluteFill, continueRender, delayRender, interpolate, useCurrentFrame, useVideoConfig } from 'remotion';
 import * as THREE from 'three';
 
 import { deconstructPhase } from '../lib/deconstruct';
 import { insideLine } from '../lib/describe';
+import { preloadPhoto } from '../three/photo-dish';
 import { Studio } from '../three/studio';
 import { type ExplainerVideoProps, sceneTimeline } from './props';
 import { Stage } from './stages';
@@ -300,7 +301,17 @@ function Overlay({ props, index, local, frames }: { props: ExplainerVideoProps; 
   );
 }
 
+/** Holds rendering until the meal photo is decoded, so no frame shows a blank plate. */
+function usePhotoReady(uri: string | null) {
+  const [handle] = useState(() => (uri ? delayRender('Loading the meal photo') : null));
+  useEffect(() => {
+    if (handle === null || !uri) return;
+    preloadPhoto(uri).finally(() => continueRender(handle));
+  }, [handle, uri]);
+}
+
 export function Explainer(props: ExplainerVideoProps) {
+  usePhotoReady(props.photo);
   const frame = useCurrentFrame();
   const { width, height } = useVideoConfig();
   const { starts } = sceneTimeline(props.scenes);

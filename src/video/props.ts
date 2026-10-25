@@ -27,6 +27,8 @@ export type ExplainerVideoProps = {
   /** Verdict colour on the dark video background. */
   color: string;
   dishColor: string;
+  /** The meal's own photo as a data URI, shown as the dish; null for meals added by search. */
+  photo: string | null;
   parts: Part[];
   partNames: string[];
   partTags: { good: string; bad: string };
@@ -52,6 +54,7 @@ export function gutHealth(analysis: Analysis) {
 export function buildExplainerProps({
   analysis,
   dish,
+  photo,
   t,
   list,
   lower,
@@ -61,6 +64,7 @@ export function buildExplainerProps({
 }: {
   analysis: Analysis;
   dish: string;
+  photo: string | null;
   t: T;
   list: (items: string[]) => string;
   /** `inSentence` from i18n. */
@@ -86,6 +90,7 @@ export function buildExplainerProps({
     score: analysis.score,
     color,
     dishColor: partsColor(parts),
+    photo,
     parts,
     partNames: parts.map((part) => t(`parts.${part.kind}.name`)),
     partTags: { good: t('parts.good'), bad: t('parts.bad') },

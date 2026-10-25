@@ -9,6 +9,7 @@ import * as THREE from 'three';
 import type { SceneKind } from '../lib/describe';
 import { Bite, Deconstruct } from '../three/deconstruct';
 import { Avocado, Broccoli, Tomato } from '../three/food';
+import { PhotoDish } from '../three/photo-dish';
 import { GutScene, HeartScene, ScoreOrb } from '../three/scenes';
 import { bakeDrop, bakeMicrobes, bakePlate, poseAt } from './physics';
 import type { ExplainerVideoProps } from './props';
@@ -33,11 +34,30 @@ function Pedestal({ radius = 1.3 }: { radius?: number }) {
   );
 }
 
-/** Intro: the whole dish drops onto the pedestal, tumbles and settles. */
+/** How far the meal photo leans back to face the camera, like a plate on a display stand. */
+const PHOTO_TILT = 1.2;
+
+/**
+ * Intro: the dish drops onto the pedestal. A meal from a photo is that photo
+ * on a plate, swinging up to face the viewer; otherwise a stand-in bite
+ * tumbles and settles.
+ */
 function IntroStage({ props, local, frames }: { props: ExplainerVideoProps; local: number; frames: number }) {
   const { fps } = useVideoConfig();
   const baked = useMemo(() => bakeDrop(frames, fps), [frames, fps]);
   const pose = poseAt(baked, 0, local);
+  if (props.photo) {
+    const drop = spring({ frame: local, fps, config: { damping: 13, mass: 0.9 } });
+    const sway = Math.sin((local / fps) * 0.8) * 0.12;
+    return (
+      <group position={[0, -0.75, 0]} scale={0.62}>
+        <Pedestal />
+        <group position={[0, 1 + (1 - drop) * 3.6, 0]} rotation={[PHOTO_TILT * drop, sway, 0]}>
+          <PhotoDish uri={props.photo} />
+        </group>
+      </group>
+    );
+  }
   return (
     <group position={[0, -0.75, 0]} scale={0.62}>
       <Pedestal />
@@ -48,7 +68,7 @@ function IntroStage({ props, local, frames }: { props: ExplainerVideoProps; loca
   );
 }
 
-/** Inside: the shared take-apart scene on the video's clock. */
+/** Inside: the shared take-apart scene on the video's clock. The meal's photo burns away into its parts. */
 function InsideStage({ props, progress }: { props: ExplainerVideoProps; progress: number }) {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -60,7 +80,14 @@ function InsideStage({ props, progress }: { props: ExplainerVideoProps; progress
   });
   return (
     <group position={[0, 0.1, 0]} scale={0.55}>
-      <Deconstruct parts={props.parts} progress={progressRef} time={timeRef} color={props.dishColor} />
+      <Deconstruct
+        parts={props.parts}
+        progress={progressRef}
+        time={timeRef}
+        color={props.dishColor}
+        whole={props.photo ? <PhotoDish uri={props.photo} radius={1.1} rotation={[PHOTO_TILT, 0, 0]} /> : undefined}
+        facing={Boolean(props.photo)}
+      />
     </group>
   );
 }

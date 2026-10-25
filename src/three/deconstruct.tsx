@@ -434,6 +434,7 @@ export function Deconstruct({
   color = '#C9A46A',
   label,
   whole: custom,
+  facing = false,
   time,
 }: {
   parts: Part[];
@@ -441,6 +442,8 @@ export function Deconstruct({
   color?: string;
   label?: (index: number) => ReactNode;
   whole?: ReactNode;
+  /** The whole has a front (such as a photo) that should stay facing the viewer instead of turning. */
+  facing?: boolean;
   /**
    * Seconds to animate by, instead of the render clock. With it every frame is
    * a pure function of `progress` and `time`, so video renders repeat exactly.
@@ -638,9 +641,10 @@ export function Deconstruct({
     const phase = deconstructPhase(progress.current, count);
 
     if (whole.current) {
-      // Turn slowly while whole; square up to the viewer to open.
+      // Turn slowly while whole; square up to the viewer to open. A dish with a front sways instead.
       const rotation = whole.current.rotation;
-      if (fixed) {
+      if (facing) rotation.y = Math.sin(now * 0.6) * 0.15 * (1 - phase.split);
+      else if (fixed) {
         const spin = now * 0.35;
         rotation.y = THREE.MathUtils.lerp(spin, Math.round(spin / (Math.PI * 2)) * Math.PI * 2, phase.split);
       } else if (phase.split > 0.02) rotation.y = settle(rotation.y, Math.round(rotation.y / (Math.PI * 2)) * Math.PI * 2, 4);

@@ -19,6 +19,7 @@ import { Colors, Spacing, verdictColors } from '@/constants/theme';
 import { useAnalysis } from '@/hooks/use-analysis';
 import { useTranslation } from '@/i18n/use-translation';
 import { goBack } from '@/lib/navigation';
+import { photoDataUri } from '@/lib/photo-store';
 import { useAppState } from '@/lib/store';
 import { pickVoice } from '@/lib/voice';
 import { buildExplainerProps } from '@/video/props';
@@ -31,6 +32,8 @@ export default function ExplainerScreen() {
   const { t, list, inSentence, speechLanguage, rtl } = useTranslation();
   // The voice to narrate in: undefined while looking, null when there is none for this language.
   const [voice, setVoice] = useState<string | null | undefined>(undefined);
+  // The meal's photo for the video (undefined while loading, null for searched meals).
+  const [photo, setPhoto] = useState<string | null | undefined>(undefined);
   // The scene whose narration is still being spoken (-1: none). Each narration
   // gets a token, so the callback of one that was cut short can't clear a newer one.
   const [narrating, setNarrating] = useState({ token: 0, scene: -1 });
@@ -45,16 +48,24 @@ export default function ExplainerScreen() {
     };
   }, [speechLanguage]);
 
+  const photoName = scan?.photo ?? null;
+  useEffect(() => {
+    photoDataUri(photoName)
+      .then(setPhoto)
+      .catch(() => setPhoto(null));
+  }, [photoName]);
+
   const voiceAvailable = voice === undefined ? null : voice !== null;
   const speak = voiceSetting && voiceAvailable === true;
 
-  if (!result || voiceAvailable === null) {
+  if (!result || voiceAvailable === null || photo === undefined) {
     return <View style={[styles.container, { backgroundColor: Colors.dark.background }]} />;
   }
 
   const video = buildExplainerProps({
     analysis: result.analysis,
     dish: result.name,
+    photo,
     t,
     list,
     lower: inSentence,
