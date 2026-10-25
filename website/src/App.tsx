@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { startCounters, startReveals, startSmoothScroll, startSplitReveals } from './motion';
 import { Preloader } from './sections/Brand';
+import { ChapterHud } from './sections/Cinema';
 import { preloadScans } from './scene/scans';
 import { Compare, Editorial, Finale, Footer, Gut, Languages, Nav, Privacy, Truth } from './sections/Sections';
 import { Inside } from './sections/Inside';
@@ -57,6 +58,7 @@ export function App() {
         <Finale />
       </main>
       <Footer />
+      <ChapterHud />
     </>
   );
 }

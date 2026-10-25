@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { reducedMotion, trackProgress } from '../motion';
 import { HeroScene } from '../scene/HeroScene';
 import { TryNow } from './Brand';
+import { Slate } from './Cinema';
 
 const STEPS = [
   {
@@ -82,12 +83,13 @@ export function Stage() {
   }, [compact]);
 
   return (
-    <section ref={stage} className="stage" id="how" aria-label="How foodhabits.com works">
+    <section ref={stage} className="stage" id="how" data-chapter="01|Your plate" aria-label="How foodhabits.com works">
       <div className="stage__frame">
         <HeroScene progress={progress} compact={compact} />
 
         <div ref={hero} className="hero-copy">
           <div className="hero-copy__inner">
+            <Slate scene="01" title="Your plate" />
             <h1 className="display" data-split="reveal">
               Know what your food <em>does</em> to&nbsp;you.
             </h1>

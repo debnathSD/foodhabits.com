@@ -145,8 +145,9 @@ function Choreography({ progress, compact, focus }: { progress: { current: numbe
     if (stage.current) {
       const x = compact ? 0 : THREE.MathUtils.lerp(1.55, 1.72, story);
       // On phones the stage sits above the copy, and grows once the shorter step copy replaces the hero.
-      const y = compact ? THREE.MathUtils.lerp(0.95, 0.7, story) : 0.24;
-      const scale = compact ? THREE.MathUtils.lerp(0.46, 0.6, story) : 0.86;
+      // On phones the hero copy fills the lower half, so the phone starts higher and a little smaller.
+      const y = compact ? THREE.MathUtils.lerp(1.2, 0.7, story) : 0.24;
+      const scale = compact ? THREE.MathUtils.lerp(0.4, 0.6, story) : 0.86;
       stage.current.position.x = THREE.MathUtils.damp(stage.current.position.x, x, 4, delta);
       stage.current.position.y = THREE.MathUtils.damp(stage.current.position.y, y, 4, delta);
       stage.current.scale.setScalar(THREE.MathUtils.damp(stage.current.scale.x, scale, 4, delta));

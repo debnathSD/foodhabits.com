@@ -21,6 +21,14 @@
   --gutter: clamp(16px, 4vw, 56px);
   --max: 1320px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  /* The cinema: near-black, with each chapter shown on its own lit screen. */
+  --black: #040605;
+  --amber: #f2b24c;
+  --key: var(--chartreuse);
+  --frame-x: clamp(8px, 1.4vw, 20px);
+  --frame-y: clamp(8px, 1.2vw, 14px);
+  --nav-h: 68px;
+  --screen-radius: clamp(20px, 2.4vw, 36px);
   color-scheme: dark;
 }
 
@@ -45,21 +53,41 @@ html.lenis body {
   scroll-behavior: auto !important;
 }
 
-/* Fine film grain over everything, for depth. */
+/* Film grain over everything, shifting a few times a second like real stock. */
 body::after {
   content: '';
   position: fixed;
-  inset: 0;
+  inset: -50%;
   z-index: 60;
   pointer-events: none;
-  opacity: 0.07;
+  opacity: 0.08;
   mix-blend-mode: overlay;
+  animation: grain 0.9s steps(6) infinite;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-4%, 3%); }
+  40% { transform: translate(3%, -5%); }
+  60% { transform: translate(-6%, -2%); }
+  80% { transform: translate(5%, 4%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* A soft vignette, so the eye rests on the middle of the frame. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 59;
+  pointer-events: none;
+  background: radial-gradient(120% 100% at 50% 45%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.5) 100%);
 }
 
 body {
   margin: 0;
-  background: var(--ink);
+  background: var(--black);
   color: var(--text);
   font: 400 18px/1.55 var(--sans);
   overflow-x: hidden;
@@ -127,12 +155,8 @@ a {
 .display em,
 .h2 em {
   font-style: italic;
-  color: var(--chartreuse);
+  color: var(--key);
   padding-right: 0.04em;
-}
-
-.section--paper .h2 em {
-  color: var(--emerald);
 }
 
 .h3 {
@@ -206,30 +230,29 @@ a {
   opacity: 0.7;
 }
 
-/* Nav: a floating, blurred pill over every section. */
+/* Nav: a slim bar across the top of the cinema, turning solid once the page scrolls. */
 
 .nav {
   position: fixed;
-  top: 14px;
-  left: 50%;
+  inset: 0 0 auto;
   z-index: 50;
-  width: min(1120px, calc(100% - 2 * var(--gutter)));
-  transform: translateX(-50%);
+  height: var(--nav-h);
+  transition: background-color 0.4s var(--ease);
+}
+
+.nav--solid {
+  background: rgba(4, 6, 5, 0.72);
+  backdrop-filter: saturate(150%) blur(18px);
+  -webkit-backdrop-filter: saturate(150%) blur(18px);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .nav__inner {
   display: flex;
   align-items: center;
   gap: 32px;
-  height: 60px;
-  padding: 0 8px 0 18px;
-  border-radius: 999px;
-  background: rgba(8, 20, 14, 0.74);
-  backdrop-filter: saturate(150%) blur(18px);
-  -webkit-backdrop-filter: saturate(150%) blur(18px);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
-    0 12px 40px rgba(0, 0, 0, 0.25);
+  height: 100%;
+  padding-inline: calc(var(--frame-x) + 14px);
 }
 
 .wordmark {
@@ -260,9 +283,10 @@ a {
 
 .nav__links {
   display: flex;
-  gap: 28px;
+  gap: 30px;
   margin-left: auto;
-  font-size: 15px;
+  font-size: 14px;
+  letter-spacing: 0.01em;
 }
 
 .nav__links a {
@@ -282,17 +306,13 @@ a {
 }
 
 @media (max-width: 860px) {
-  .nav {
-    top: 10px;
-  }
-  .nav__inner {
-    height: 54px;
-    padding-left: 14px;
+  :root {
+    --nav-h: 60px;
   }
   .nav__links {
     display: none;
   }
-  .nav .button {
+  .nav .try {
     margin-left: auto;
   }
 }
@@ -300,14 +320,19 @@ a {
 /* Hero + story stage: one tall section whose sticky frame holds the phone. */
 
 .stage {
+  --key: var(--chartreuse);
   position: relative;
   height: 520vh;
 }
 
+/* Pinned screens sit just below the nav, so the whole frame is always in view. */
 .stage__frame {
   position: sticky;
-  top: 0;
-  height: 100svh;
+  top: var(--nav-h);
+  height: calc(100svh - var(--nav-h) - var(--frame-y));
+  margin-inline: var(--frame-x);
+  border-radius: var(--screen-radius);
+  box-shadow: var(--screen-edge);
   overflow: hidden;
   background:
     radial-gradient(34% 46% at 74% 50%, rgba(43, 209, 126, 0.22) 0%, rgba(43, 209, 126, 0) 70%),
@@ -357,13 +382,54 @@ a {
 @media (max-width: 860px) {
   .hero-copy {
     top: auto;
-    bottom: 5vh;
+    bottom: 3.5vh;
     right: var(--gutter);
     width: auto;
     transform: none;
   }
   .hero-copy__inner {
-    gap: 20px;
+    gap: 16px;
+  }
+  .hero-copy__side {
+    gap: 18px;
+  }
+  .hero-copy .display {
+    font-size: clamp(40px, 11vw, 56px);
+  }
+  .hero-copy .lede {
+    font-size: 16px;
+  }
+  .hero-copy .actions {
+    flex-wrap: nowrap;
+  }
+  .hero-copy .actions .button {
+    min-height: 48px;
+    padding: 0 18px;
+    white-space: nowrap;
+  }
+  .hero-copy__note {
+    display: none;
+  }
+  .hero-copy .try__label {
+    white-space: nowrap;
+  }
+  .hero-copy .try__face {
+    gap: 10px;
+    padding: 0 10px 0 18px;
+    font-size: 15px;
+  }
+  .hero-copy .actions .button {
+    padding: 0 16px;
+    font-size: 14px;
+  }
+  /* Fade the lower frame to black so the copy reads cleanly over the scene. */
+  .stage__frame::after {
+    content: '';
+    position: absolute;
+    inset: 38% 0 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(rgba(4, 6, 5, 0), rgba(4, 6, 5, 0.82) 55%, rgba(4, 6, 5, 0.92));
   }
 }
 
@@ -717,27 +783,21 @@ a {
   padding-block: clamp(96px, 16vh, 200px);
 }
 
-.section--paper {
-  background: var(--paper);
-  color: var(--paper-ink);
-}
-
-.section--paper .lede,
-.section--paper .small {
-  color: rgba(12, 26, 18, 0.66);
-}
-
 /* Inside the plate: a pinned studio chapter where one dish is taken apart */
 
 .inside {
   position: relative;
   height: 460vh;
+  margin-top: var(--frame-y);
 }
 
 .inside__frame {
   position: sticky;
-  top: 0;
-  height: 100svh;
+  top: var(--nav-h);
+  height: calc(100svh - var(--nav-h) - var(--frame-y));
+  margin-inline: var(--frame-x);
+  border-radius: var(--screen-radius);
+  box-shadow: var(--screen-edge);
   overflow: hidden;
   background:
     radial-gradient(40% 50% at 70% 60%, rgba(212, 242, 92, 0.06) 0%, rgba(212, 242, 92, 0) 70%),
@@ -759,15 +819,6 @@ a {
   display: grid;
   gap: 24px;
   pointer-events: none;
-}
-
-.eyebrow {
-  margin: 0;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--chartreuse);
 }
 
 .readout {
@@ -1037,11 +1088,12 @@ a {
 /* Plate: a full-bleed product shot on paper */
 
 .plate {
+  --key: var(--amber);
   position: relative;
   padding-bottom: clamp(80px, 12vh, 160px);
   background:
-    radial-gradient(60% 70% at 72% 40%, #ffffff 0%, rgba(255, 255, 255, 0) 70%),
-    var(--paper);
+    radial-gradient(42% 55% at 70% 38%, rgba(242, 178, 76, 0.2) 0%, rgba(242, 178, 76, 0) 70%),
+    radial-gradient(100% 90% at 65% 40%, #2a1c0e 0%, #130d07 55%, #070504 100%);
   overflow: hidden;
 }
 
@@ -1090,7 +1142,7 @@ a {
   gap: 24px;
   padding-block: 22px;
   background:
-    linear-gradient(rgba(12, 26, 18, 0.12), rgba(12, 26, 18, 0.12)) bottom / 100% 1px no-repeat;
+    linear-gradient(rgba(242, 178, 76, 0.18), rgba(242, 178, 76, 0.18)) bottom / 100% 1px no-repeat;
 }
 
 .figure__value {
@@ -1098,21 +1150,13 @@ a {
   font-variant-numeric: tabular-nums;
 }
 
-/* Truth: a vermilion chapter with cream type */
+/* Truth: crimson light on black, each fact in its own panel */
 
 .truth-section {
-  background: var(--vermilion);
-  color: var(--cream);
-}
-
-.truth-section .lede,
-.truth-section .small {
-  color: rgba(247, 237, 224, 0.8);
-}
-
-.truth-section ::selection {
-  background: var(--cream);
-  color: var(--vermilion);
+  --key: var(--coral);
+  background:
+    radial-gradient(50% 60% at 18% 0%, rgba(191, 52, 32, 0.32) 0%, rgba(191, 52, 32, 0) 70%),
+    radial-gradient(100% 100% at 50% 0%, #1d0708 0%, #0a0304 70%);
 }
 
 .truth {
@@ -1123,16 +1167,15 @@ a {
 .truth__rows {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(24px, 4vw, 64px);
+  gap: clamp(12px, 1.4vw, 20px);
 }
 
 .truth__value {
-  font: 400 clamp(64px, 8vw, 132px) / 0.85 var(--serif);
-  color: var(--cream);
+  font: 400 clamp(64px, 7vw, 120px) / 0.85 var(--serif);
+  color: #ffd9cf;
   display: block;
-  margin-bottom: 16px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid rgba(247, 237, 224, 0.3);
+  margin-bottom: 18px;
+  text-shadow: 0 0 48px rgba(255, 107, 91, 0.35);
 }
 
 @media (max-width: 860px) {
@@ -1144,13 +1187,11 @@ a {
 /* Languages */
 
 .languages {
+  --key: var(--chartreuse);
   overflow: hidden;
-  background: var(--chartreuse);
-  color: var(--ink);
-}
-
-.languages .lede {
-  color: rgba(7, 18, 13, 0.7);
+  background:
+    radial-gradient(60% 70% at 85% 100%, rgba(212, 242, 92, 0.16) 0%, rgba(212, 242, 92, 0) 70%),
+    #070a06;
 }
 
 .marquee {
@@ -1162,9 +1203,14 @@ a {
   animation: marquee 60s linear infinite;
 }
 
+.marquee {
+  color: var(--chartreuse);
+}
+
 .marquee--reverse {
   animation-direction: reverse;
-  opacity: 0.45;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(212, 242, 92, 0.55);
 }
 
 .marquee span::after {
@@ -1182,7 +1228,24 @@ a {
 /* Privacy: near-black */
 
 .privacy-section {
-  background: #050806;
+  --key: var(--mint);
+  background:
+    radial-gradient(50% 60% at 50% 0%, rgba(87, 227, 154, 0.12) 0%, rgba(87, 227, 154, 0) 70%),
+    #050806;
+}
+
+.privacy-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(100deg, transparent 35%, rgba(87, 227, 154, 0.07) 50%, transparent 65%) 0 0 / 250% 100%;
+  animation: sweep 9s var(--ease) infinite;
+}
+
+@keyframes sweep {
+  from { background-position: 100% 0; }
+  to { background-position: -150% 0; }
 }
 
 
@@ -1221,26 +1284,36 @@ a {
   font-size: 17px;
 }
 
+.compare-section {
+  --key: var(--chartreuse);
+  background:
+    radial-gradient(50% 70% at 100% 50%, rgba(43, 209, 126, 0.1) 0%, rgba(43, 209, 126, 0) 70%),
+    #070b09;
+}
+
 .table th,
 .table td {
   text-align: left;
   padding: 18px 0;
   background:
-    linear-gradient(rgba(12, 26, 18, 0.12), rgba(12, 26, 18, 0.12)) bottom / 100% 1px no-repeat;
+    linear-gradient(rgba(234, 242, 236, 0.1), rgba(234, 242, 236, 0.1)) bottom / 100% 1px no-repeat;
 }
 
 .table th {
   font-weight: 600;
-  font-size: 14px;
-  color: rgba(12, 26, 18, 0.6);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .table td:nth-child(2) {
   font-weight: 600;
+  color: var(--chartreuse);
 }
 
 .table td:nth-child(3) {
-  color: rgba(12, 26, 18, 0.55);
+  color: var(--muted);
 }
 
 @media (max-width: 860px) {
@@ -1321,6 +1394,83 @@ a {
   }
 }
 
+/* End credits */
+
+.credits {
+  padding: clamp(96px, 16vh, 180px) 0 calc(48px + var(--frame-y));
+  text-align: center;
+}
+
+.credits__inner {
+  display: grid;
+  justify-items: center;
+  gap: 28px;
+}
+
+.credits__title {
+  margin: 0;
+  font: 400 clamp(44px, 6vw, 88px) / 1 var(--serif);
+  letter-spacing: -0.02em;
+}
+
+.credits__list {
+  display: grid;
+  gap: 18px;
+  margin: 24px 0 40px;
+}
+
+.credits__list div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: baseline;
+}
+
+.credits__list dt {
+  text-align: right;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.credits__list dd {
+  margin: 0;
+  text-align: left;
+  font: 400 clamp(20px, 1.8vw, 26px) / 1.1 var(--serif);
+}
+
+.credits__legal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 28px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.credits__legal nav {
+  display: flex;
+  gap: 24px;
+}
+
+.credits__legal a {
+  color: inherit;
+}
+
+@media (max-width: 640px) {
+  .credits__list div {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .credits__list dt,
+  .credits__list dd {
+    text-align: center;
+  }
+}
+
+/* Legal pages keep a plain one-line footer. */
 .footer {
   padding-block: 40px;
   font-size: 14px;
@@ -1379,6 +1529,178 @@ a {
   min-height: 44px;
 }
 
+/* Screens: each chapter is projected on its own rounded, softly lit panel,
+   with the black of the cinema between them. */
+
+:root {
+  --screen-edge:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 30px 80px rgba(0, 0, 0, 0.45);
+}
+
+.screen {
+  margin: var(--frame-y) var(--frame-x) 0;
+  border-radius: var(--screen-radius);
+  box-shadow: var(--screen-edge);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Scene slate: the chapter's number and name, above its heading. */
+.slate {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  width: fit-content;
+  margin: 0;
+  padding: 8px 14px 8px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.slate__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--key);
+  box-shadow: 0 0 12px var(--key);
+}
+
+.slate__scene {
+  color: var(--key);
+}
+
+.slate__rule {
+  width: 18px;
+  height: 1px;
+  background: rgba(234, 242, 236, 0.35);
+}
+
+/* The block that wipes each heading line on, in the chapter's key colour. */
+.split-line-mask {
+  position: relative;
+}
+
+.wipe {
+  position: absolute;
+  inset: 0.08em -0.02em 0.12em;
+  background: var(--key);
+  transform: scaleX(0);
+  pointer-events: none;
+}
+
+/* Bento panels: one fact each, with the number lit. */
+.bento {
+  display: grid;
+  align-content: start;
+  padding: clamp(24px, 2.4vw, 36px);
+  border-radius: calc(var(--screen-radius) * 0.7);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.015));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.bento .small {
+  margin: 0;
+  font-size: 15px;
+}
+
+/* A small call to try it, at the end of a chapter. */
+.chapter-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 18px 0 20px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--black);
+  background: var(--key);
+  text-decoration: none;
+  pointer-events: auto;
+  transition:
+    transform 0.4s var(--ease),
+    box-shadow 0.4s var(--ease);
+}
+
+.chapter-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--key) 40%, transparent);
+}
+
+.chapter-cta svg {
+  transition: transform 0.4s var(--ease);
+}
+
+.chapter-cta:hover svg {
+  transform: translateX(3px);
+}
+
+/* Corner readout: the chapter on screen, and the scroll as a film's timecode. */
+.hud {
+  position: fixed;
+  z-index: 40;
+  right: calc(var(--frame-x) + 22px);
+  bottom: calc(var(--frame-y) + 18px);
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 8px 18px;
+  align-items: baseline;
+  padding: 10px 14px 12px;
+  border-radius: 14px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(234, 242, 236, 0.7);
+  background: rgba(4, 6, 5, 0.5);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  pointer-events: none;
+}
+
+.hud__scene b {
+  margin-right: 10px;
+  color: var(--chartreuse);
+}
+
+.hud__clock {
+  font-variant-numeric: tabular-nums;
+  color: rgba(234, 242, 236, 0.5);
+}
+
+.hud__track {
+  grid-column: 1 / -1;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(234, 242, 236, 0.1);
+  overflow: hidden;
+}
+
+.hud__track span {
+  display: block;
+  height: 100%;
+  background: var(--chartreuse);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+@media (max-width: 1023px) {
+  .hud {
+    display: none;
+  }
+}
+
 /* Motion */
 
 .reveals [data-reveal] {
@@ -1398,7 +1720,9 @@ a {
 @media (prefers-reduced-motion: reduce) {
   .marquee,
   .try__shine,
-  .try__glow {
+  .try__glow,
+  body::after,
+  .privacy-section::before {
     animation: none;
   }
   .button:hover {

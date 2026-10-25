@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { trackProgress } from '../motion';
 import { InsideScene } from '../scene/InsideScene';
+import { Slate } from './Cinema';
 import { PARTS } from './inside-parts';
 
 /** What the readout says outside the spotlight tour. */
@@ -64,11 +65,11 @@ export function Inside() {
   }, []);
 
   return (
-    <section ref={section} className="inside" id="inside" aria-labelledby="inside-title">
+    <section ref={section} className="inside" id="inside" data-chapter="02|Inside the plate" aria-labelledby="inside-title">
       <div className="inside__frame">
         <InsideScene progress={progress} compact={compact} />
         <div className="inside__copy">
-          <p className="eyebrow">Inside the plate</p>
+          <Slate scene="02" title="Inside the plate" />
           <h2 className="h2" id="inside-title" data-split>
             Take any meal <em>apart</em>.
           </h2>

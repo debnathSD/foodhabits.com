@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { FinaleScene, GutCanvas, PlateCanvas } from '../scene/SceneCanvas';
 import { asset } from '../links';
-import { TryNow, Wordmark } from './Brand';
+import { Mark, TryNow, Wordmark } from './Brand';
+import { ChapterCta, Slate } from './Cinema';
+import { useNavOnScroll } from './useNavOnScroll';
 
 /** Words for "food" in the 22 languages the app offers. */
 const FOOD_WORDS = [
@@ -11,8 +13,10 @@ const FOOD_WORDS = [
 ];
 
 export function Nav() {
+  const nav = useRef<HTMLElement>(null);
+  useNavOnScroll(nav);
   return (
-    <header className="nav">
+    <header ref={nav} className="nav">
       <div className="nav__inner">
         <Wordmark />
         <nav className="nav__links" aria-label="Sections">
@@ -30,9 +34,10 @@ export function Nav() {
 export function Gut() {
   const [health, setHealth] = useState(0.85);
   return (
-    <section className="gut" id="gut" aria-labelledby="gut-title">
+    <section className="gut screen" id="gut" data-chapter="03|Your gut" aria-labelledby="gut-title">
       <GutCanvas health={health} />
       <div className="wrap gut__copy">
+        <Slate scene="03" title="Your gut" />
         <h2 className="h2" id="gut-title" data-split>
           Thirty-eight trillion microbes are keeping score.
         </h2>
@@ -52,6 +57,9 @@ export function Gut() {
           <span>Friendly microbes</span>
           <span>Troublemakers</span>
         </div>
+        <div data-reveal>
+          <ChapterCta label="See what your plate does" />
+        </div>
       </div>
     </section>
   );
@@ -59,9 +67,10 @@ export function Gut() {
 
 export function Editorial() {
   return (
-    <section className="plate section--paper" aria-labelledby="plate-title">
+    <section className="plate screen" data-chapter="04|Your body" aria-labelledby="plate-title">
       <div className="plate__stage">
         <div className="plate__copy">
+          <Slate scene="04" title="Your body" />
           <h2 className="h2" id="plate-title" data-split>
             Every plate tells your body <em>something</em>.
           </h2>
@@ -98,9 +107,10 @@ export function Editorial() {
 
 export function Truth() {
   return (
-    <section className="section truth-section" aria-labelledby="truth-title">
+    <section className="section truth-section screen" data-chapter="05|The evidence" aria-labelledby="truth-title">
       <div className="wrap truth">
         <div>
+          <Slate scene="05" title="The evidence" />
           <h2 className="h2" id="truth-title" data-split>
             Honest about what eating it often can do.
           </h2>
@@ -109,17 +119,17 @@ export function Truth() {
           </p>
         </div>
         <div className="truth__rows">
-          <div data-reveal>
+          <div className="bento" data-reveal>
             <span className="truth__value">18%</span>
             <p className="small">
               higher bowel-cancer risk for every 50&nbsp;g of processed meat eaten a day, according to the WHO’s cancer agency.
             </p>
           </div>
-          <div data-reveal>
+          <div className="bento" data-reveal>
             <span className="truth__value">5&nbsp;g</span>
             <p className="small">the most salt the WHO advises in a day. One restaurant meal can pass it.</p>
           </div>
-          <div data-reveal>
+          <div className="bento" data-reveal>
             <span className="truth__value">1–10</span>
             <p className="small">a gut score for every meal, so the effect of small swaps is easy to see.</p>
           </div>
@@ -132,8 +142,9 @@ export function Truth() {
 export function Languages() {
   const row = [...FOOD_WORDS, ...FOOD_WORDS];
   return (
-    <section className="section languages" id="languages" aria-labelledby="languages-title">
+    <section className="section languages screen" id="languages" data-chapter="06|Your language" aria-labelledby="languages-title">
       <div className="wrap" style={{ marginBottom: 56 }}>
+        <Slate scene="06" title="Your language" />
         <h2 className="h2" id="languages-title" data-split>
           Speaks your language.
         </h2>
@@ -160,8 +171,9 @@ export function Languages() {
 
 export function Privacy() {
   return (
-    <section className="section privacy-section" id="privacy" aria-labelledby="privacy-title">
+    <section className="section privacy-section screen" id="privacy" data-chapter="07|Your privacy" aria-labelledby="privacy-title">
       <div className="wrap privacy">
+        <Slate scene="07" title="Your privacy" />
         <h2 className="display" id="privacy-title" data-split>
           Your photos never leave your device.
         </h2>
@@ -174,6 +186,9 @@ export function Privacy() {
           <span>No tracking</span>
           <span>Works offline</span>
           <span>No subscription</span>
+        </div>
+        <div data-reveal>
+          <ChapterCta label="Try it, nothing leaves your device" />
         </div>
       </div>
     </section>
@@ -191,9 +206,10 @@ const ROWS: [string, string, string][] = [
 
 export function Compare() {
   return (
-    <section className="section section--paper" aria-labelledby="free-title">
+    <section className="section compare-section screen" data-chapter="08|The price" aria-labelledby="free-title">
       <div className="wrap compare">
         <div>
+          <Slate scene="08" title="The price" />
           <h2 className="h2" id="free-title" data-split>
             Everything. Free.
           </h2>
@@ -227,10 +243,11 @@ export function Compare() {
 
 export function Finale() {
   return (
-    <section className="finale" id="get" aria-labelledby="get-title">
+    <section className="finale screen" id="get" data-chapter="09|Your next meal" aria-labelledby="get-title">
       <FinaleScene />
       <div className="wrap finale__inner">
         <div className="finale__copy">
+          <Slate scene="09" title="Your next meal" />
           <h2 className="display" id="get-title" data-split>
             Start with your <em>next</em> meal.
           </h2>
@@ -256,16 +273,41 @@ export function Finale() {
   );
 }
 
+/** Who and what made it, rolled like a film's end credits. */
+const CREDITS: [string, string][] = [
+  ['Food recognition', 'SigLIP 2 by Google'],
+  ['On phones, until it downloads', 'AIY Food Classifier by Google'],
+  ['Photoscanned food', 'Poly Haven, CC0'],
+  ['Typefaces', 'Instrument Serif and Inter Tight'],
+  ['Languages', '22, each narrated'],
+  ['Price', '₹0, forever'],
+];
+
 export function Footer() {
   return (
-    <footer className="footer">
-      <div className="wrap">
-        <span>© 2026 foodhabits.com</span>
-        <span>General food guidance, not medical advice.</span>
-        <nav aria-label="Legal">
-          <a href={asset('privacy.html')}>Privacy</a>
-          <a href="mailto:hello@example.com">Contact</a>
-        </nav>
+    <footer className="credits">
+      <div className="wrap credits__inner">
+        <Mark size={64} tile={false} weight="master" />
+        <p className="credits__title">
+          foodhabits<span className="wordmark__dot">.</span>
+          <span className="wordmark__tld">com</span>
+        </p>
+        <dl className="credits__list">
+          {CREDITS.map(([role, name]) => (
+            <div key={role}>
+              <dt>{role}</dt>
+              <dd>{name}</dd>
+            </div>
+          ))}
+        </dl>
+        <div className="credits__legal">
+          <span>© 2026 foodhabits.com</span>
+          <span>General food guidance, not medical advice.</span>
+          <nav aria-label="Legal">
+            <a href={asset('privacy.html')}>Privacy</a>
+            <a href="mailto:hello@example.com">Contact</a>
+          </nav>
+        </div>
       </div>
     </footer>
   );

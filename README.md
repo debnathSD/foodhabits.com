@@ -134,6 +134,9 @@ npm run lint
 `website/` is the marketing site (Vite, React Three Fiber, GSAP). It shares the
 3D scenes in `src/three`, uses photoscanned food from Poly Haven (CC0) in
 `website/public/models`, and links to the web app with its "Try now" button.
+It plays like a film in nine chapters: each on its own lit screen in a dark
+cinema, opening with a scene slate, with film-title reveals and end credits
+(see `website/README.md`).
 
 ```bash
 npm run dev --prefix website                 # http://localhost:5173

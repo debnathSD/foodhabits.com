@@ -56,7 +56,8 @@ export function playMarkDrawing(root: HTMLElement, onDone: () => void) {
   let lift: gsap.core.Tween | undefined;
   timeline.eventCallback('onComplete', () => {
     pageReady.then(() => {
-      lift = gsap.to(root, { clipPath: 'inset(0 0 100% 0)', duration: 0.9, ease: 'expo.inOut', onComplete: finish });
+      // The curtain parts from the middle, like a projector's shutter opening on the first frame.
+      lift = gsap.to(root, { clipPath: 'inset(50% 0 50% 0)', duration: 1.1, ease: 'expo.inOut', onComplete: finish });
     });
   });
   timeline.play();
@@ -67,26 +68,52 @@ export function playMarkDrawing(root: HTMLElement, onDone: () => void) {
 }
 
 /**
- * Headings marked data-split rise in line by line from behind a mask: on
- * scroll, or for data-split="reveal" as soon as the preloader lifts.
+ * Headings marked data-split come in like film titles. The hero
+ * (data-split="reveal") pulls into focus letter by letter as the curtain
+ * opens; every other heading is wiped on line by line, a block of its
+ * chapter's key colour sweeping across and leaving the words behind.
  */
 export function startSplitReveals() {
   if (reducedMotion) return { stop: () => {}, playHero: () => {} };
   const splits: SplitText[] = [];
   const triggers: ScrollTrigger[] = [];
-  let hero: gsap.core.Tween | undefined;
+  let hero: gsap.core.Timeline | undefined;
   document.querySelectorAll<HTMLElement>('[data-split]').forEach((element) => {
+    if (element.dataset.split === 'reveal') {
+      const split = SplitText.create(element, { type: 'lines,chars', mask: 'lines', linesClass: 'split-line' });
+      splits.push(split);
+      gsap.set(split.chars, { yPercent: 70, opacity: 0, filter: 'blur(14px)' });
+      hero = gsap
+        .timeline({ paused: true })
+        .to(split.chars, { yPercent: 0, opacity: 1, filter: 'blur(0px)', duration: 1.2, ease: 'expo.out', stagger: 0.022 });
+      return;
+    }
     const split = SplitText.create(element, { type: 'lines', mask: 'lines', linesClass: 'split-line' });
     splits.push(split);
-    gsap.set(split.lines, { yPercent: 110 });
-    const tween = gsap.to(split.lines, { yPercent: 0, duration: 1.15, ease: 'expo.out', stagger: 0.09, paused: true });
-    if (element.dataset.split === 'reveal') hero = tween;
-    else triggers.push(ScrollTrigger.create({ trigger: element, start: 'top 88%', once: true, onEnter: () => tween.play() }));
+    const wipes = split.lines.map((line) => {
+      const block = document.createElement('span');
+      block.className = 'wipe';
+      line.parentElement?.appendChild(block);
+      return block;
+    });
+    gsap.set(split.lines, { opacity: 0 });
+    gsap.set(wipes, { scaleX: 0, transformOrigin: 'left center' });
+    const timeline = gsap.timeline({ paused: true });
+    split.lines.forEach((line, index) => {
+      const at = index * 0.14;
+      timeline
+        .to(wipes[index], { scaleX: 1, duration: 0.45, ease: 'expo.inOut' }, at)
+        .set(line, { opacity: 1 }, at + 0.45)
+        .set(wipes[index], { transformOrigin: 'right center' }, at + 0.45)
+        .to(wipes[index], { scaleX: 0, duration: 0.55, ease: 'expo.inOut' }, at + 0.45);
+    });
+    triggers.push(ScrollTrigger.create({ trigger: element, start: 'top 85%', once: true, onEnter: () => timeline.play() }));
   });
   return {
     stop: () => {
       triggers.forEach((trigger) => trigger.kill());
       splits.forEach((split) => split.revert());
+      document.querySelectorAll('.wipe').forEach((block) => block.remove());
     },
     playHero: () => hero?.play(),
   };

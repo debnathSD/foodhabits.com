@@ -87,18 +87,18 @@ function Lifted() {
   ));
 }
 
-/** The gut-friendly bowl on a paper-stone plinth, its ingredients lifting out. */
+/** The gut-friendly bowl on a dark plinth under a warm key light, its ingredients lifting out. */
 export function PlateCanvas() {
   return (
     <Frame className="plate__art" camera={[0, 1.6, 7.6]}>
-      <Lighting paper />
+      <Lighting warm />
       <group position={[0, -0.95, 0]}>
         <group position={[0, 0.42, 0]}>
           <SaladBowl spin={0.12} />
         </group>
         <Lifted />
-        <Plinth radius={1.5} height={0.5} color="#e6e0d2" />
-        <ContactShadows position={[0, 0.01, 0]} opacity={0.4} scale={4} blur={2} far={1.2} />
+        <Plinth radius={1.5} height={0.5} color="#221b14" rim="#F2B24C" />
+        <ContactShadows position={[0, 0.01, 0]} opacity={0.6} scale={4} blur={2} far={1.2} color="#000000" />
       </group>
       <Effects bloom={0} vignette={false} />
     </Frame>
