@@ -4,13 +4,18 @@
  */
 import { bn } from './locales/bn';
 import { en, type Messages } from './locales/en';
+import { gu } from './locales/gu';
 import { hi } from './locales/hi';
+import { kn } from './locales/kn';
+import { mr } from './locales/mr';
+import { ta } from './locales/ta';
+import { te } from './locales/te';
 import type { LanguageCode } from './languages';
 
 type DeepPartial<T> = { [K in keyof T]?: T[K] extends readonly unknown[] ? T[K] : T[K] extends object ? DeepPartial<T[K]> : T[K] };
 export type Translation = DeepPartial<Messages>;
 
-export const DICTIONARIES: Partial<Record<LanguageCode, Translation>> = { en, hi, bn };
+export const DICTIONARIES: Partial<Record<LanguageCode, Translation>> = { en, bn, gu, hi, kn, mr, ta, te };
 
 /** Languages whose translation is complete enough to offer. */
 export const TRANSLATED: LanguageCode[] = Object.keys(DICTIONARIES) as LanguageCode[];

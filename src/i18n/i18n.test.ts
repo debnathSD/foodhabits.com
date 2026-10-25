@@ -121,7 +121,9 @@ test('every translation covers every English message, with the same placeholders
 });
 
 test('falls back to English and fills placeholders', () => {
-  assert.equal(translate('ta', 'common.continue'), 'Continue');
+  assert.equal(translate('ta', 'common.continue'), 'தொடரவும்');
+  // Translations leave the brand name out, so it comes from English.
+  assert.equal(translate('ta', 'common.appName'), 'foodhabits.com');
   assert.equal(translate('en', 'home.afterMeal', { dish: 'Idli' }), 'After your Idli');
   assert.equal(joinList('en', ['a', 'b', 'c']), 'a, b and c');
 });
