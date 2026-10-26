@@ -1,6 +1,6 @@
 import { ContactShadows, Html } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import { Suspense, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
 import { asset } from '../links';
@@ -183,11 +183,9 @@ export function HeroScene({ progress, compact }: { progress: { current: number }
   return (
     <Frame className="stage__canvas" camera={[0, 0.25, 8.8]}>
       <Backdrop layers={compact ? BACKDROPS.heroCompact : BACKDROPS.hero} />
-      <Suspense fallback={null}>
-        <Lighting />
-        <Choreography progress={progress} compact={compact} focus={focus.target} />
-        <Effects focus={compact ? undefined : focus} bloom={0.7} />
-      </Suspense>
+      <Lighting />
+      <Choreography progress={progress} compact={compact} focus={focus.target} />
+      <Effects focus={compact ? undefined : focus} bloom={0.7} />
     </Frame>
   );
 }

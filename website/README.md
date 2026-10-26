@@ -90,16 +90,29 @@ CSS. The full version made Android phones crawl.
 
 - **3D:** at most 1.5× pixel density, drawn straight to the screen with the
   same neutral tone mapping but no post-processing pass (ambient occlusion,
-  bloom, depth of field) and no shadow maps, at 30 frames a second. A canvas
-  exists only while its section is within a few screens, so at most two hold
-  GPU memory. On desktop all five are created with the page.
-- **The page:** no grain or vignette layer over the screen, no blur behind
-  see-through panels (they get a solid tint), no light sweep across the
-  privacy screen, and no blur on the hero's letters.
+  bloom, depth of field) and no shadow maps, at 30 frames a second.
+- **The page:** native scrolling (no Lenis, whose touch listeners make every
+  swipe wait for JavaScript), no grain or vignette layer over the screen, no
+  blur behind see-through panels (they get a solid tint), no light sweep
+  across the privacy screen, and no blur on the hero's letters.
+
+On every device:
+
+- **Canvases are created once, with the page, and warmed up** (`WarmUp` in
+  `src/scene/Frame.tsx`): one scene at a time, each compiles its shaders in
+  the background, uploads its textures and draws a frame, so no section
+  stalls the scroll the first time it comes into view. Creating canvases as
+  they near the screen, and removing them again, made phones stutter.
+- **Photoscan textures are 512 × 512.** Poly Haven ships three 2048 × 2048
+  textures per food, about 67 MB of GPU memory each, held again by every
+  canvas that shows it: over a gigabyte for the whole page. On screen a food is
+  a few hundred pixels across at most. `node scripts/shrink-scans.mjs` shrinks
+  any new scan added to `public/models`.
 
 When adding an effect, animate only `transform` and `opacity`, and keep blend
 modes, `filter` and `backdrop-filter` off large or always-visible elements, or
-off phones altogether. Each of those is redrawn every frame on a phone.
+off phones altogether. Each of those is redrawn every frame on a phone. Keep
+textures as small as they appear on screen.
 
 ## Publishing
 

@@ -124,9 +124,13 @@ export function startSplitReveals() {
   };
 }
 
-/** Smooth, inertial scrolling kept in sync with ScrollTrigger. */
+/**
+ * Smooth, inertial scrolling kept in sync with ScrollTrigger, for mouse wheels
+ * and trackpads. Phones keep their own scrolling: Lenis listens to touches in a
+ * way that makes every swipe wait for the page's JavaScript, which lags.
+ */
 export function startSmoothScroll() {
-  if (reducedMotion) return () => {};
+  if (reducedMotion || LITE) return () => {};
   const lenis = new Lenis({ lerp: 0.09, smoothWheel: true });
   lenis.on('scroll', ScrollTrigger.update);
   const tick = (time: number) => lenis.raf(time * 1000);

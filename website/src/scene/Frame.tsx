@@ -16,33 +16,71 @@ const CANVAS_PROPS = {
   gl: { antialias: LITE, alpha: true, toneMapping: LITE ? THREE.NeutralToneMapping : THREE.NoToneMapping },
 };
 
-/**
- * Whether a 3D section's canvas should exist, and whether it should draw: it
- * draws only while on (or near) screen. On desktop every canvas is created with
- * the page. On phones one is created about a screen before it scrolls into view
- * and removed again once it is a few screens away, so no more than two scenes
- * hold GPU memory at a time.
- */
+/** True while the element is on (or near) screen, so off-screen canvases stop drawing. */
 function useInView<T extends Element>() {
   const ref = useRef<T>(null);
-  const [mounted, setMounted] = useState(!LITE);
   const [inView, setInView] = useState(false);
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
-    const watch = (margin: string, onChange: (inside: boolean) => void) => {
-      const observer = new IntersectionObserver(([entry]) => onChange(entry.isIntersecting), { rootMargin: margin });
-      observer.observe(element);
-      return observer;
-    };
-    const observers = [watch('200px 0px', setInView)];
-    if (LITE) {
-      observers.push(watch('100% 0px', (inside) => inside && setMounted(true)));
-      observers.push(watch('250% 0px', (inside) => !inside && setMounted(false)));
-    }
-    return () => observers.forEach((observer) => observer.disconnect());
+    const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { rootMargin: '200px 0px' });
+    observer.observe(element);
+    return () => observer.disconnect();
   }, []);
-  return [ref, inView, mounted] as const;
+  return [ref, inView] as const;
+}
+
+/** Resolves when the browser next has a moment to spare. */
+function whenIdle() {
+  return new Promise<void>((resolve) => {
+    if ('requestIdleCallback' in window) requestIdleCallback(() => resolve(), { timeout: 1500 });
+    else setTimeout(resolve, 200);
+  });
+}
+
+/** Warm-ups take turns, one scene at a time, so they never pile onto the same frames. */
+let warmUps = Promise.resolve();
+
+/**
+ * Once the scene has loaded, even off screen, compiles the shaders of every
+ * material (parts still hidden included), uploads every texture and draws one
+ * frame, so that work is done before anyone scrolls there. Left to the moment a
+ * section scrolls into view, it stalls the scroll, for a second or more on a
+ * phone. Shaders compile in the background where the browser can
+ * (compileAsync), so the page keeps responding meanwhile.
+ */
+function WarmUp() {
+  const gl = useThree((state) => state.gl);
+  const scene = useThree((state) => state.scene);
+  const camera = useThree((state) => state.camera);
+  const advance = useThree((state) => state.advance);
+  useEffect(() => {
+    let cancelled = false;
+    warmUps = warmUps
+      .then(async () => {
+        await whenIdle();
+        if (cancelled) return;
+        await gl.compileAsync(scene, camera);
+        if (cancelled) return;
+        scene.traverse((object) => {
+          const material = (object as THREE.Mesh).material;
+          for (const each of Array.isArray(material) ? material : material ? [material] : []) {
+            Object.values(each).forEach((value) => value instanceof THREE.Texture && gl.initTexture(value));
+          }
+        });
+        await new Promise<void>((resolve) =>
+          requestAnimationFrame((now) => {
+            if (!cancelled) advance(now);
+            resolve();
+          }),
+        );
+      })
+      .catch((error) => console.warn('Could not warm up a 3D scene', error));
+    return () => {
+      cancelled = true;
+    };
+  }, [gl, scene, camera, advance]);
+  return null;
 }
 
 /**
@@ -67,18 +105,22 @@ function ThirtyFps() {
   return null;
 }
 
-/** A section's 3D canvas, drawing only while in view (and on phones, existing only near it). */
+/**
+ * A section's 3D canvas. Every canvas is created with the page and warmed up
+ * right after, and draws only while in view.
+ */
 export function Frame({ className, camera, children }: { className: string; camera: [number, number, number]; children: React.ReactNode }) {
-  const [ref, inView, mounted] = useInView<HTMLDivElement>();
+  const [ref, inView] = useInView<HTMLDivElement>();
   const drawing = LITE ? 'demand' : 'always';
   return (
     <div ref={ref} className={className} aria-hidden="true">
-      {mounted && (
-        <Canvas {...CANVAS_PROPS} frameloop={inView ? drawing : 'never'} camera={{ position: camera, fov: 32 }}>
-          {LITE && inView && <ThirtyFps />}
-          <Suspense fallback={null}>{children}</Suspense>
-        </Canvas>
-      )}
+      <Canvas {...CANVAS_PROPS} frameloop={inView ? drawing : 'never'} camera={{ position: camera, fov: 32 }}>
+        {LITE && inView && <ThirtyFps />}
+        <Suspense fallback={null}>
+          {children}
+          <WarmUp />
+        </Suspense>
+      </Canvas>
     </div>
   );
 }

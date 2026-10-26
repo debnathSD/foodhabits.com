@@ -2,7 +2,7 @@ import { ContactShadows, Html } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { deconstructPhase } from '@lib/deconstruct';
 import { Deconstruct } from '@three/deconstruct';
-import { Suspense, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
 import { CONTACT_SHADOW_RESOLUTION } from '../quality';
@@ -68,20 +68,18 @@ export function InsideScene({ progress, compact }: { progress: { current: number
   return (
     <Frame className="inside__canvas" camera={[0, 1.2, 8]}>
       <Backdrop layers={BACKDROPS.inside} />
-      <Suspense fallback={null}>
-        <Lighting dim />
-        <group position={stage.position} scale={stage.scale}>
-          <Deconstruct
-            parts={PARTS}
-            progress={progress}
-            whole={<CholeBhature />}
-            label={compact ? undefined : (index) => <PartTag index={index} progress={progress} />}
-          />
-          <ContactShadows position={[0, -1.4, 0]} opacity={0.5} scale={9} blur={2.6} far={3} color="#000" resolution={CONTACT_SHADOW_RESOLUTION} />
-        </group>
-        <FocusPull progress={progress} focus={focus.target} blurRef={focus.blur} stage={stage} />
-        <Effects focus={compact ? undefined : focus} bloom={0.8} />
-      </Suspense>
+      <Lighting dim />
+      <group position={stage.position} scale={stage.scale}>
+        <Deconstruct
+          parts={PARTS}
+          progress={progress}
+          whole={<CholeBhature />}
+          label={compact ? undefined : (index) => <PartTag index={index} progress={progress} />}
+        />
+        <ContactShadows position={[0, -1.4, 0]} opacity={0.5} scale={9} blur={2.6} far={3} color="#000" resolution={CONTACT_SHADOW_RESOLUTION} />
+      </group>
+      <FocusPull progress={progress} focus={focus.target} blurRef={focus.blur} stage={stage} />
+      <Effects focus={compact ? undefined : focus} bloom={0.8} />
     </Frame>
   );
 }

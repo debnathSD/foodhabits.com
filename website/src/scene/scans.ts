@@ -2,7 +2,7 @@ import { useGLTF } from '@react-three/drei';
 
 import { asset } from '../links';
 
-/** Photoscanned foods (CC0, from Poly Haven), optimised into /public/models. */
+/** Photoscanned foods (CC0, from Poly Haven), optimised into /public/models with 512 px textures (scripts/shrink-scans.mjs). */
 export type ScanName =
   | 'food_avocado_01'
   | 'food_lime_01'
