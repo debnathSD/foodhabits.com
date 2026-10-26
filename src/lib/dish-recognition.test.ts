@@ -35,7 +35,22 @@ test('a photo that looks exactly like a dish is recognised straight away', () =>
 test('a photo halfway between two dishes asks the user to choose', () => {
   const table = decodeDishTable(buffer, labels);
   const [a, b] = [vector(table, dishRow(table, 'Idli')), vector(table, dishRow(table, 'Medu vada'))];
-  const recognition = recognizeDish(table, a.map((x, i) => x + b[i]));
+  const blend = (t: number) => recognizeDish(table, a.map((x, i) => (1 - t) * x + t * b[i]));
+  const first = (t: number) => {
+    const recognition = blend(t);
+    return recognition.kind === 'match' ? recognition.prediction.food.name : recognition.kind === 'choose' ? recognition.predictions[0].food.name : null;
+  };
+  // Halfway by score rather than by vector: idli is the more common dish, so
+  // an even mix of the two already leans its way.
+  assert.equal(first(0), 'Idli');
+  assert.equal(first(1), 'Medu vada');
+  let [low, high] = [0, 1];
+  for (let step = 0; step < 20; step++) {
+    const middle = (low + high) / 2;
+    if (first(middle) === 'Idli') low = middle;
+    else high = middle;
+  }
+  const recognition = blend(low);
   assert.equal(recognition.kind, 'choose');
   const names = recognition.kind === 'choose' ? recognition.predictions.map((prediction) => prediction.food.name) : [];
   assert.ok(names.includes('Idli') && names.includes('Medu vada'), names.join(', '));

@@ -1,14 +1,16 @@
 import type { CatalogFood } from './catalog';
 
 /**
- * Bengali food: everyday rice-and-fish meals, dals, shaak and posto, Kolkata
- * street food, chutneys and sweets. Aliases cover the usual spellings
+ * Bengali food from West Bengal and Bangladesh: everyday rice-and-fish meals,
+ * dals, bhorta, shaak and posto, Kolkata and Dhaka street food, biryanis and
+ * polao, chutneys, pitha and sweets. Aliases cover the usual spellings
  * (chatni, chutney), Bengali script, and Hindi or English names people use.
+ * Each dish's name in Bengali script is in src/i18n/dish-names/bn.ts.
  */
 export const BENGALI_FOODS: CatalogFood[] = [
   // Rice, dal and khichuri
   { name: 'Panta bhat', category: 'rice_plain', diet: 'vegan', aliases: ['panta bhaat', 'pantabhat', 'poita bhat', 'fermented rice', 'পান্তা ভাত'] },
-  { name: 'Bhoger khichuri', category: 'porridge', diet: 'veg', aliases: ['khichuri', 'bhog khichuri', 'khichudi', 'bhuna khichuri', 'ভোগের খিচুড়ি', 'খিচুড়ি'] },
+  { name: 'Bhoger khichuri', category: 'porridge', diet: 'veg', aliases: ['khichuri', 'bhog khichuri', 'khichudi', 'ভোগের খিচুড়ি', 'খিচুড়ি'] },
   { name: 'Musur dal', category: 'legumes', diet: 'vegan', aliases: ['masoor dal', 'moshur dal', 'red lentil dal', 'মুসুর ডাল', 'মসুর ডাল'] },
   { name: 'Cholar dal', category: 'legumes', diet: 'veg', aliases: ['chholar dal', 'chana dal bengali', 'ছোলার ডাল'] },
   { name: 'Bhaja moong dal', category: 'legumes', diet: 'vegan', aliases: ['moong dal', 'muger dal', 'sona moong dal', 'মুগ ডাল', 'ভাজা মুগের ডাল'] },
@@ -21,6 +23,21 @@ export const BENGALI_FOODS: CatalogFood[] = [
   { name: 'Muri', category: 'rice_plain', diet: 'vegan', aliases: ['puffed rice', 'মুড়ি'] },
   { name: 'Chirer polao', category: 'rice_dish', diet: 'vegan', allergens: ['nuts'], aliases: ['chire polao', 'poha bengali', 'চিঁড়ের পোলাও'] },
   { name: 'Doi chire', category: 'yogurt', diet: 'veg', allergens: ['dairy'], aliases: ['doi chira', 'curd flattened rice', 'দই চিঁড়ে'] },
+  { name: 'Bhuna khichuri', category: 'rice_dish', diet: 'meat', aliases: ['bhuna khichdi', 'mangsho khichuri', 'gosht khichuri', 'ভুনা খিচুড়ি'] },
+  { name: 'Kacchi biryani', category: 'rice_dish', diet: 'meat', allergens: ['dairy', 'nuts'], aliases: ['kachchi biryani', 'kacchi', 'dhakai kacchi', 'mutton kacchi', 'কাচ্চি বিরিয়ানি', 'কাচ্চি'] },
+  { name: 'Tehari', category: 'rice_dish', diet: 'meat', aliases: ['tehri', 'beef tehari', 'haji biryani', 'তেহারি'] },
+  { name: 'Morog polao', category: 'rice_dish', diet: 'meat', allergens: ['dairy', 'nuts'], aliases: ['murog polao', 'chicken polao', 'chicken pulao', 'মোরগ পোলাও'] },
+  { name: 'Akhni', category: 'rice_dish', diet: 'meat', aliases: ['akhni pulao', 'chittagong akhni', 'আখনি'] },
+  { name: 'Ilish polao', category: 'rice_dish', diet: 'fish', allergens: ['fish', 'dairy'], aliases: ['ilish pulao', 'hilsa pulao', 'ইলিশ পোলাও'] },
+  { name: 'Panta ilish', category: 'mixed_plate', diet: 'fish', allergens: ['fish'], aliases: ['panta bhat ilish', 'fermented rice with hilsa', 'পান্তা ইলিশ'] },
+
+  // Bhorta: mashed with mustard oil, raw onion and green chilli
+  { name: 'Aloo bhorta', category: 'potato', diet: 'vegan', allergens: [], aliases: ['alu bhorta', 'aloo bharta', 'alu bhate', 'aloo seddho', 'alu sheddho', 'mashed potato bengali', 'আলু ভর্তা', 'আলু ভাতে', 'আলু সেদ্ধ'] },
+  { name: 'Dal bhorta', category: 'legumes', diet: 'vegan', aliases: ['masoor dal bhorta', 'lentil mash', 'ডাল ভর্তা'] },
+  { name: 'Shutki bhorta', category: 'fish', diet: 'fish', allergens: ['fish'], aliases: ['shutki bharta', 'dried fish bhorta', 'শুঁটকি ভর্তা'] },
+  { name: 'Chingri bhorta', category: 'seafood', diet: 'fish', allergens: ['shellfish'], aliases: ['prawn bhorta', 'shrimp bhorta', 'চিংড়ি ভর্তা'] },
+  { name: 'Tomato bhorta', category: 'veg_dish', diet: 'vegan', aliases: ['tomato bharta', 'roasted tomato mash', 'টমেটো ভর্তা'] },
+  { name: 'Kalojira bhorta', category: 'dips', diet: 'vegan', aliases: ['kalonji bhorta', 'nigella seed bhorta', 'কালোজিরা ভর্তা'] },
 
   // Vegetables, shaak and posto
   { name: 'Shukto', category: 'veg_dish', diet: 'veg', allergens: ['dairy'], aliases: ['sukto', 'shuktoni', 'শুক্তো'] },
@@ -30,7 +47,7 @@ export const BENGALI_FOODS: CatalogFood[] = [
   { name: 'Begun bhaja', category: 'fried_veg', diet: 'vegan', aliases: ['baingan bhaja', 'fried brinjal', 'fried eggplant', 'বেগুন ভাজা'] },
   { name: 'Beguni', category: 'fried_snack', diet: 'vegan', aliases: ['begun beguni', 'brinjal fritters', 'বেগুনি'] },
   { name: 'Aloo bhaja', category: 'fries', diet: 'vegan', aliases: ['alu bhaja', 'bengali fries', 'আলু ভাজা'] },
-  { name: 'Begun pora', category: 'veg_dish', diet: 'vegan', aliases: ['begun bharta', 'baingan bharta', 'roasted brinjal mash', 'বেগুন পোড়া'] },
+  { name: 'Begun pora', category: 'veg_dish', diet: 'vegan', aliases: ['begun bharta', 'begun bhorta', 'baingan bharta', 'roasted brinjal mash', 'বেগুন পোড়া', 'বেগুন ভর্তা'] },
   { name: 'Mochar ghonto', category: 'veg_dish', diet: 'veg', aliases: ['mochar ghanto', 'mocha', 'banana flower curry', 'মোচার ঘণ্ট'] },
   { name: 'Mochar chop', category: 'fried_snack', diet: 'veg', allergens: ['gluten'], aliases: ['banana flower chop', 'মোচার চপ'] },
   { name: 'Labra', category: 'veg_dish', diet: 'vegan', aliases: ['labda', 'mixed vegetable labra', 'লাবড়া'] },
@@ -49,18 +66,24 @@ export const BENGALI_FOODS: CatalogFood[] = [
   { name: 'Aloo dum', category: 'potato', diet: 'veg', aliases: ['alur dom', 'alu dum', 'dum aloo bengali', 'আলুর দম'] },
   { name: 'Aloo phulkopir dalna', category: 'curry_veg', diet: 'vegan', aliases: ['phulkopi alu', 'phulkopir dalna', 'cauliflower potato curry', 'আলু ফুলকপির ডালনা'] },
   { name: 'Chhanar dalna', category: 'curry_veg', diet: 'veg', allergens: ['dairy'], aliases: ['chanar dalna', 'paneer dalna', 'ছানার ডালনা'] },
+  { name: 'Chhanar kalia', category: 'curry_creamy', diet: 'veg', allergens: ['dairy'], aliases: ['chanar kalia', 'paneer kalia', 'ছানার কালিয়া'] },
+  { name: 'Lau ghonto', category: 'veg_dish', diet: 'vegan', aliases: ['lau ghanto', 'lauki ghonto', 'bottle gourd ghonto', 'লাউ ঘণ্ট'] },
+  { name: 'Kochur loti', category: 'veg_dish', diet: 'vegan', aliases: ['kochur lati', 'taro stolon curry', 'কচুর লতি'] },
+  { name: 'Aloo borir jhol', category: 'curry_veg', diet: 'vegan', aliases: ['bori', 'borir jhol', 'alu bori', 'lentil dumpling curry', 'বড়ির ঝোল', 'বড়ি'] },
+  { name: 'Kumro phuler bora', category: 'fried_veg', diet: 'vegan', aliases: ['kumro phool bhaja', 'pumpkin flower fritters', 'কুমড়ো ফুলের বড়া'] },
+  { name: 'Kanchkolar kofta', category: 'curry_veg', diet: 'vegan', aliases: ['kancha kolar kofta', 'raw banana kofta', 'কাঁচকলার কোফতা'] },
 
   // Fish and seafood
   { name: 'Shorshe ilish', category: 'fish_curry', diet: 'fish', allergens: ['fish'], aliases: ['sorshe ilish', 'ilish macher jhal', 'hilsa mustard', 'ilish', 'hilsa', 'সর্ষে ইলিশ', 'ইলিশ'] },
   { name: 'Ilish bhapa', category: 'fish', diet: 'fish', allergens: ['fish'], aliases: ['bhapa ilish', 'steamed hilsa', 'ভাপা ইলিশ'] },
   { name: 'Ilish macher jhol', category: 'fish_curry', diet: 'fish', allergens: ['fish'], aliases: ['ilish jhol', 'hilsa curry', 'ইলিশ মাছের ঝোল'] },
   { name: 'Doi maach', category: 'fish_curry', diet: 'fish', allergens: ['fish', 'dairy'], aliases: ['doi mach', 'doi katla', 'fish in yogurt', 'দই মাছ'] },
-  { name: 'Macher kalia', category: 'fish_curry', diet: 'fish', allergens: ['fish'], aliases: ['machher kalia', 'fish kalia', 'rui kalia', 'মাছের কালিয়া'] },
+  { name: 'Macher kalia', category: 'fish_curry', diet: 'fish', allergens: ['fish'], aliases: ['machher kalia', 'fish kalia', 'rui kalia', 'katla kalia', 'bhetki kalia', 'মাছের কালিয়া', 'কাতলা মাছের কালিয়া'] },
   { name: 'Tel koi', category: 'fish_curry', diet: 'fish', allergens: ['fish'], aliases: ['koi macher tel jhal', 'তেল কই'] },
   { name: 'Pabda macher jhal', category: 'fish_curry', diet: 'fish', allergens: ['fish'], aliases: ['pabda jhal', 'macher jhal', 'পাবদা মাছের ঝাল', 'মাছের ঝাল'] },
   { name: 'Chhoto macher chorchori', category: 'fish_curry', diet: 'fish', allergens: ['fish'], aliases: ['small fish chorchori', 'mourola', 'mourala macher chorchori', 'মৌরলা মাছ'] },
   { name: 'Bhetki paturi', category: 'fish', diet: 'fish', allergens: ['fish'], aliases: ['paturi', 'bhetki macher paturi', 'fish in banana leaf', 'ভেটকি পাতুরি', 'পাতুরি'] },
-  { name: 'Chingri malai curry', category: 'seafood', diet: 'fish', allergens: ['shellfish'], aliases: ['chingri malaikari', 'malaikari', 'prawn malai curry', 'চিংড়ি মালাইকারি'] },
+  { name: 'Chingri malai curry', category: 'seafood', diet: 'fish', allergens: ['shellfish'], aliases: ['chingri malaikari', 'malaikari', 'golda chingri', 'prawn malai curry', 'চিংড়ি মালাইকারি', 'গলদা চিংড়ি'] },
   { name: 'Daab chingri', category: 'seafood', diet: 'fish', allergens: ['shellfish'], aliases: ['dab chingri', 'prawn in tender coconut', 'ডাব চিংড়ি'] },
   { name: 'Chingri bhapa', category: 'seafood', diet: 'fish', allergens: ['shellfish'], aliases: ['bhapa chingri', 'steamed prawns mustard', 'চিংড়ি ভাপা'] },
   { name: 'Chingri cutlet', category: 'fried_seafood', diet: 'fish', allergens: ['shellfish', 'gluten', 'egg'], aliases: ['prawn cutlet', 'চিংড়ির কাটলেট'] },
@@ -68,8 +91,15 @@ export const BENGALI_FOODS: CatalogFood[] = [
   { name: 'Fish kabiraji', category: 'fried_seafood', diet: 'fish', allergens: ['fish', 'gluten', 'egg'], aliases: ['kobiraji', 'fish kobiraji', 'ফিশ কবিরাজি'] },
   { name: 'Macher chop', category: 'fried_seafood', diet: 'fish', allergens: ['fish', 'gluten'], aliases: ['fish chop', 'মাছের চপ'] },
   { name: 'Macher dim bhaja', category: 'fried_seafood', diet: 'fish', allergens: ['fish'], aliases: ['fish roe fritters', 'মাছের ডিম ভাজা'] },
-  { name: 'Loitta macher jhuri', category: 'fried_seafood', diet: 'fish', allergens: ['fish'], aliases: ['loitta fry', 'bombay duck fry', 'লইট্টা মাছ'] },
+  { name: 'Loitta macher jhuri', category: 'fried_seafood', diet: 'fish', allergens: ['fish'], aliases: ['loitta fry', 'bombay duck fry', 'lote macher jhuri', 'লইট্টা মাছ', 'লোটে মাছ'] },
   { name: 'Shutki', category: 'fish', diet: 'fish', allergens: ['fish'], aliases: ['shutki maach', 'dried fish', 'শুঁটকি'] },
+  { name: 'Ilish bhaja', category: 'fried_seafood', diet: 'fish', allergens: ['fish'], aliases: ['fried hilsa', 'ilish mach bhaja', 'ইলিশ ভাজা', 'ইলিশ মাছ ভাজা'] },
+  { name: 'Rupchanda bhaja', category: 'fried_seafood', diet: 'fish', allergens: ['fish'], aliases: ['pomfret fry', 'pomfret bhaja', 'pomfret', 'rupchanda fry', 'রূপচাঁদা ভাজা', 'পমফ্রেট'] },
+  { name: 'Chitol macher muitha', category: 'fish_curry', diet: 'fish', allergens: ['fish'], aliases: ['chitol muitha', 'muithya', 'chital fish kofta', 'চিতল মাছের মুইঠ্যা'] },
+  { name: 'Tangra macher jhol', category: 'fish_curry', diet: 'fish', allergens: ['fish'], aliases: ['tangra jhol', 'tangra', 'ট্যাংরা মাছের ঝোল'] },
+  { name: 'Parshe macher jhal', category: 'fish_curry', diet: 'fish', allergens: ['fish'], aliases: ['parshe', 'parshe jhal', 'পার্শে মাছের ঝাল'] },
+  { name: 'Kakrar jhal', category: 'seafood', diet: 'fish', allergens: ['shellfish'], aliases: ['kankrar jhal', 'kakra', 'crab curry', 'কাঁকড়ার ঝাল', 'কাঁকড়া'] },
+  { name: 'Lau chingri', category: 'seafood', diet: 'fish', allergens: ['shellfish'], aliases: ['lau diye chingri', 'bottle gourd prawns', 'লাউ চিংড়ি'] },
 
   // Meat and eggs
   { name: 'Kosha mangsho', category: 'curry_meat', diet: 'meat', aliases: ['kasha mangsho', 'mutton kosha', 'golbari kosha mangsho', 'কষা মাংস'] },
@@ -86,20 +116,31 @@ export const BENGALI_FOODS: CatalogFood[] = [
   { name: 'Kolkata chilli chicken', category: 'stir_fry', diet: 'meat', allergens: ['soy', 'gluten'], aliases: ['chilli chicken', 'চিলি চিকেন'] },
   { name: 'Kolkata chowmein', category: 'noodles', diet: 'egg', allergens: ['gluten', 'soy', 'egg'], aliases: ['chowmin', 'chow mein', 'egg chowmein', 'চাউমিন'] },
   { name: 'Chicken cutlet', category: 'fried_meat', diet: 'meat', allergens: ['gluten', 'egg'], aliases: ['chicken kabiraji', 'চিকেন কাটলেট'] },
+  { name: 'Chicken dak bungalow', category: 'curry_meat', diet: 'meat', allergens: ['egg'], aliases: ['dak bungalow', 'mutton dak bungalow', 'ডাকবাংলো'] },
+  { name: 'Gorur mangsho bhuna', category: 'curry_meat', diet: 'meat', aliases: ['beef bhuna', 'gorur mangsho', 'beef curry', 'bhuna gosht', 'গরুর মাংস ভুনা', 'গরুর মাংস'] },
+  { name: 'Kala bhuna', category: 'curry_meat', diet: 'meat', aliases: ['kalo bhuna', 'beef kala bhuna', 'chittagong kala bhuna', 'কালা ভুনা'] },
+  { name: 'Mezbani mangsho', category: 'curry_meat', diet: 'meat', aliases: ['mezbani', 'mezbani gosht', 'mezbani beef', 'মেজবানি মাংস'] },
+  { name: 'Shatkora gosht', category: 'curry_meat', diet: 'meat', aliases: ['shatkora beef', 'satkora', 'sylheti shatkora', 'সাতকরা মাংস'] },
+  { name: 'Murgir roast', category: 'curry_creamy', diet: 'meat', allergens: ['dairy', 'nuts'], aliases: ['chicken roast', 'biye barir roast', 'murgir rost', 'মুরগির রোস্ট', 'রোস্ট'] },
+  { name: 'Jali kabab', category: 'fried_meat', diet: 'meat', allergens: ['egg'], aliases: ['jali kebab', 'জালি কাবাব'] },
+  { name: 'Dimer devil', category: 'fried_snack', diet: 'egg', allergens: ['egg', 'gluten'], aliases: ['egg devil', 'dimer chop', 'ডিমের ডেভিল'] },
 
   // Breads, snacks and street food
-  { name: 'Radhaballavi', category: 'fried_bread', diet: 'veg', allergens: ['gluten'], aliases: ['radhaballabhi', 'radha bollobhi', 'dal puri', 'রাধাবল্লভী'] },
+  { name: 'Radhaballavi', category: 'fried_bread', diet: 'veg', allergens: ['gluten'], aliases: ['radhaballabhi', 'radha bollobhi', 'dal puri', 'dalpuri', 'রাধাবল্লভী', 'ডালপুরি'] },
   { name: 'Koraishutir kochuri', category: 'fried_bread', diet: 'vegan', allergens: ['gluten'], aliases: ['motorshutir kochuri', 'peas kachori', 'kochuri', 'কড়াইশুঁটির কচুরি', 'কচুরি'] },
   { name: 'Singara', category: 'fried_snack', diet: 'vegan', allergens: ['gluten'], aliases: ['shingara', 'samosa bengali', 'সিঙ্গারা'] },
   { name: 'Nimki', category: 'fried_snack', diet: 'vegan', allergens: ['gluten'], aliases: ['namak para', 'নিমকি'] },
   { name: 'Aloo chop', category: 'fried_snack', diet: 'vegan', aliases: ['alur chop', 'potato chop', 'আলুর চপ', 'চপ'] },
   { name: 'Vegetable chop', category: 'fried_snack', diet: 'veg', allergens: ['gluten'], aliases: ['beetroot chop', 'veg chop', 'ভেজিটেবল চপ'] },
-  { name: 'Telebhaja', category: 'fried_snack', diet: 'vegan', aliases: ['tele bhaja', 'piyaji', 'peyaji', 'pakora bengali', 'তেলেভাজা', 'পেঁয়াজি'] },
+  { name: 'Telebhaja', category: 'fried_snack', diet: 'vegan', aliases: ['tele bhaja', 'piyaji', 'peyaji', 'piyaju', 'pakora bengali', 'তেলেভাজা', 'পেঁয়াজি', 'পিঁয়াজু'] },
   { name: 'Jhalmuri', category: 'chaat', diet: 'vegan', aliases: ['jhal muri', 'muri makha', 'puffed rice chaat', 'ঝালমুড়ি'] },
   { name: 'Phuchka', category: 'chaat', diet: 'vegan', allergens: ['gluten'], aliases: ['puchka', 'fuchka', 'pani puri', 'golgappa', 'ফুচকা'] },
   { name: 'Churmur', category: 'chaat', diet: 'vegan', allergens: ['gluten'], aliases: ['churmur chaat', 'চুরমুর'] },
   { name: 'Chire bhaja', category: 'fried_snack', diet: 'vegan', allergens: ['nuts'], aliases: ['fried flattened rice', 'chira bhaja', 'চিঁড়ে ভাজা'] },
   { name: 'Papor', category: 'fried_snack', diet: 'vegan', aliases: ['papad', 'papor bhaja', 'পাঁপড়'] },
+  { name: 'Chotpoti', category: 'chaat', diet: 'egg', allergens: ['egg'], aliases: ['chotpoti chaat', 'chatpati', 'চটপটি'] },
+  { name: 'Aloo kabli', category: 'chaat', diet: 'vegan', allergens: [], aliases: ['alu kabli', 'aloo kabuli', 'আলু কাবলি'] },
+  { name: 'Ghoti gorom', category: 'chaat', diet: 'vegan', allergens: ['nuts'], aliases: ['ghoti gorom chanachur', 'ঘটিগরম'] },
 
   // Chutneys, pickles and sauces
   { name: 'Chatni', category: 'chutney', diet: 'vegan', aliases: ['chutney', 'chutni', 'chatney', 'চাটনি', 'चटनी'] },
@@ -135,6 +176,21 @@ export const BENGALI_FOODS: CatalogFood[] = [
   { name: 'Shonpapdi', category: 'sweets_candy', diet: 'veg', allergens: ['gluten', 'nuts'], aliases: ['soan papdi', 'শোনপাপড়ি'] },
   { name: 'Aamsotto', category: 'sweets_candy', diet: 'vegan', aliases: ['aam papad', 'mango leather', 'আমসত্ত্ব'] },
   { name: 'Nolen gur', category: 'sweets_candy', diet: 'vegan', aliases: ['khejur gur', 'patali gur', 'date palm jaggery', 'নলেন গুড়', 'খেজুর গুড়'] },
+  { name: 'Rajbhog', category: 'milk_sweet', diet: 'veg', allergens: ['dairy', 'nuts'], aliases: ['raj bhog', 'kesar rasgulla', 'রাজভোগ'] },
+  { name: 'Komolabhog', category: 'milk_sweet', diet: 'veg', allergens: ['dairy'], aliases: ['kamalabhog', 'orange rasgulla', 'কমলাভোগ'] },
+  { name: 'Jolbhora sandesh', category: 'milk_sweet', diet: 'veg', allergens: ['dairy'], aliases: ['jolbhora', 'jalbhara sandesh', 'talshansh sandesh', 'জলভরা সন্দেশ'] },
+  { name: 'Sorpuria', category: 'milk_sweet', diet: 'veg', allergens: ['dairy', 'nuts'], aliases: ['sarpuria', 'সরপুরিয়া'] },
+  { name: 'Lobongo lotika', category: 'fried_sweet', diet: 'veg', allergens: ['gluten', 'dairy'], aliases: ['labanga latika', 'lavang latika', 'লবঙ্গ লতিকা'] },
+  { name: 'Nikuti', category: 'fried_sweet', diet: 'veg', allergens: ['dairy', 'gluten'], aliases: ['নিকুতি'] },
+  { name: 'Chhanabora', category: 'fried_sweet', diet: 'veg', allergens: ['dairy'], aliases: ['chanabora', 'chhanar bora', 'ছানাবড়া'] },
+  { name: 'Shemai', category: 'milk_sweet', diet: 'veg', allergens: ['gluten', 'dairy', 'nuts'], aliases: ['semai', 'sewai', 'vermicelli kheer', 'shemai payesh', 'সেমাই'] },
+  { name: 'Firni', category: 'milk_sweet', diet: 'veg', allergens: ['dairy', 'nuts'], aliases: ['phirni', 'ফিরনি'] },
+  { name: 'Jorda', category: 'steamed_sweet', diet: 'veg', allergens: ['dairy', 'nuts'], aliases: ['zarda', 'jorda polao', 'sweet saffron rice', 'জর্দা'] },
+  { name: 'Sujir halua', category: 'milk_sweet', diet: 'veg', allergens: ['gluten', 'dairy', 'nuts'], aliases: ['suji halua', 'halua', 'sooji halwa', 'semolina halwa', 'সুজির হালুয়া', 'হালুয়া'] },
+  { name: 'Bhapa pitha', category: 'steamed_sweet', diet: 'vegan', allergens: [], aliases: ['bhapa pithe', 'steamed rice cake', 'ভাপা পিঠা', 'ভাপা পিঠে'] },
+  { name: 'Chitoi pitha', category: 'fermented_batter', diet: 'vegan', allergens: [], aliases: ['chitoi pithe', 'sora pitha', 'চিতই পিঠা'] },
+  { name: 'Pakan pitha', category: 'fried_sweet', diet: 'vegan', allergens: [], aliases: ['pakan pithe', 'পাকান পিঠা'] },
+  { name: 'Teler pitha', category: 'fried_sweet', diet: 'vegan', allergens: [], aliases: ['tel pitha', 'teler pithe', 'তেলের পিঠা'] },
 
   // Drinks
   { name: 'Lebu cha', category: 'tea', diet: 'vegan', aliases: ['lemon tea', 'lebu chaa', 'লেবু চা'] },
@@ -142,4 +198,7 @@ export const BENGALI_FOODS: CatalogFood[] = [
   { name: 'Ghol', category: 'yogurt', diet: 'veg', allergens: ['dairy'], aliases: ['buttermilk', 'gondhoraj ghol', 'ঘোল'] },
   { name: 'Aam pora shorbot', category: 'juice', diet: 'vegan', aliases: ['aam panna', 'raw mango drink', 'আম পোড়া শরবত'] },
   { name: 'Daaber jol', category: 'coconut_water', diet: 'vegan', aliases: ['dab', 'daab', 'tender coconut water', 'ডাবের জল'] },
+  { name: 'Borhani', category: 'yogurt', diet: 'veg', allergens: ['dairy'], aliases: ['burhani', 'spiced yogurt drink', 'বোরহানি'] },
+  { name: 'Bel pana', category: 'juice', diet: 'vegan', aliases: ['bel sharbat', 'bael sharbat', 'wood apple drink', 'বেল পানা'] },
+  { name: 'Lebur shorbot', category: 'juice', diet: 'vegan', aliases: ['lebu jol', 'lemon sharbat', 'nimbu pani', 'lemonade', 'লেবুর শরবত'] },
 ];

@@ -77,9 +77,11 @@ photo ─► on-device model: SigLIP 2 (web) or AIY (phones) ──────�
   per-dish corrections in `src/data/food-tweaks.ts`. `src/data/catalog.ts`
   adds foods the AIY labels lack, from dosa and chai to plain pizza and steak;
   they are searchable and the web recognizer knows them too, so search and
-  photos cover the same 2,254 dishes. Bengali food has its own list
-  (`src/data/catalog-bengali.ts`): everyday fish, dal, shaak and posto, Kolkata
-  street food, chutneys and sweets, searchable in Bengali script too.
+  photos cover the same 2,309 dishes. Bengali food from West Bengal and
+  Bangladesh has its own list of 176 dishes (`src/data/catalog-bengali.ts`):
+  everyday fish, dal, bhorta, shaak and posto, kacchi, tehari and polao,
+  Kolkata and Dhaka street food, chutneys, pitha and sweets, searchable in
+  Bengali script too.
 - **Engine:** `src/lib/engine.ts` is pure TypeScript. It outputs ids, not
   sentences, so saved meals re-render in whatever language the user picks
   later.
@@ -88,7 +90,10 @@ photo ─► on-device model: SigLIP 2 (web) or AIY (phones) ──────�
   Kannada, Malayalam, Odia, Punjabi, Assamese, Spanish, French, Portuguese,
   German, Arabic, Chinese, Japanese, Russian and Indonesian. Urdu and Arabic
   lay out right to left. `npm test` fails if any language misses a message or
-  changes a `{placeholder}`.
+  changes a `{placeholder}`. Dish names have their own table per language
+  (`src/i18n/dish-names`): in Bengali 548 dishes, every Bengali one
+  included, show and are narrated in Bengali script; the rest keep their
+  English name.
 - **Explainer:** `src/app/explainer/[id].tsx` plays 3D scenes (three.js via
   React Three Fiber) narrated by the device's own text-to-speech
   (`expo-speech`), with captions always on. A meal scanned from a photo stars

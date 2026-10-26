@@ -11,6 +11,7 @@ import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
 import { Icon, type IconName } from '@/components/ui/icon';
 import { Radius, Spacing } from '@/constants/theme';
+import { useFoodName } from '@/hooks/use-analysis';
 import { useTheme } from '@/hooks/use-theme';
 import { useTranslation } from '@/i18n/use-translation';
 import { haptics } from '@/lib/haptics';
@@ -261,6 +262,7 @@ function Chooser({
 }) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const foodName = useFoodName();
   return (
     <View style={[styles.flex, { backgroundColor: theme.background }]}>
       <SafeAreaView style={styles.flex} edges={['top', 'bottom']}>
@@ -276,7 +278,7 @@ function Chooser({
               style={({ pressed }) => [styles.option, { backgroundColor: theme.backgroundElement, opacity: pressed ? 0.8 : 1 }]}>
               <View style={styles.flex}>
                 <ThemedText type="subtitle" style={styles.optionName}>
-                  {prediction.food.name}
+                  {foodName(prediction.food)}
                 </ThemedText>
                 <ThemedText type="caption" themeColor="textSecondary">
                   {t('scan.match', { percent: Math.max(1, Math.round(prediction.confidence * 100)) })}

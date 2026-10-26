@@ -116,7 +116,8 @@ function IntroCard({ props, seconds }: { props: ExplainerVideoProps; seconds: nu
       </span>
       <h1 style={{ margin: 0, font: `400 132px/0.95 ${SERIF}`, color: TEXT, letterSpacing: '-0.02em' }}>
         {props.dish.split(' ').map((word, index) => (
-          <span key={index} style={{ display: 'inline-block', overflow: 'hidden', paddingBottom: 12, marginRight: 24 }}>
+          // The mask reaches above the line too: Bengali and Devanagari vowel signs rise over the headline.
+          <span key={index} style={{ display: 'inline-block', overflow: 'hidden', paddingTop: 40, marginTop: -40, paddingBottom: 12, marginRight: 24 }}>
             <span data-word style={{ display: 'inline-block' }}>
               {word}
             </span>

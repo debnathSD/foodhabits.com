@@ -99,16 +99,14 @@ const tokenizer = await AutoTokenizer.from_pretrained(DISH_MODEL.repo, { revisio
 const model = await SiglipTextModel.from_pretrained(DISH_MODEL.repo, { revision: DISH_MODEL.revision, dtype: DISH_MODEL.textDtype });
 async function embed(sentences: string[]) {
   const result: Float32Array[] = [];
-  for (let i = 0; i < sentences.length; i += 64) {
-    const batch = sentences.slice(i, i + 64);
+  // One sentence at a time: the q8 model quantizes each batch as a whole, so in
+  // batches every new dish would nudge every other dish's embedding.
+  for (const sentence of sentences) {
     // SigLIP was trained on text padded to 64 tokens; shorter padding changes the embeddings.
-    const { pooler_output } = await model(tokenizer(batch, { padding: 'max_length', truncation: true, max_length: 64 }));
-    const dim = pooler_output.dims[1];
-    for (let b = 0; b < batch.length; b++) {
-      const row = (pooler_output.data as Float32Array).slice(b * dim, (b + 1) * dim);
-      const length = Math.hypot(...row);
-      result.push(row.map((x) => x / length));
-    }
+    const { pooler_output } = await model(tokenizer([sentence], { padding: 'max_length', truncation: true, max_length: 64 }));
+    const row = (pooler_output.data as Float32Array).slice(0, pooler_output.dims[1]);
+    const length = Math.hypot(...row);
+    result.push(row.map((x) => x / length));
   }
   return result;
 }

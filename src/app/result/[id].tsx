@@ -13,7 +13,7 @@ import { Chip, ChipGroup } from '@/components/ui/chip';
 import { Icon } from '@/components/ui/icon';
 import { CONTACT_EMAIL } from '@/constants/app';
 import { MaxContentWidth, Radius, Spacing } from '@/constants/theme';
-import { useAnalysis } from '@/hooks/use-analysis';
+import { useAnalysis, useFoodName } from '@/hooks/use-analysis';
 import { useTheme } from '@/hooks/use-theme';
 import { useTranslation } from '@/i18n/use-translation';
 import { confirmDestructive } from '@/lib/confirm';
@@ -27,6 +27,7 @@ import { deleteScan, updateScan, useAppState } from '@/lib/store';
 export default function ResultScreen() {
   const theme = useTheme();
   const { t, tValue, list, inSentence, capitalize } = useTranslation();
+  const foodName = useFoodName();
   const { id } = useLocalSearchParams<{ id: string }>();
   const scan = useAppState((state) => state.scans.find((candidate) => candidate.id === id));
   const result = useAnalysis(scan);
@@ -88,7 +89,7 @@ export default function ResultScreen() {
               {alternatives.map((food) => (
                 <Chip
                   key={food.name}
-                  label={food.name}
+                  label={foodName(food)}
                   selected={false}
                   onPress={() => {
                     updateScan(scan.id, {

@@ -5,6 +5,7 @@
 import { type Allergen, CATEGORIES, type CategoryId, type FoodDiet } from '../data/categories';
 import { CATALOG, LABEL_ALIASES } from '../data/catalog';
 import labelsJson from '../data/food-labels.json';
+import { dishNameTranslations } from '../i18n/dish-names';
 import type { Food, FoodRef } from './engine';
 
 type LabelEntry = [name: string, category: CategoryId, diet: FoodDiet | null, allergens: Allergen[]] | null;
@@ -69,7 +70,7 @@ function searchIndex() {
   if (index) return index;
   const entries: SearchEntry[] = CATALOG.map((item) => ({
     food: foodFromCatalog(item.name)!,
-    terms: [item.name, ...(item.aliases ?? [])].map(normalize),
+    terms: [item.name, ...(item.aliases ?? []), ...dishNameTranslations(item.name)].map(normalize),
     common: true,
   }));
   LABELS.forEach((entry, labelIndex) => {
@@ -77,7 +78,7 @@ function searchIndex() {
     const aliases = LABEL_ALIASES[entry[0]];
     entries.push({
       food: foodFromLabel(labelIndex)!,
-      terms: [entry[0], ...(aliases ?? [])].map(normalize),
+      terms: [entry[0], ...(aliases ?? []), ...dishNameTranslations(entry[0])].map(normalize),
       common: Boolean(aliases),
     });
   });
