@@ -20,7 +20,6 @@ const BASE_URL = process.env.BASE_URL ?? 'http://localhost:8086';
 const CHROME = process.env.CHROME ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const OUT = join(dirname(fileURLToPath(import.meta.url)), '..', 'website', 'public', 'screens');
 const PORT = 9333;
-const ACCENT = 'rgb(212, 242, 92)';
 
 // Today at 13:40, so the greeting, "Up next" and today's meals read naturally.
 const clock = new Date();
@@ -42,8 +41,6 @@ const SHOTS = [
   { name: 'camera', path: '/scan?demo=1' },
   { name: 'result', path: '/result/lunch' },
   { name: 'next', path: '/result/lunch', scrollTo: 'Avoid next' },
-  // The explainer video's take-apart scene, with a part under the spotlight.
-  { name: 'explainer', path: '/explainer/lunch', wait: 17000 },
 ];
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -160,16 +157,6 @@ async function main() {
           })()`,
         );
         await sleep(800);
-      }
-      if (shot.wait) await sleep(shot.wait);
-      if (shot.sceneReached) {
-        // Explainer progress segments light up as scenes play.
-        await waitFor(
-          cdp,
-          `[...document.querySelectorAll('div')].filter((node) => getComputedStyle(node).backgroundColor === '${ACCENT}' && node.offsetHeight <= 6 && node.offsetWidth > 20).length >= ${shot.sceneReached}`,
-          60000,
-        );
-        await sleep(shot.after ?? 2200);
       }
       const { data } = await cdp.send('Page.captureScreenshot', { format: 'jpeg', quality: 90 });
       writeFileSync(join(OUT, `${shot.name}.jpg`), Buffer.from(data, 'base64'));

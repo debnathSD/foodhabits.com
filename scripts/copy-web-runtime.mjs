@@ -9,12 +9,10 @@
  *   model. Only the single-threaded builds: the threaded one needs
  *   cross-origin isolation headers that static hosts such as GitHub Pages
  *   cannot send.
- * - the website's photoscanned food and studio HDRI (public/models, public/hdri)
- *   for the web app's 3D.
  * They are copied rather than committed because Expo also bundles public/ into
  * the phone apps, which don't use them.
  */
-import { copyFileSync, cpSync, mkdirSync } from 'node:fs';
+import { copyFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -31,7 +29,4 @@ mkdirSync(join(root, 'public', 'ort'), { recursive: true });
 for (const name of ['ort.wasm.min.js', 'ort-wasm-simd-threaded.mjs', 'ort-wasm-simd-threaded.wasm', 'ort.webgpu.min.js', 'ort-wasm-simd-threaded.asyncify.mjs', 'ort-wasm-simd-threaded.asyncify.wasm']) {
   copyFileSync(join(ort, name), join(root, 'public', 'ort', name));
 }
-for (const folder of ['models', 'hdri']) {
-  cpSync(join(root, 'website', 'public', folder), join(root, 'public', folder), { recursive: true });
-}
-console.log('Copied ONNX Runtime Web, the LiteRT.js runtime, photoscans and HDRI into public/');
+console.log('Copied ONNX Runtime Web and the LiteRT.js runtime into public/');

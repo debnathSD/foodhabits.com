@@ -52,9 +52,6 @@ Check on a real phone before submitting:
 - [ ] Camera opens, the photo is recognised, and the "Which one is it?"
       picker appears for unclear photos.
 - [ ] A photo from the library works.
-- [ ] The explainer speaks in English and in Hindi. Hindi needs a Hindi voice
-      on the phone: Android has one in Google TTS; on iPhone add it in
-      Settings → Accessibility → Spoken Content → Voices.
 - [ ] Airplane mode: scanning and results still work.
 
 This is the first time the native food models run: SigLIP 2 through
@@ -113,8 +110,6 @@ Snap your meal. See how it affects your gut, and what to eat next. Free.
 > • Which foods to avoid at your next meal, and what to eat instead
 > • Better versions of the same dish
 >
-> Watch an animated explainer with voice-over for every meal.
->
 > Personal: set your diet (vegetarian, eggetarian, vegan, Jain, pescatarian)
 > and sensitivities (lactose, gluten, IBS, acid reflux, nut allergy, blood
 > sugar, blood pressure) and the advice adapts.
@@ -133,8 +128,8 @@ gut health,food scanner,nutrition,diet,healthy eating,calorie,digestion,indian f
 
 **Screenshots:** Apple needs 6.9" iPhone shots (1320×2868), and Google needs
 at least 2 phone shots. Good ones to take: the camera, a "Which one is it?"
-pick, a result card with its score, the disease-risk section, the explainer,
-and Home with "Up next".
+pick, a result card with its score, the disease-risk section, and Home with
+"Up next".
 
 ## 6. Privacy and policy questionnaires
 

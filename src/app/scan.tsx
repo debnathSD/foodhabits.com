@@ -20,9 +20,6 @@ import { logMeal } from '@/lib/log-meal';
 import { goBack } from '@/lib/navigation';
 import type { Prediction } from '@/lib/recognition';
 import { recognitionAvailable, recognizeFood, useModelDownload, warmUpRecognizer } from '@/lib/recognizer';
-import { SceneCanvas } from '@/three/canvas';
-import { SaladBowl } from '@/three/scenes';
-import { Studio } from '@/three/studio';
 
 type Phase =
   | { kind: 'camera' }
@@ -34,7 +31,7 @@ export default function ScanScreen() {
   const { t } = useTranslation();
   const [phase, setPhase] = useState<Phase>({ kind: 'camera' });
   const download = useModelDownload();
-  // Web-only demo for marketing screenshots: a 3D bowl stands in for the camera feed.
+  // Web-only demo for marketing screenshots: a plain backdrop stands in for the camera feed.
   const { demo } = useLocalSearchParams<{ demo?: string }>();
 
   useEffect(() => {
@@ -199,13 +196,7 @@ function Camera({ onPhoto, onSearch, demo }: { onPhoto: (photo: PhotoSource) => 
   return (
     <View style={styles.camera}>
       {demo ? (
-        <View style={StyleSheet.absoluteFill}>
-          <View style={[StyleSheet.absoluteFill, { backgroundColor: '#2A2622' }]} />
-          <SceneCanvas camera={[0, 4.6, 5]} style={StyleSheet.absoluteFill}>
-            <Studio />
-            <SaladBowl spin={0.05} />
-          </SceneCanvas>
-        </View>
+        <View style={[StyleSheet.absoluteFill, { backgroundColor: '#2A2622' }]} />
       ) : unavailable ? (
         <View style={styles.unavailable}>
           <ThemedText style={styles.onPhoto}>{t('scan.noCamera')}</ThemedText>

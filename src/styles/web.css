@@ -1,4 +1,5 @@
-/* The web app's finish: a cinematic backdrop, glass surfaces, 3D keys and motion. Web only. */
+/* The web app's finish: a still forest backdrop, translucent surfaces and a raised key. Web only.
+   Nothing animates for ever or blurs what is behind it: both make phones stutter. */
 
 :root {
   --fh-ink: #07120d;
@@ -21,7 +22,7 @@ body {
   color: var(--fh-ink);
 }
 
-/* Backdrop: deep forest light, a slow aurora and fine grain behind every screen. */
+/* Backdrop: deep forest light behind every screen. */
 .fh-backdrop {
   position: fixed;
   inset: 0;
@@ -32,87 +33,34 @@ body {
     radial-gradient(50% 50% at 90% 20%, rgba(212, 242, 92, 0.08), transparent 70%),
     radial-gradient(90% 70% at 50% 100%, #0b2a1b, transparent 70%),
     var(--fh-ink);
-  overflow: hidden;
 }
 
-.fh-backdrop::before {
-  content: '';
-  position: absolute;
-  inset: -20%;
-  background:
-    conic-gradient(from 120deg at 30% 40%, rgba(87, 227, 154, 0.12), transparent 30%, rgba(212, 242, 92, 0.08) 55%, transparent 75%);
-  filter: blur(60px);
-  animation: fh-aurora 24s linear infinite;
-}
-
-.fh-backdrop::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  opacity: 0.06;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-@keyframes fh-aurora {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Glass card that tilts towards the pointer and rises in when it appears. */
+/* Translucent card that rises in when it appears. */
 .fh-card {
-  --rx: 0deg;
-  --ry: 0deg;
   position: relative;
   border-radius: 28px;
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.02) 60%);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.03) 60%);
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.09),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 24px 60px rgba(0, 0, 0, 0.32);
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry));
-  transition:
-    transform 0.5s var(--fh-ease),
-    box-shadow 0.5s var(--fh-ease);
-  animation: fh-rise 0.9s var(--fh-ease) both;
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  animation: fh-rise 0.6s var(--fh-ease) both;
   animation-delay: var(--delay, 0s);
-}
-
-.fh-card:hover {
-  box-shadow:
-    inset 0 0 0 1px rgba(212, 242, 92, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 32px 80px rgba(0, 0, 0, 0.4);
-}
-
-.fh-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(240px 160px at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, 0.08), transparent 70%);
-  pointer-events: none;
 }
 
 @keyframes fh-rise {
   from {
     opacity: 0;
-    transform: perspective(900px) translateY(24px) rotateX(6deg);
+    transform: translateY(16px);
   }
 }
 
 .fh-rise {
-  animation: fh-rise 0.9s var(--fh-ease) both;
+  animation: fh-rise 0.6s var(--fh-ease) both;
   animation-delay: var(--delay, 0s);
 }
 
-/* The 3D key: a raised face over its own depth, tilting to the pointer, with a light sweep. */
+/* The key: a raised face over its own depth that presses down. */
 .fh-key {
-  --rx: 0deg;
-  --ry: 0deg;
   --lift: 6px;
   position: relative;
   display: grid;
@@ -121,7 +69,6 @@ body {
   padding: 0;
   background: none;
   cursor: pointer;
-  perspective: 600px;
   isolation: isolate;
   text-decoration: none;
   font: inherit;
@@ -131,14 +78,12 @@ body {
 .fh-key__depth {
   grid-area: 1 / 1;
   border-radius: 999px;
-  transform: rotateX(var(--rx)) rotateY(var(--ry));
-  transition: transform 0.35s var(--fh-ease);
+  transition: transform 0.2s var(--fh-ease);
 }
 
 .fh-key__depth {
   background: linear-gradient(180deg, #8fae2a, #4f6512);
-  transform: rotateX(var(--rx)) rotateY(var(--ry)) translateY(var(--lift));
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+  transform: translateY(var(--lift));
 }
 
 .fh-key__face {
@@ -156,52 +101,16 @@ body {
     inset 0 -2px 0 rgba(0, 0, 0, 0.08);
 }
 
-.fh-key__shine {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.6) 50%, transparent 65%) -150% 0 / 60% 100% no-repeat;
-  animation: fh-sweep 3.6s var(--fh-ease) infinite;
-  pointer-events: none;
-}
-
-.fh-key__glow {
-  position: absolute;
-  inset: -10px;
-  z-index: -1;
-  border-radius: 999px;
-  background: radial-gradient(closest-side, rgba(212, 242, 92, 0.5), transparent);
-  filter: blur(12px);
-  opacity: 0.5;
-  animation: fh-glow 2.8s ease-in-out infinite;
-}
-
 .fh-key:hover .fh-key__face {
-  transform: rotateX(var(--rx)) rotateY(var(--ry)) translateY(-2px);
+  transform: translateY(-2px);
 }
 
 .fh-key:active .fh-key__face {
-  transform: rotateX(var(--rx)) rotateY(var(--ry)) translateY(calc(var(--lift) - 1px));
+  transform: translateY(calc(var(--lift) - 1px));
   transition-duration: 0.08s;
 }
 
-@keyframes fh-sweep {
-  0%,
-  55% {
-    background-position: -150% 0;
-  }
-  100% {
-    background-position: 250% 0;
-  }
-}
-
-@keyframes fh-glow {
-  50% {
-    opacity: 0.9;
-    transform: scale(1.04);
-  }
-}
-
-/* Round glass button. */
+/* Round button. */
 .fh-orb-button {
   display: grid;
   place-items: center;
@@ -212,30 +121,18 @@ body {
   cursor: pointer;
   color: var(--fh-text);
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
-    0 16px 36px rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(14px);
-  transition: transform 0.35s var(--fh-ease);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
 }
 
-.fh-orb-button:hover {
-  transform: translateY(-2px) scale(1.04);
-}
-
-/* Navigation: a floating glass pill on wide screens, a glass dock on phones. */
+/* Navigation: a floating pill on wide screens, a dock on phones. */
 .fh-nav {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 8px 8px 8px 18px;
   border-radius: 999px;
-  background: rgba(8, 20, 14, 0.62);
-  backdrop-filter: saturate(150%) blur(20px);
-  -webkit-backdrop-filter: saturate(150%) blur(20px);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
-    0 18px 50px rgba(0, 0, 0, 0.35);
+  background: rgba(8, 20, 14, 0.94);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
 .fh-nav__tab {
@@ -284,10 +181,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .fh-card,
-  .fh-rise,
-  .fh-backdrop::before,
-  .fh-key__shine,
-  .fh-key__glow {
+  .fh-rise {
     animation: none;
   }
 }

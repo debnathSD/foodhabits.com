@@ -12,8 +12,9 @@ iOS and the web that recognises the food in a photo and explains, in plain langu
 - watch-outs for your diet (vegetarian, vegan, Jain…) and sensitivities
   (lactose, gluten, IBS, reflux, nuts, blood sugar, blood pressure).
 
-Every result has an **animated explainer with voice-over** in the user's
-language.
+The app does one job and keeps it light: it identifies the dish and shows
+what it means for you, as plain text. No videos, 3D or animated backgrounds,
+so it stays quick on phones.
 
 Everything runs **on the device**, in the browser too. There is no server, no
 account, no subscription and no per-scan cost, and photos never leave the device.
@@ -34,7 +35,7 @@ photo ─► on-device model: SigLIP 2 (web) or AIY (phones) ──────�
      rules engine ─► score, gut and body effects, disease risks, avoid next,
                      eat next, swaps, watch-outs  (language-neutral ids)
                                                                          ▼
-     t() ─► the user's language ─► result screen + narrated explainer
+     t() ─► the user's language ─► result screen
 ```
 
 - **Recognition (web):** Google's [SigLIP 2](https://huggingface.co/google/siglip2-base-patch16-224)
@@ -92,24 +93,7 @@ photo ─► on-device model: SigLIP 2 (web) or AIY (phones) ──────�
   lay out right to left. `npm test` fails if any language misses a message or
   changes a `{placeholder}`. Dish names have their own table per language
   (`src/i18n/dish-names`): in Bengali 548 dishes, every Bengali one
-  included, show and are narrated in Bengali script; the rest keep their
-  English name.
-- **Explainer:** `src/app/explainer/[id].tsx` plays 3D scenes (three.js via
-  React Three Fiber) narrated by the device's own text-to-speech
-  (`expo-speech`), with captions always on. A meal scanned from a photo stars
-  as itself: the photo, on a plate (`src/three/photo-dish.tsx`), drops onto the
-  pedestal and is what the "inside" scene burns away into its parts and puts
-  back together. A meal added by search shows a 3D model of the dish instead
-  (`src/three/dish-models.tsx`), built offline from simple shapes: curries in a
-  bowl with their fish, mutton or paneer, biryani on a plate, a dosa with sambar
-  and coconut chutney, bhetki paturi in banana leaf, jhalmuri in a paper cone,
-  chai in a kulhad. The food type picks the model and the dish's name its
-  colours and toppings (`src/lib/dish-look.ts`); Bengali and Indian dishes are
-  set one by one in `src/data/dish-looks.ts`. Its "inside" scene takes the dish
-  apart (`src/three/deconstruct.tsx`, timing in `src/lib/deconstruct.ts`): the
-  parts it is made of come out at micro scale (fibre strands, protein coils,
-  starch, oil, sugar, salt, microbes) and each passes under a spotlight, mint
-  when it helps and coral when it harms, before the dish comes back together.
+  included, show in Bengali script; the rest keep their English name.
 
 ## Run it
 
@@ -136,8 +120,8 @@ npm run lint
 
 ## Website
 
-`website/` is the marketing site (Vite, React Three Fiber, GSAP). It shares the
-3D scenes in `src/three`, uses photoscanned food from Poly Haven (CC0) in
+`website/` is the marketing site (Vite, React Three Fiber, GSAP). Its 3D
+scenes are in `website/src/three`; it uses photoscanned food from Poly Haven (CC0) in
 `website/public/models`, and links to the web app with its "Try now" button.
 It plays like a film in nine chapters: each on its own lit screen in a dark
 cinema, opening with a scene slate, with film-title reveals and end credits
@@ -167,8 +151,6 @@ website and the web app and publishes both to GitHub Pages: the site at
   laptop) and looks up Wikipedia readership only for dishes it hasn't seen,
   caching it in `scripts/data/dish-popularity.json`. `npm test` fails until the
   embeddings match the dish list.
-- Change how a dish looks in its explainer when there is no photo: its entry in
-  `src/data/dish-looks.ts` (model, colours, toppings, side bowls).
 - Change advice text: `src/i18n/locales/en.ts`, then the same key in each
   translation. `npm test` fails if any food produces a missing message.
 - Regenerate the icon and splash after editing the mark:

@@ -43,11 +43,6 @@ export function photoUri(photo: string | null): string | null {
   return storage()?.getItem(`${PREFIX}${photo}`) ?? null;
 }
 
-/** The photo as a data URI, for the explainer video. On the web that is how it is stored. */
-export async function photoDataUri(photo: string | null): Promise<string | null> {
-  return photoUri(photo);
-}
-
 export function deletePhoto(photo: string | null) {
   if (photo && !photo.startsWith('data:')) storage()?.removeItem(`${PREFIX}${photo}`);
 }

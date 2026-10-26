@@ -28,7 +28,7 @@ const WIDE = 900;
 
 export default function HomeScreen() {
   const { t } = useTranslation();
-  const { width, height } = useWindowDimensions();
+  const { width } = useWindowDimensions();
   const wide = Platform.OS === 'web' && width >= WIDE;
   const scans = useAppState((state) => state.scans);
   const now = useNow();
@@ -52,7 +52,7 @@ export default function HomeScreen() {
           contentInsetAdjustmentBehavior="automatic">
           {wide ? (
             <View style={styles.columns}>
-              <View style={[styles.heroColumn, { height: Math.max(560, height - 150) }]}>{hero}</View>
+              <View style={styles.heroColumn}>{hero}</View>
               <View style={styles.sideColumn}>
                 {showUpNext && <UpNext scan={latest} />}
                 <TodayOrHowTo todays={todays} />
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     gap: Spacing.five,
     alignItems: 'flex-start',
   },
-  // On the web the 3D stage stays in view while the day's cards scroll past.
+  // On wide screens the greeting stays in view while the day's cards scroll past.
   heroColumn: {
     flex: 1.15,
     position: 'sticky',

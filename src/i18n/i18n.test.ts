@@ -5,7 +5,7 @@ import { test } from 'node:test';
 import { CATEGORIES, type CategoryId } from '../data/categories';
 import { CATALOG } from '../data/catalog';
 import labels from '../data/food-labels.json';
-import { buildScenes, summaryText, watchText } from '../lib/describe';
+import { summaryText, watchText } from '../lib/describe';
 import { analyzeFood, type Food } from '../lib/engine';
 import { foodFromCatalog, foodFromLabel, genericFood } from '../lib/food-index';
 import { DEFAULT_PROFILE, DIETS, GOALS, SENSITIVITIES } from '../lib/profile-options';
@@ -46,17 +46,18 @@ test('every message the engine produces exists, for every food and profile', () 
           const analysis = analyzeFood(food, { profile, hour });
           summaryText(analysis, t, list, capitalize);
           analysis.watch.forEach((item) => watchText(item, t, list, lower));
-          buildScenes(analysis, food.name, t, list, lower);
-          analysis.gut.forEach((item) => t(`gut.${item.id}.detail`));
-          analysis.body.forEach((item) => t(`body.${item.id}.detail`));
-          analysis.risks.forEach((risk) => t(`risks.${risk}.detail`));
+          t(`verdict.${analysis.verdict}`);
+          analysis.gut.forEach((item) => [t(`gut.${item.id}.title`), t(`gut.${item.id}.detail`)]);
+          analysis.body.forEach((item) => [t(`body.${item.id}.title`), t(`body.${item.id}.detail`)]);
+          analysis.risks.forEach((risk) => [t(`risks.${risk}.name`), t(`risks.${risk}.detail`)]);
           analysis.avoid.forEach((item) => {
+            t(`avoid.${item.id}.food`);
             t(`avoid.${item.id}.gut`);
             t(`avoid.${item.id}.body`);
             t(`instead.${item.instead}`);
             t(`timeframe.${item.timeframe}`);
           });
-          analysis.eat.forEach((id) => t(`eat.${id}.why`));
+          analysis.eat.forEach((id) => [t(`eat.${id}.food`), t(`eat.${id}.why`)]);
         }
       }
     }

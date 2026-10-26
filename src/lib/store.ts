@@ -30,7 +30,6 @@ type State = {
   language: LanguageCode | null;
   onboarded: boolean;
   profile: Profile;
-  voice: boolean;
   scans: Scan[];
 };
 
@@ -38,7 +37,6 @@ const KEYS = {
   language: 'foodhabits/language',
   onboarded: 'foodhabits/onboarded',
   profile: 'foodhabits/profile',
-  voice: 'foodhabits/voice',
   scans: 'foodhabits/scans',
 } as const;
 
@@ -49,7 +47,6 @@ let state: State = {
   language: null,
   onboarded: false,
   profile: DEFAULT_PROFILE,
-  voice: true,
   scans: [],
 };
 const listeners = new Set<() => void>();
@@ -101,7 +98,6 @@ export async function loadState() {
       language: findLanguage(language)?.code ?? null,
       onboarded: parse(entries[KEYS.onboarded], false),
       profile: { ...DEFAULT_PROFILE, ...parse<Partial<Profile>>(entries[KEYS.profile], {}) },
-      voice: parse(entries[KEYS.voice], true),
       scans: parse<Scan[]>(entries[KEYS.scans], []),
     });
   } catch (error) {
@@ -124,11 +120,6 @@ export function updateProfile(patch: Partial<Profile>) {
   const profile = { ...state.profile, ...patch };
   setState({ profile });
   persist('profile', profile);
-}
-
-export function setVoice(voice: boolean) {
-  setState({ voice });
-  persist('voice', voice);
 }
 
 export function createScanId() {

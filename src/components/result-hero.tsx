@@ -6,13 +6,10 @@ import { ThemedText } from '@/components/themed-text';
 import { Colors, Spacing, Type, verdictColors } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import type { Verdict } from '@/lib/verdict';
-import { SceneCanvas } from '@/three/canvas';
-import { ScoreOrb } from '@/three/scenes';
-import { Studio } from '@/three/studio';
 
 /**
- * The top of a result: the meal photo (or a 3D score orb when there is no
- * photo) under a dark fade, with the dish name, verdict and score set large.
+ * The top of a result: the meal photo (or a plain emerald glow when there is
+ * no photo) under a dark fade, with the dish name, verdict and score set large.
  */
 export function ResultHero({
   name,
@@ -36,17 +33,11 @@ export function ResultHero({
   const onDark = verdictColors(verdict, Colors.dark).color;
 
   return (
-    <View style={styles.hero}>
+    <View style={[styles.hero, !photo && styles.plain]}>
       {photo ? (
         <Image source={{ uri: photo }} style={StyleSheet.absoluteFill} contentFit="cover" />
       ) : (
-        <>
-          <LinearGradient colors={['#155C38', theme.hero]} style={StyleSheet.absoluteFill} />
-          <SceneCanvas camera={[0, 0, 6.5]} style={styles.orb}>
-            <Studio />
-            <ScoreOrb score={score} color={onDark} />
-          </SceneCanvas>
-        </>
+        <LinearGradient colors={['#155C38', theme.hero]} style={StyleSheet.absoluteFill} />
       )}
       <LinearGradient
         colors={['rgba(7,18,13,0)', 'rgba(7,18,13,0.55)', 'rgba(7,18,13,0.95)']}
@@ -86,12 +77,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     justifyContent: 'flex-end',
   },
-  orb: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 110,
+  plain: {
+    height: 260,
   },
   copy: {
     padding: Spacing.four,

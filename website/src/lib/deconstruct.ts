@@ -3,8 +3,8 @@
  * out at micro scale, each comes forward under a spotlight (mint when it helps,
  * coral when it harms), and then everything comes back together.
  *
- * Pure timing and types with no imports, shared by the app's explainer, its
- * captions and the website, so the 3D scene and the words always agree.
+ * Pure timing and types with no imports, shared by the site's 3D scene and its
+ * captions, so the two always agree.
  */
 
 export type PartKind =

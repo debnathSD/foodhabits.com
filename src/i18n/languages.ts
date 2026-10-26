@@ -1,30 +1,27 @@
-/**
- * Languages offered on first launch. `speech` is the BCP-47 tag handed to the
- * phone's text-to-speech engine for the explainer voice-over.
- */
+/** Languages offered on first launch. */
 export const LANGUAGES = [
-  { code: 'en', name: 'English', english: 'English', speech: 'en-IN' },
-  { code: 'hi', name: 'हिन्दी', english: 'Hindi', speech: 'hi-IN' },
-  { code: 'bn', name: 'বাংলা', english: 'Bengali', speech: 'bn-IN' },
-  { code: 'te', name: 'తెలుగు', english: 'Telugu', speech: 'te-IN' },
-  { code: 'mr', name: 'मराठी', english: 'Marathi', speech: 'mr-IN' },
-  { code: 'ta', name: 'தமிழ்', english: 'Tamil', speech: 'ta-IN' },
-  { code: 'ur', name: 'اردو', english: 'Urdu', speech: 'ur-IN', rtl: true },
-  { code: 'gu', name: 'ગુજરાતી', english: 'Gujarati', speech: 'gu-IN' },
-  { code: 'kn', name: 'ಕನ್ನಡ', english: 'Kannada', speech: 'kn-IN' },
-  { code: 'ml', name: 'മലയാളം', english: 'Malayalam', speech: 'ml-IN' },
-  { code: 'or', name: 'ଓଡ଼ିଆ', english: 'Odia', speech: 'or-IN' },
-  { code: 'pa', name: 'ਪੰਜਾਬੀ', english: 'Punjabi', speech: 'pa-IN' },
-  { code: 'as', name: 'অসমীয়া', english: 'Assamese', speech: 'as-IN' },
-  { code: 'es', name: 'Español', english: 'Spanish', speech: 'es-ES' },
-  { code: 'fr', name: 'Français', english: 'French', speech: 'fr-FR' },
-  { code: 'pt', name: 'Português', english: 'Portuguese', speech: 'pt-BR' },
-  { code: 'de', name: 'Deutsch', english: 'German', speech: 'de-DE' },
-  { code: 'ar', name: 'العربية', english: 'Arabic', speech: 'ar-SA', rtl: true },
-  { code: 'zh', name: '中文', english: 'Chinese', speech: 'zh-CN' },
-  { code: 'ja', name: '日本語', english: 'Japanese', speech: 'ja-JP' },
-  { code: 'ru', name: 'Русский', english: 'Russian', speech: 'ru-RU' },
-  { code: 'id', name: 'Bahasa Indonesia', english: 'Indonesian', speech: 'id-ID' },
+  { code: 'en', name: 'English', english: 'English' },
+  { code: 'hi', name: 'हिन्दी', english: 'Hindi' },
+  { code: 'bn', name: 'বাংলা', english: 'Bengali' },
+  { code: 'te', name: 'తెలుగు', english: 'Telugu' },
+  { code: 'mr', name: 'मराठी', english: 'Marathi' },
+  { code: 'ta', name: 'தமிழ்', english: 'Tamil' },
+  { code: 'ur', name: 'اردو', english: 'Urdu', rtl: true },
+  { code: 'gu', name: 'ગુજરાતી', english: 'Gujarati' },
+  { code: 'kn', name: 'ಕನ್ನಡ', english: 'Kannada' },
+  { code: 'ml', name: 'മലയാളം', english: 'Malayalam' },
+  { code: 'or', name: 'ଓଡ଼ିଆ', english: 'Odia' },
+  { code: 'pa', name: 'ਪੰਜਾਬੀ', english: 'Punjabi' },
+  { code: 'as', name: 'অসমীয়া', english: 'Assamese' },
+  { code: 'es', name: 'Español', english: 'Spanish' },
+  { code: 'fr', name: 'Français', english: 'French' },
+  { code: 'pt', name: 'Português', english: 'Portuguese' },
+  { code: 'de', name: 'Deutsch', english: 'German' },
+  { code: 'ar', name: 'العربية', english: 'Arabic', rtl: true },
+  { code: 'zh', name: '中文', english: 'Chinese' },
+  { code: 'ja', name: '日本語', english: 'Japanese' },
+  { code: 'ru', name: 'Русский', english: 'Russian' },
+  { code: 'id', name: 'Bahasa Indonesia', english: 'Indonesian' },
 ] as const;
 
 export type LanguageCode = (typeof LANGUAGES)[number]['code'];

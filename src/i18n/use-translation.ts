@@ -9,7 +9,6 @@ export function useTranslation() {
   const info = findLanguage(language)!;
   return {
     language,
-    speechLanguage: info.speech,
     rtl: 'rtl' in info && info.rtl,
     t: (key: string, params?: Params) => translate(language, key, params),
     tValue: <T,>(key: string) => translateValue<T>(language, key),

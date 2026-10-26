@@ -2,7 +2,6 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Linking, Platform, ScrollView, StyleSheet, useWindowDimensions, View, type ViewStyle } from 'react-native';
 
-import { ExplainerButton } from '@/components/explainer-button';
 import { ResultHero } from '@/components/result-hero';
 import { ScoreMeter } from '@/components/score-badge';
 import { ThemedText } from '@/components/themed-text';
@@ -116,12 +115,6 @@ export default function ResultScreen() {
         {!changing && (
           <Button title={t('result.fixIt')} icon="edit" variant="ghost" onPress={() => setChanging(true)} />
         )}
-
-        <ExplainerButton
-          title={t('result.explain')}
-          hint={t('result.explainHint')}
-          onPress={() => router.push({ pathname: '/explainer/[id]', params: { id: scan.id } })}
-        />
 
         <Section title={t('result.gutTitle')} icon="leaf">
           <Card>

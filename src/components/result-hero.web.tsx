@@ -1,22 +1,15 @@
-import { Canvas } from '@react-three/fiber';
 import { Image } from 'expo-image';
-import { Suspense } from 'react';
 import { StyleSheet, View } from 'react-native';
-import * as THREE from 'three';
 
 import { ThemedText } from '@/components/themed-text';
 import { Colors, Spacing, Type, verdictColors } from '@/constants/theme';
 import { useTranslation } from '@/i18n/use-translation';
 import type { Verdict } from '@/lib/verdict';
-import { ScoreOrb } from '@/three/scenes';
-import { Backdrop, FOREST } from '@/three/web/backdrop';
-import { Effects } from '@/three/web/effects';
-import { StudioLighting } from '@/three/web/lighting';
 
 /**
- * Web: the top of a result. A meal photo, or the score as a glowing 3D orb in
- * a lit studio, with the dish name, verdict and score set large. On wide
- * screens it is a tall card beside the details.
+ * Web: the top of a result. A meal photo, or else a plain emerald glow, with
+ * the dish name, verdict and score set large. On wide screens it is a tall
+ * card beside the details.
  */
 export function ResultHero({
   name,
@@ -38,24 +31,11 @@ export function ResultHero({
   const onDark = verdictColors(verdict, Colors.dark).color;
   const { rtl } = useTranslation();
   return (
-    <View style={[styles.hero, wide ? styles.wide : styles.narrow]}>
+    <View style={[styles.hero, wide ? styles.wide : styles.narrow, !photo && !wide && styles.plain]}>
       {photo ? (
         <Image source={{ uri: photo }} style={StyleSheet.absoluteFill} contentFit="cover" />
       ) : (
-        <Canvas
-          dpr={[1, 2]}
-          camera={{ position: [0, 0.2, wide ? 10.5 : 9.6], fov: 32 }}
-          gl={{ antialias: false, alpha: false, toneMapping: THREE.NoToneMapping }}
-          style={StyleSheet.absoluteFill}>
-          <Backdrop layers={FOREST} />
-          <Suspense fallback={null}>
-            <StudioLighting />
-            <group position={[0, wide ? 1.2 : 1.1, 0]} scale={0.9}>
-              <ScoreOrb score={score} color={onDark} />
-            </group>
-            <Effects bloom={0.7} />
-          </Suspense>
-        </Canvas>
+        <View style={[StyleSheet.absoluteFill, styles.glow]} />
       )}
       <View style={styles.shade} pointerEvents="none" />
       <View style={styles.copy} pointerEvents="none">
@@ -94,6 +74,12 @@ const styles = StyleSheet.create({
     height: 440,
     marginHorizontal: -Spacing.four,
     marginTop: -Spacing.four,
+  },
+  plain: {
+    height: 280,
+  },
+  glow: {
+    backgroundImage: 'radial-gradient(80% 70% at 50% 0%, #155C38, #0B2A1B 60%, #06100B)',
   },
   wide: {
     height: '100%',

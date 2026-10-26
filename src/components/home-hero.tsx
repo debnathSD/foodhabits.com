@@ -1,37 +1,26 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
-import { SceneCanvas } from '@/three/canvas';
-import { FoodOrbit, SaladBowl } from '@/three/scenes';
-import { Studio } from '@/three/studio';
 
-/** The home screen's opening: a live 3D bowl on a deep emerald glow, with the day's greeting. */
-export function HomeHero({ greeting, title }: { greeting: string; title: string; wide?: boolean }) {
+/** The home screen's opening: the day's greeting on a deep emerald glow. A plain gradient, so it costs a phone nothing. */
+export function HomeHero({ greeting, title, wide = false }: { greeting: string; title: string; wide?: boolean }) {
   const theme = useTheme();
   return (
-    <View style={styles.hero}>
+    <View style={[styles.hero, wide ? styles.wide : styles.narrow]}>
       <LinearGradient
-        colors={['#155C38', theme.hero, theme.background]}
-        locations={[0, 0.55, 1]}
+        // On the web, screens sit on the page backdrop, so the glow fades into it.
+        colors={['#155C38', theme.hero, wide ? '#06100B' : Platform.OS === 'web' ? 'rgba(11,42,27,0)' : theme.background]}
+        locations={[0, 0.6, 1]}
         style={StyleSheet.absoluteFill}
       />
-      <SceneCanvas camera={[0, 2.6, 5.6]} style={styles.canvas}>
-        <Studio />
-        <group position={[0.15, -0.35, 0]} rotation={[0.18, 0, 0]}>
-          <SaladBowl spin={0.25} />
-        </group>
-        <group position={[0.15, 0.55, 0]}>
-          <FoodOrbit count={6} radius={2.05} speed={0.14} tilt={0.42} />
-        </group>
-      </SceneCanvas>
-      <View style={styles.copy} pointerEvents="none">
+      <View style={styles.copy}>
         <ThemedText type="smallBold" style={styles.greeting}>
           {greeting}
         </ThemedText>
-        <ThemedText type="largeTitle" style={styles.title}>
+        <ThemedText type={wide ? 'display' : 'largeTitle'} style={styles.title}>
           {title}
         </ThemedText>
       </View>
@@ -41,23 +30,20 @@ export function HomeHero({ greeting, title }: { greeting: string; title: string;
 
 const styles = StyleSheet.create({
   hero: {
-    height: 420,
+    overflow: 'hidden',
+    justifyContent: 'flex-end',
+  },
+  narrow: {
+    height: 240,
     marginHorizontal: -Spacing.four,
     marginTop: -Spacing.four,
-    overflow: 'hidden',
   },
-  canvas: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 70,
+  wide: {
+    height: 380,
+    borderRadius: 32,
   },
   copy: {
-    position: 'absolute',
-    left: Spacing.four,
-    right: Spacing.four,
-    bottom: Spacing.three,
+    padding: Spacing.four,
     gap: Spacing.one,
   },
   greeting: {

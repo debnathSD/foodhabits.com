@@ -1,7 +1,5 @@
 /**
- * Composed 3D scenes used by the marketing site, the app's home screen and the
- * meal explainer. Plain three.js + react-three-fiber only, so they render with
- * WebGL on the web and expo-gl on phones.
+ * Composed 3D scenes for the site. Plain three.js + react-three-fiber only.
  */
 import { useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';

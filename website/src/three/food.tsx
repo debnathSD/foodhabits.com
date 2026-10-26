@@ -1,6 +1,5 @@
 /**
- * Stylised 3D food, built from primitives so it needs no model files and runs
- * the same on the web (WebGL) and on phones (expo-gl). Each piece is centred
+ * Stylised 3D food, built from primitives so it needs no model files. Each piece is centred
  * on the origin at roughly unit size; position and scale them with a <group>.
  */
 import { useMemo } from 'react';

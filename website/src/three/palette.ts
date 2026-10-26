@@ -1,4 +1,4 @@
-/** Colours shared by the 3D scenes on the website and in the app. */
+/** Colours of the site's 3D scenes. */
 export const PALETTE = {
   ink: '#07120D',
   emerald: '#1E8A55',

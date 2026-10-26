@@ -8,10 +8,9 @@ import {
 } from '@expo-google-fonts/inter-tight';
 import { DarkTheme, DefaultTheme, LocaleProvider, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Platform, useColorScheme } from 'react-native';
 
-import { LaunchAnimation } from '@/components/launch-animation';
 import { WebBackdrop } from '@/components/web-backdrop';
 import { Colors, Type } from '@/constants/theme';
 import { applyDirection } from '@/i18n/direction';
@@ -26,9 +25,6 @@ export default function RootLayout() {
   const ready = useAppState((state) => state.ready);
   const onboarded = useAppState((state) => state.onboarded && state.language !== null);
   const { t, language, rtl } = useTranslation();
-  // The Kolam f drawing that plays once as the splash screen hides.
-  const [launching, setLaunching] = useState(true);
-  const launched = useCallback(() => setLaunching(false), []);
   const [fontsLoaded, fontError] = useFonts({
     InstrumentSerif_400Regular,
     InterTight_400Regular,
@@ -80,7 +76,6 @@ export default function RootLayout() {
               name="result/[id]"
               options={{ title: '', headerTransparent: true, headerTintColor: '#F3F7F2', headerStyle: { backgroundColor: 'transparent' } }}
             />
-            <Stack.Screen name="explainer/[id]" options={{ headerShown: false, presentation: 'fullScreenModal' }} />
           </Stack.Protected>
           <Stack.Protected guard={!onboarded}>
             <Stack.Screen name="welcome" options={{ headerShown: false }} />
@@ -89,7 +84,6 @@ export default function RootLayout() {
           <Stack.Screen name="privacy" options={{ title: t('privacy.title') }} />
         </Stack>
       </LocaleProvider>
-      {launching && <LaunchAnimation onDone={launched} />}
     </ThemeProvider>
   );
 }

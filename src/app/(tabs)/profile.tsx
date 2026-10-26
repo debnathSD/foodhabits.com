@@ -1,6 +1,6 @@
 import Constants from 'expo-constants';
 import { router } from 'expo-router';
-import { Pressable, ScrollView, StyleSheet, Switch, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
@@ -15,7 +15,7 @@ import { useWebLayout } from '@/hooks/use-web-layout';
 import { useTranslation } from '@/i18n/use-translation';
 import { confirmDestructive } from '@/lib/confirm';
 import { DIETS, GOALS, SENSITIVITIES } from '@/lib/profile-options';
-import { clearScans, setVoice, updateProfile, useAppState } from '@/lib/store';
+import { clearScans, updateProfile, useAppState } from '@/lib/store';
 
 function toggle<T>(list: T[], item: T) {
   return list.includes(item) ? list.filter((value) => value !== item) : [...list, item];
@@ -25,7 +25,6 @@ export default function ProfileScreen() {
   const layout = useWebLayout();
   const { t, language } = useTranslation();
   const profile = useAppState((state) => state.profile);
-  const voice = useAppState((state) => state.voice);
   const theme = useTheme();
 
   return (
@@ -80,16 +79,6 @@ export default function ProfileScreen() {
 
           <Card>
             <SettingRow icon="globe" label={t('profile.language')} value={findLanguage(language)?.name} onPress={() => router.push('/language')} />
-            <View style={styles.settingRow}>
-              <Icon name="speaker" size={20} color={theme.tint} />
-              <View style={styles.flex}>
-                <ThemedText type="smallBold">{t('profile.voice')}</ThemedText>
-                <ThemedText type="caption" themeColor="textSecondary">
-                  {voice ? t('profile.voiceOn') : t('profile.voiceOff')}
-                </ThemedText>
-              </View>
-              <Switch value={voice} onValueChange={setVoice} trackColor={{ true: theme.tint }} />
-            </View>
           </Card>
 
           <Section title={t('profile.about')} icon="sparkle">
